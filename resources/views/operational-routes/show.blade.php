@@ -36,7 +36,7 @@
     <!-- Info Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- Route Specs -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
             <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Parameter Jalur</h3>
             <div>
                 <span class="text-xs text-slate-400 block">Bandara Asal</span>
@@ -52,19 +52,19 @@
             </div>
             <div>
                 <span class="text-xs text-slate-400 block">Jarak Tempuh Operasional</span>
-                <span class="text-xl font-bold font-mono text-[#0B5A9E] dark:text-sky-400">
+                <span class="text-xl font-bold font-mono text-brand-600 dark:text-brand-400">
                     {{ $operationalRoute->distance_km ? number_format($operationalRoute->distance_km, 1) . ' km' : '-' }}
                 </span>
             </div>
         </div>
 
         <!-- Waypoints List -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
             <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Waypoints Jalur</h3>
             @if(is_array($operationalRoute->waypoints) && count($operationalRoute->waypoints) > 0)
                 <div class="space-y-1.5 max-h-48 overflow-y-auto">
                     @foreach($operationalRoute->waypoints as $idx => $wp)
-                        <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-slate-700 font-mono">
+                        <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-slate-700/60 font-mono">
                             <span class="font-bold text-slate-700 dark:text-slate-200">{{ is_array($wp) ? ($wp['name'] ?? 'WP ' . ($idx+1)) : $wp }}</span>
                             <span class="text-slate-400">{{ is_array($wp) && isset($wp['lat']) ? number_format($wp['lat'], 3) . ', ' . number_format($wp['lng'], 3) : '' }}</span>
                         </div>
@@ -76,8 +76,8 @@
         </div>
 
         <!-- Route Leaflet Map -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 overflow-hidden shadow-sm flex flex-col">
-            <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-700 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <div class="card overflow-hidden flex flex-col">
+            <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-700/80 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/50">
                 Peta Visual Rute
             </div>
             <div id="route-map" class="flex-1 min-h-[220px]"></div>

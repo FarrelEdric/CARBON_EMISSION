@@ -28,7 +28,7 @@
     </div>
     @endif
 
-    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-6 shadow-sm">
+    <div class="card p-6">
         <form method="POST" action="{{ route('airports.update', $airport) }}" class="space-y-6">
             @csrf
             @method('PUT')

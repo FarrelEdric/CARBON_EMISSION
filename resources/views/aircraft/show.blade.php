@@ -41,7 +41,7 @@
     <!-- Info Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- Specs -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
             <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Spesifikasi Armada</h3>
             <div>
                 <span class="text-xs text-slate-400 block">Pabrikan</span>
@@ -66,7 +66,7 @@
         </div>
 
         <!-- ICAO Calculation Factors -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
             <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Faktor Emisi & Konsumsi (ICAO)</h3>
             <div>
                 <span class="text-xs text-slate-400 block">Fuel Burn Factor</span>
@@ -87,12 +87,12 @@
         </div>
 
         <!-- Notes / Formula -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
             <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Metodologi & Catatan</h3>
             <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 {{ $aircraft->notes ?? 'Armada ini menggunakan perhitungan konsumsi bahan bakar ICAO Fuel Consumption Curve berdasarkan parameter jarak Great Circle Distance (GCD) dan koreksi rute operasional.' }}
             </p>
-            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300">
+            <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300">
                 CO₂ = Total Fuel × 3.16<br>
                 Pax CO₂ = CO₂ × 0.85 / (Y-Seats × LF)
             </div>

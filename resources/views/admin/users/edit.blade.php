@@ -15,6 +15,19 @@
             <span class="text-slate-700 dark:text-slate-200 font-medium">Edit: {{ $user->name }}</span>
         </div>
 
+        {{-- Session Flash Alerts --}}
+        @if(session('success'))
+        <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-lg px-4 py-3 text-xs text-emerald-800 dark:text-emerald-200 font-medium">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-lg px-4 py-3 text-xs text-rose-800 dark:text-rose-200 font-medium">
+            {{ session('error') }}
+        </div>
+        @endif
+
         {{-- Validation Errors --}}
         @if($errors->any())
         <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-lg px-4 py-3">
@@ -108,22 +121,28 @@
                     {{-- Status --}}
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Status Akun</label>
-                        <label class="flex items-center gap-3 mt-2 cursor-pointer select-none">
-                            <input type="hidden" name="status" value="0">
-                            <input type="checkbox"
-                                   id="status"
-                                   name="status"
-                                   value="1"
-                                   {{ old('status', $user->status ? '1' : '0') == '1' ? 'checked' : '' }}
-                                   {{ $user->id === auth()->id() ? 'disabled' : '' }}
-                                   class="w-4 h-4 text-blue-600 border-slate-300 dark:border-slate-600 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
-                            <span class="text-sm text-slate-700 dark:text-slate-300">
-                                Akun aktif
-                                @if($user->id === auth()->id())
-                                    <span class="text-[11px] text-slate-400 ml-1">(tidak dapat mengnonaktifkan akun sendiri)</span>
-                                @endif
-                            </span>
-                        </label>
+                        @if($user->id === auth()->id())
+                            <input type="hidden" name="status" value="1">
+                            <label class="flex items-center gap-3 mt-2 select-none opacity-75">
+                                <input type="checkbox" checked disabled class="w-4 h-4 text-blue-600 border-slate-300 dark:border-slate-600 rounded">
+                                <span class="text-sm text-slate-700 dark:text-slate-300">
+                                    Akun aktif <span class="text-[11px] text-slate-400 ml-1">(tidak dapat menonaktifkan akun sendiri)</span>
+                                </span>
+                            </label>
+                        @else
+                            <label class="flex items-center gap-3 mt-2 cursor-pointer select-none">
+                                <input type="hidden" name="status" value="0">
+                                <input type="checkbox"
+                                       id="status"
+                                       name="status"
+                                       value="1"
+                                       {{ old('status', $user->status ? '1' : '0') == '1' ? 'checked' : '' }}
+                                       class="w-4 h-4 text-blue-600 border-slate-300 dark:border-slate-600 rounded focus:ring-blue-500">
+                                <span class="text-sm text-slate-700 dark:text-slate-300">
+                                    Akun aktif (dapat login ke sistem)
+                                </span>
+                            </label>
+                        @endif
                     </div>
                 </div>
 

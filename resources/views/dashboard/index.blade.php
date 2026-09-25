@@ -6,14 +6,13 @@
 
 @section('content')
 <div class="p-4 md:p-6 space-y-6"
-     x-data="{ loading: true }"
-     x-init="setTimeout(() => loading = false, 700)">
+     x-data="{ loading: false }">
 
     {{-- ===== SKELETON DASHBOARD ===== --}}
     <div x-show="loading" x-cloak class="space-y-6">
 
         {{-- Filter bar skeleton --}}
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-4">
+        <div class="card p-4">
             <div class="flex flex-wrap gap-3 items-end">
                 <div class="flex flex-col gap-1">
                     <div class="skeleton h-3 w-14 rounded mb-1"></div>
@@ -34,7 +33,7 @@
         {{-- KPI Cards skeleton (4 cards) --}}
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             @for($i = 0; $i < 4; $i++)
-            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+            <div class="card p-4">
                 <div class="flex items-center justify-between mb-3">
                     <div class="skeleton h-3 w-24 rounded"></div>
                     <div class="skeleton h-8 w-8 rounded-lg"></div>
@@ -48,13 +47,13 @@
         {{-- Chart + Table skeleton row --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {{-- Chart --}}
-            <div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-4">
+            <div class="lg:col-span-2 card p-4">
                 <div class="skeleton h-4 w-40 rounded mb-1"></div>
                 <div class="skeleton h-3 w-28 rounded mb-4"></div>
                 <div class="skeleton h-52 w-full rounded-xl"></div>
             </div>
             {{-- Top routes --}}
-            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-4">
+            <div class="card p-4">
                 <div class="skeleton h-4 w-36 rounded mb-4"></div>
                 @for($j = 0; $j < 5; $j++)
                 <div class="flex items-center gap-3 py-2 border-b border-slate-100 dark:border-slate-700/50 last:border-0">
@@ -70,7 +69,7 @@
         </div>
 
         {{-- Map skeleton --}}
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="card overflow-hidden">
             <div class="flex items-center justify-between px-4 pt-4 pb-3 border-b border-slate-100 dark:border-slate-700">
                 <div>
                     <div class="skeleton h-4 w-48 rounded mb-1"></div>
@@ -81,7 +80,7 @@
                     <div class="skeleton h-8 w-24 rounded-lg"></div>
                 </div>
             </div>
-            <div class="skeleton w-full rounded-b-2xl" style="height: 360px; border-radius: 0 0 1rem 1rem;"></div>
+            <div class="skeleton w-full" style="height: 360px;"></div>
         </div>
     </div>
 
@@ -89,14 +88,13 @@
     <div x-show="!loading" class="ace-content-ready space-y-6">
 
     <!-- ====== FILTERS ====== -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-4">
+    <div class="card p-4 sm:p-5">
         <form method="GET" action="{{ route('dashboard') }}" id="filter-form" class="flex flex-wrap gap-3 items-end">
 
             <!-- Period -->
-            <div class="flex flex-col gap-1">
-                <label class="text-xs font-medium text-slate-500 dark:text-slate-400">Periode</label>
-                <select name="period" onchange="toggleDateRange(this.value)"
-                        class="px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-[#0B5A9E] focus:border-transparent">
+            <div class="flex flex-col gap-1 min-w-[130px]">
+                <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Periode</label>
+                <select name="period" onchange="toggleDateRange(this.value)" class="form-select-base">
                     @foreach(['today'=>'Hari Ini','yesterday'=>'Kemarin','this-week'=>'Minggu Ini','this-month'=>'Bulan Ini','this-quarter'=>'Kuartal Ini','this-year'=>'Tahun Ini','custom'=>'Custom'] as $val => $label)
                         <option value="{{ $val }}" {{ $filters['period'] === $val ? 'selected' : '' }}>{{ $label }}</option>
                     @endforeach
@@ -106,23 +104,20 @@
             <!-- Date Range (shown for custom) -->
             <div id="date-range-wrapper" class="{{ $filters['period'] === 'custom' ? 'flex' : 'hidden' }} gap-2">
                 <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-500 dark:text-slate-400">Dari</label>
-                    <input type="date" name="date_from" value="{{ $filters['date_from'] }}"
-                           class="px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-[#0B5A9E]">
+                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Dari</label>
+                    <input type="date" name="date_from" value="{{ $filters['date_from'] }}" class="form-input-base">
                 </div>
                 <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-500 dark:text-slate-400">Sampai</label>
-                    <input type="date" name="date_to" value="{{ $filters['date_to'] }}"
-                           class="px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-[#0B5A9E]">
+                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Sampai</label>
+                    <input type="date" name="date_to" value="{{ $filters['date_to'] }}" class="form-input-base">
                 </div>
             </div>
 
             <!-- Origin -->
-            <div class="flex flex-col gap-1">
-                <label class="text-xs font-medium text-slate-500 dark:text-slate-400">Departure</label>
-                <select name="origin"
-                        class="px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-[#0B5A9E]">
-                    <option value="">Semua</option>
+            <div class="flex flex-col gap-1 min-w-[130px]">
+                <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Departure</label>
+                <select name="origin" class="form-select-base">
+                    <option value="">Semua Asal</option>
                     @foreach($airports as $airport)
                         <option value="{{ $airport->iata_code }}" {{ $filters['origin'] === $airport->iata_code ? 'selected' : '' }}>
                             {{ $airport->iata_code }} — {{ $airport->name }}
@@ -132,11 +127,10 @@
             </div>
 
             <!-- Destination -->
-            <div class="flex flex-col gap-1">
-                <label class="text-xs font-medium text-slate-500 dark:text-slate-400">Destination</label>
-                <select name="destination"
-                        class="px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-[#0B5A9E]">
-                    <option value="">Semua</option>
+            <div class="flex flex-col gap-1 min-w-[130px]">
+                <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Destination</label>
+                <select name="destination" class="form-select-base">
+                    <option value="">Semua Tujuan</option>
                     @foreach($airports as $airport)
                         <option value="{{ $airport->iata_code }}" {{ $filters['destination'] === $airport->iata_code ? 'selected' : '' }}>
                             {{ $airport->iata_code }} — {{ $airport->name }}
@@ -146,11 +140,10 @@
             </div>
 
             <!-- Aircraft -->
-            <div class="flex flex-col gap-1">
-                <label class="text-xs font-medium text-slate-500 dark:text-slate-400">Pesawat</label>
-                <select name="aircraft"
-                        class="px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-[#0B5A9E]">
-                    <option value="">Semua</option>
+            <div class="flex flex-col gap-1 min-w-[130px]">
+                <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Pesawat</label>
+                <select name="aircraft" class="form-select-base">
+                    <option value="">Semua Pesawat</option>
                     @foreach($aircraft as $ac)
                         <option value="{{ $ac->id }}" {{ $filters['aircraft'] == $ac->id ? 'selected' : '' }}>
                             {{ $ac->manufacturer }} {{ $ac->model }}
@@ -159,13 +152,11 @@
                 </select>
             </div>
 
-            <div class="flex gap-2">
-                <button type="submit"
-                        class="px-4 py-2 bg-[#0B5A9E] hover:bg-[#084a82] text-white text-sm font-semibold rounded-lg transition-colors shadow-sm">
+            <div class="flex items-center gap-2">
+                <button type="submit" class="btn-primary">
                     Terapkan Filter
                 </button>
-                <a href="{{ route('dashboard') }}"
-                   class="px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg transition-colors">
+                <a href="{{ route('dashboard') }}" class="btn-secondary">
                     Reset
                 </a>
             </div>
@@ -173,79 +164,76 @@
     </div>
 
     <!-- ====== KPI CARDS ====== -->
-    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3.5">
 
-        <div class="kpi-card bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 shadow-sm">
-            <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Total Penerbangan</div>
-            <div class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_flights']) }}</div>
-            <div class="text-xs text-slate-400 dark:text-slate-500 mt-1">penerbangan</div>
+        <div class="kpi-card card p-4">
+            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Penerbangan</div>
+            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_flights']) }}</div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">penerbangan</div>
         </div>
 
-        <div class="kpi-card bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 shadow-sm">
-            <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Total CO₂</div>
-            <div class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_co2_tonnes'], 2) }}</div>
-            <div class="text-xs text-slate-400 dark:text-slate-500 mt-1">tonnes CO₂</div>
+        <div class="kpi-card card p-4">
+            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total CO₂</div>
+            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_co2_tonnes'], 2) }}</div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">tonnes CO₂</div>
         </div>
 
-        <div class="kpi-card bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 shadow-sm">
-            <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Rata-rata CO₂ / Penumpang</div>
-            <div class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['avg_co2_per_pax'], 2) }}</div>
-            <div class="text-xs text-slate-400 dark:text-slate-500 mt-1">kg CO₂/penumpang</div>
+        <div class="kpi-card card p-4">
+            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Rata-rata CO₂ / Pax</div>
+            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['avg_co2_per_pax'], 2) }}</div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">kg CO₂/pax</div>
         </div>
 
-        <div class="kpi-card bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 shadow-sm">
-            <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Total Bahan Bakar</div>
-            <div class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_fuel_kg'] / 1000, 1) }}</div>
-            <div class="text-xs text-slate-400 dark:text-slate-500 mt-1">tonnes fuel</div>
+        <div class="kpi-card card p-4">
+            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Bahan Bakar</div>
+            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_fuel_kg'] / 1000, 1) }}</div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">tonnes Jet-A1</div>
         </div>
 
-        <div class="kpi-card bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 shadow-sm">
-            <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Total Penumpang</div>
-            <div class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_passengers']) }}</div>
-            <div class="text-xs text-slate-400 dark:text-slate-500 mt-1">penumpang est.</div>
+        <div class="kpi-card card p-4">
+            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Penumpang</div>
+            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_passengers']) }}</div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">penumpang est.</div>
         </div>
 
-        <div class="kpi-card bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 shadow-sm">
-            <div class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Rata-rata Load Factor</div>
-            <div class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{{ $kpis['avg_load_factor'] }}<span class="text-base font-semibold">%</span></div>
-            <div class="text-xs text-slate-400 dark:text-slate-500 mt-1">load factor</div>
+        <div class="kpi-card card p-4">
+            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Rata-rata Load Factor</div>
+            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ $kpis['avg_load_factor'] }}<span class="text-base font-normal text-slate-400 dark:text-slate-500">%</span></div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">load factor</div>
         </div>
     </div>
 
     <!-- ====== CHARTS ROW ====== -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <!-- CO2 Trend -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
-            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-[#0B5A9E]"></span>
+        <div class="card p-4 sm:p-5">
+            <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3 tracking-tight">
                 Tren Emisi CO₂
             </h3>
             <div class="relative h-52">
                 <canvas id="chart-trend"></canvas>
                 @if(empty($charts['trend']['labels']) || count($charts['trend']['labels']) === 0)
-                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-sm">Tidak ada data untuk periode ini.</div>
+                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">Tidak ada data untuk periode ini.</div>
                 @endif
             </div>
         </div>
 
         <!-- CO2 by Aircraft -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
-            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-[#0B5A9E]"></span>
+        <div class="card p-4 sm:p-5">
+            <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3 tracking-tight">
                 CO₂ per Jenis Pesawat
             </h3>
             <div class="relative h-52">
                 <canvas id="chart-aircraft"></canvas>
                 @if(empty($charts['byAircraft']['labels']) || count($charts['byAircraft']['labels']) === 0)
-                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-sm">Tidak ada data.</div>
+                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">Tidak ada data.</div>
                 @endif
             </div>
         </div>
 
         <!-- CO2 by Route -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
-            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-[#D22228]"></span>
+        <div class="card p-4 sm:p-5">
+            <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3 tracking-tight">
                 CO₂ per Rute
             </h3>
             <div class="relative h-52">
@@ -254,9 +242,8 @@
         </div>
 
         <!-- Avg CO2 per Pax -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
-            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <div class="card p-4 sm:p-5">
+            <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3 tracking-tight">
                 Rata-rata CO₂/Penumpang per Rute
             </h3>
             <div class="relative h-52">
@@ -266,21 +253,21 @@
     </div>
 
     <!-- ====== LIVE FLIGHT RADAR & TRACKING MAP ====== -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden" id="flight-radar-card">
+    <div class="card overflow-hidden" id="flight-radar-card">
         <!-- Top Toolbar -->
-        <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/80">
+        <div class="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/80">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-[#0B5A9E]/10 dark:bg-sky-500/20 text-[#0B5A9E] dark:text-sky-400 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <div class="w-8 h-8 rounded-lg bg-[#0B5A9E]/10 dark:bg-sky-500/20 text-[#0B5A9E] dark:text-sky-400 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
                     </svg>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">
+                        <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">
                             Peta Radar Penerbangan Real-Time
                         </h3>
-                        <span id="flight-status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
+                        <span id="flight-status-badge" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                             <span id="flight-status-text">Menghubungkan ADS-B...</span>
                         </span>
@@ -295,13 +282,13 @@
             <!-- Stats & Action Controls -->
             <div class="flex flex-wrap items-center gap-2 text-xs">
                 <!-- Active Aircraft Count -->
-                <div class="px-3 py-1 bg-white dark:bg-slate-700/80 rounded-lg border border-slate-200 dark:border-slate-600 font-semibold text-slate-700 dark:text-slate-200 shadow-sm flex items-center gap-1.5">
+                <div class="px-2.5 py-1 bg-white dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 font-semibold text-slate-700 dark:text-slate-200 shadow-xs flex items-center gap-1.5">
                     <span class="text-[#0B5A9E] dark:text-sky-400 font-bold">✈</span>
                     <span id="aircraft-count-display">0 Pesawat Aktif</span>
                 </div>
 
                 <!-- Last Updated -->
-                <div class="px-2.5 py-1 text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1 font-mono">
+                <div class="px-2 py-1 text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1 font-mono">
                     <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span id="last-updated-display">-</span>
                 </div>
@@ -309,19 +296,19 @@
                 <!-- Actions -->
                 <div class="flex items-center gap-1.5">
                     <button type="button" id="btn-refresh-flights" title="Refresh Posisi Pesawat Sekarang"
-                            class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 transition shadow-sm flex items-center gap-1.5">
+                            class="px-2.5 py-1 text-[11px] font-medium rounded-md bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 transition shadow-xs flex items-center gap-1.5">
                         <svg id="refresh-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                         <span>Refresh</span>
                     </button>
 
                     <button type="button" id="btn-toggle-polling" title="Jeda atau lanjutkan polling otomatis"
-                            class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 transition shadow-sm flex items-center gap-1.5">
+                            class="px-2.5 py-1 text-[11px] font-medium rounded-md bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 transition shadow-xs flex items-center gap-1.5">
                         <span id="polling-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                         <span id="btn-polling-text">Live (15s)</span>
                     </button>
 
                     <button type="button" id="btn-center-indonesia" title="Pusatkan kembali ke Indonesia"
-                            class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition shadow-sm">
+                            class="px-2.5 py-1 text-[11px] font-medium rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition shadow-xs">
                         🇮🇩 Fokus RI
                     </button>
                 </div>
@@ -366,7 +353,7 @@
             </div>
 
             <!-- Selected Plane Quick Card (Bottom Right Floating Widget) -->
-            <div id="selected-plane-card" class="hidden absolute bottom-4 right-4 z-[400] bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-slate-200 dark:border-slate-700 w-72 text-xs space-y-2 pointer-events-auto transition-all">
+            <div id="selected-plane-card" class="hidden absolute bottom-4 right-4 z-[400] bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-xl p-4 shadow-lg border border-slate-200 dark:border-slate-700 w-72 text-xs space-y-2 pointer-events-auto transition-all">
                 <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
                     <div class="flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -387,63 +374,63 @@
 
 
     <!-- ====== FLIGHT TABLE ====== -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-        <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-700">
-            <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200">Data Penerbangan Terkini</h3>
+    <div class="card overflow-hidden">
+        <div class="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">Data Penerbangan Terkini</h3>
             <a href="{{ route('flights.index', request()->query()) }}"
-               class="text-xs text-[#0B5A9E] hover:text-[#084a82] font-medium transition-colors">
+               class="text-xs text-[#0B5A9E] dark:text-sky-400 hover:text-[#084a82] font-medium transition-colors">
                 Lihat Semua →
             </a>
         </div>
 
         @if($flights->isEmpty())
         <div class="flex flex-col items-center justify-center py-16 text-center">
-            <svg class="w-12 h-12 text-slate-300 dark:text-slate-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-            <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Tidak ada data penerbangan untuk filter yang dipilih.</p>
-            <a href="{{ route('dashboard') }}" class="mt-3 text-xs text-[#0B5A9E] hover:underline">Reset filter</a>
+            <svg class="w-10 h-10 text-slate-300 dark:text-slate-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            <p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Tidak ada data penerbangan untuk filter yang dipilih.</p>
+            <a href="{{ route('dashboard') }}" class="mt-2 text-xs text-[#0B5A9E] hover:underline">Reset filter</a>
         </div>
         @else
         <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+            <table class="w-full text-xs text-left">
                 <thead>
-                    <tr class="bg-slate-50 dark:bg-slate-900/50">
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Penerbangan</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tanggal</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Rute</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Pesawat</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">GCD (km)</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Fuel (kg)</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Load %</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total CO₂ (kg)</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">CO₂/Pax (kg)</th>
+                    <tr class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Penerbangan</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Tanggal</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Rute</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Pesawat</th>
+                        <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">GCD (km)</th>
+                        <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">Fuel (kg)</th>
+                        <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">Load %</th>
+                        <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">Total CO₂ (kg)</th>
+                        <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">CO₂/Pax (kg)</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
                     @foreach($flights as $flight)
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer"
+                    <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
                         onclick="window.location='{{ route('flights.show', $flight) }}'">
-                        <td class="px-4 py-3">
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-[#0B5A9E]/10 text-[#0B5A9E] dark:bg-[#0B5A9E]/20 dark:text-blue-300">
+                        <td class="px-4 py-2.5">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium text-[#0B5A9E] dark:text-sky-400 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50">
                                 {{ $flight->flight_number }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 text-slate-600 dark:text-slate-400">{{ $flight->flight_date->format('d M Y') }}</td>
-                        <td class="px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">
-                            {{ $flight->departureAirport?->iata_code ?? '?' }} <span class="text-[#0B5A9E]">→</span> {{ $flight->arrivalAirport?->iata_code ?? '?' }}
+                        <td class="px-4 py-2.5 text-slate-600 dark:text-slate-400">{{ $flight->flight_date->format('d M Y') }}</td>
+                        <td class="px-4 py-2.5 font-medium text-slate-800 dark:text-slate-200">
+                            {{ $flight->departureAirport?->iata_code ?? '?' }} <span class="text-slate-400">→</span> {{ $flight->arrivalAirport?->iata_code ?? '?' }}
                         </td>
-                        <td class="px-4 py-3 text-slate-600 dark:text-slate-400 text-xs">{{ $flight->aircraft?->manufacturer }} {{ $flight->aircraft?->model }}</td>
-                        <td class="px-4 py-3 text-right font-mono text-slate-700 dark:text-slate-300">{{ number_format($flight->distance_gcd_km, 1) }}</td>
-                        <td class="px-4 py-3 text-right font-mono text-slate-700 dark:text-slate-300">{{ number_format($flight->total_fuel_kg) }}</td>
-                        <td class="px-4 py-3 text-right">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold
-                                {{ ($flight->passenger_load_factor ?? 0) >= 0.85 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' :
-                                   (($flight->passenger_load_factor ?? 0) >= 0.70 ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
-                                   'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400') }}">
+                        <td class="px-4 py-2.5 text-slate-600 dark:text-slate-400 text-xs">{{ $flight->aircraft?->manufacturer }} {{ $flight->aircraft?->model }}</td>
+                        <td class="px-4 py-2.5 text-right font-mono tabular-nums text-slate-700 dark:text-slate-300">{{ number_format($flight->distance_gcd_km, 1) }}</td>
+                        <td class="px-4 py-2.5 text-right font-mono tabular-nums text-slate-700 dark:text-slate-300">{{ number_format($flight->total_fuel_kg) }}</td>
+                        <td class="px-4 py-2.5 text-right">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium
+                                {{ ($flight->passenger_load_factor ?? 0) >= 0.85 ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' :
+                                   (($flight->passenger_load_factor ?? 0) >= 0.70 ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800' :
+                                   'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800') }}">
                                 {{ number_format(($flight->passenger_load_factor ?? 0) * 100, 1) }}%
                             </span>
                         </td>
-                        <td class="px-4 py-3 text-right font-mono font-semibold text-slate-800 dark:text-slate-200">{{ number_format($flight->co2_total_kg, 2) }}</td>
-                        <td class="px-4 py-3 text-right font-mono font-bold text-[#0B5A9E]">{{ number_format($flight->co2_per_passenger_kg, 2) }}</td>
+                        <td class="px-4 py-2.5 text-right font-mono tabular-nums font-semibold text-slate-800 dark:text-slate-200">{{ number_format($flight->co2_total_kg, 2) }}</td>
+                        <td class="px-4 py-2.5 text-right font-mono tabular-nums font-semibold text-[#0B5A9E] dark:text-sky-400">{{ number_format($flight->co2_per_passenger_kg, 2) }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -453,7 +440,7 @@
     </div>
 
     <!-- DEMO disclaimer -->
-    <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl px-4 py-3 text-xs text-amber-700 dark:text-amber-300">
+    <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg px-4 py-3 text-xs text-amber-800 dark:text-amber-300">
         <strong>⚠️ DEMO DATA:</strong> Data penerbangan, bandara, dan pesawat dalam sistem ini adalah data demonstrasi. Hasil kalkulasi emisi CO₂ adalah estimasi berdasarkan metodologi ICAO, bukan pengukuran langsung.
     </div>
 

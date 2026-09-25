@@ -8,16 +8,16 @@
 <div class="p-4 md:p-6 space-y-6" x-data="carbonCalculatorApp()">
 
     <!-- Header & Methodology Banner -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm">
+    <div class="card p-5">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div class="space-y-1">
                 <div class="flex items-center gap-2">
-                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300">
+                    <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                         ICAO Standard Methodology
                     </span>
                     <span class="text-xs text-slate-400">Doc 9889 / CORSIA Framework</span>
                 </div>
-                <h1 class="text-lg font-bold text-slate-800 dark:text-slate-100">
+                <h1 class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">
                     Perhitungan Estimasi Emisi CO₂ Penerbangan per Penumpang
                 </h1>
                 <p class="text-xs text-slate-500 dark:text-slate-400 max-w-3xl">
@@ -27,17 +27,17 @@
 
             <!-- Preset Buttons -->
             <div class="flex flex-wrap items-center gap-2">
-                <span class="text-xs font-semibold text-slate-400 w-full lg:w-auto">Preset Simulasi:</span>
+                <span class="text-xs font-medium text-slate-400 w-full lg:w-auto">Preset:</span>
                 <button type="button" @click="applyPreset('icao')"
-                        class="px-3 py-1.5 text-xs font-medium bg-slate-100 dark:bg-slate-700 hover:bg-blue-50 dark:hover:bg-blue-900/40 text-slate-700 dark:text-slate-300 hover:text-[#0B5A9E] dark:hover:text-sky-300 rounded-lg transition border border-slate-200 dark:border-slate-600">
-                    Contoh Standar ICAO
+                        class="px-2.5 py-1 text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-md transition border border-slate-300 dark:border-slate-700 shadow-xs">
+                    Contoh ICAO
                 </button>
                 <button type="button" @click="applyPreset('cgk-dps')"
-                        class="px-3 py-1.5 text-xs font-medium bg-slate-100 dark:bg-slate-700 hover:bg-blue-50 dark:hover:bg-blue-900/40 text-slate-700 dark:text-slate-300 hover:text-[#0B5A9E] dark:hover:text-sky-300 rounded-lg transition border border-slate-200 dark:border-slate-600">
+                        class="px-2.5 py-1 text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-md transition border border-slate-300 dark:border-slate-700 shadow-xs">
                     CGK &rarr; DPS (B738)
                 </button>
                 <button type="button" @click="applyPreset('cgk-upg')"
-                        class="px-3 py-1.5 text-xs font-medium bg-slate-100 dark:bg-slate-700 hover:bg-blue-50 dark:hover:bg-blue-900/40 text-slate-700 dark:text-slate-300 hover:text-[#0B5A9E] dark:hover:text-sky-300 rounded-lg transition border border-slate-200 dark:border-slate-600">
+                        class="px-2.5 py-1 text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-md transition border border-slate-300 dark:border-slate-700 shadow-xs">
                     CGK &rarr; UPG (A320)
                 </button>
             </div>
@@ -52,12 +52,9 @@
             <form @submit.prevent="submitCalculation" class="space-y-5">
 
                 <!-- 1. Flight Route Card -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/80 pb-3">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-[#0B5A9E]"></span>
-                            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">1. Rute Penerbangan</h3>
-                        </div>
+                <div class="card p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                        <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">1. Rute Penerbangan</h3>
                         <button type="button" @click="swapAirports"
                                 class="text-xs font-medium text-[#0B5A9E] dark:text-sky-400 hover:underline flex items-center gap-1">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
@@ -115,12 +112,9 @@
                 </div>
 
                 <!-- 2. Aircraft & Capacity Card -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/80 pb-3">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-[#0B5A9E]"></span>
-                            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">2. Armada & Kapasitas Kursi</h3>
-                        </div>
+                <div class="card p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                        <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">2. Armada & Kapasitas Kursi</h3>
                         <span class="text-xs text-slate-400">Master Data Pesawat</span>
                     </div>
 
@@ -130,7 +124,7 @@
                             Pilih Tipe Pesawat
                         </label>
                         <select x-model="form.aircraft_id" @change="onAircraftChanged"
-                                class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
+                                class="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-1 focus:ring-[#0B5A9E] focus:outline-none">
                             <option value="">-- Kustom / Input Manual --</option>
                             @foreach($aircraft as $ac)
                                 <option value="{{ $ac->id }}"
@@ -154,17 +148,14 @@
                                x-model.number="form.y_seats"
                                required
                                placeholder="Contoh: 180"
-                               class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
+                               class="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-1 focus:ring-[#0B5A9E] focus:outline-none">
                     </div>
                 </div>
 
                 <!-- 3. Fuel & Operational Factors Card -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/80 pb-3">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-[#0B5A9E]"></span>
-                            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">3. Bahan Bakar & Parameter Beban</h3>
-                        </div>
+                <div class="card p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                        <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">3. Bahan Bakar & Parameter Beban</h3>
                         <span class="text-xs text-slate-400">Parameter ICAO</span>
                     </div>
 
@@ -186,8 +177,8 @@
                                    x-model.number="form.total_fuel_kg"
                                    required
                                    placeholder="Contoh: 5000"
-                                   class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none pr-12">
-                            <span class="absolute right-3.5 top-2.5 text-xs text-slate-400 font-mono">kg</span>
+                                   class="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-1 focus:ring-[#0B5A9E] focus:outline-none pr-12">
+                            <span class="absolute right-3.5 top-2 text-xs text-slate-400 font-mono">kg</span>
                         </div>
                     </div>
 
@@ -246,7 +237,7 @@
                                x-model.number="form.co2_factor"
                                required
                                placeholder="3.16"
-                               class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
+                               class="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-1 focus:ring-[#0B5A9E] focus:outline-none">
                         <span class="text-[11px] text-slate-400 mt-1 block">Standar resmi ICAO Doc 9889 = 3.16</span>
                     </div>
                 </div>
@@ -255,15 +246,14 @@
                 <div class="flex items-center gap-3">
                     <button type="submit"
                             :disabled="isLoading"
-                            class="flex-1 py-3 px-5 bg-[#0B5A9E] hover:bg-[#084a82] disabled:opacity-50 text-white font-semibold rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                            class="btn-primary flex-1 h-10 text-xs sm:text-sm font-semibold rounded-lg shadow-xs">
                         <svg x-show="isLoading" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                         </svg>
                         <span x-text="isLoading ? 'Menghitung Emisi...' : 'Hitung Estimasi Emisi Karbon'"></span>
                     </button>
-                    <button type="button" @click="resetForm"
-                            class="px-4 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 text-sm font-semibold rounded-xl transition">
+                    <button type="button" @click="resetForm" class="btn-secondary h-10 px-4 text-xs sm:text-sm font-medium rounded-lg shadow-xs">
                         Reset
                     </button>
                 </div>
@@ -274,28 +264,27 @@
         <div class="lg:col-span-7 space-y-5">
 
             <!-- Initial Placeholder (when not calculated yet) -->
-            <div x-show="!hasResult && !isLoading" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-8 shadow-sm flex flex-col items-center justify-center text-center min-h-[460px] space-y-4">
-                <div class="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-[#0B5A9E] dark:text-sky-300">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            <div x-show="!hasResult && !isLoading" class="card p-8 flex flex-col items-center justify-center text-center min-h-[460px] space-y-4">
+                <div class="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center text-[#0B5A9E] dark:text-sky-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                 </div>
-                <div class="max-w-md space-y-2">
-                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">Siap Menghitung Estimasi Emisi Karbon</h3>
+                <div class="max-w-md space-y-1.5">
+                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">Siap Menghitung Estimasi Emisi Karbon</h3>
                     <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                        Pilih bandara asal dan tujuan pada formulir di sebelah kiri atau klik tombol <strong>"Contoh Standar ICAO"</strong> di bagian atas untuk melihat demonstrasi kalkulasi instan.
+                        Pilih bandara asal dan tujuan pada formulir di sebelah kiri atau klik tombol <strong>"Contoh ICAO"</strong> di bagian atas untuk melihat demonstrasi kalkulasi instan.
                     </p>
                 </div>
                 <div class="pt-2">
-                    <button type="button" @click="applyPreset('icao')"
-                            class="px-4 py-2 bg-[#0B5A9E] hover:bg-[#084a82] text-white text-xs font-semibold rounded-lg shadow-sm transition">
+                    <button type="button" @click="applyPreset('icao')" class="btn-primary">
                         Gunakan Contoh Resmi ICAO (79.00 kg/pax)
                     </button>
                 </div>
             </div>
 
             <!-- Loading State -->
-            <div x-show="isLoading" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-8 shadow-sm flex flex-col items-center justify-center text-center min-h-[460px] space-y-3">
-                <div class="w-10 h-10 border-4 border-[#0B5A9E] border-t-transparent rounded-full animate-spin"></div>
-                <div class="text-sm font-semibold text-slate-800 dark:text-slate-100">Memproses Algoritma ICAO...</div>
+            <div x-show="isLoading" class="card p-8 flex flex-col items-center justify-center text-center min-h-[460px] space-y-3">
+                <div class="w-8 h-8 border-3 border-[#0B5A9E] border-t-transparent rounded-full animate-spin"></div>
+                <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">Memproses Algoritma ICAO...</div>
                 <div class="text-xs text-slate-400">Menghitung jarak Haversine, deviasi rute, dan alokasi penumpang.</div>
             </div>
 
@@ -303,7 +292,7 @@
             <div x-show="hasResult && !isLoading" x-cloak class="space-y-5">
 
                 <!-- Top Route & Benchmark Banner -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm">
+                <div class="card p-5">
                     <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-700 pb-3">
                         <div class="flex items-center gap-3">
                             <span class="text-2xl font-black font-mono text-slate-900 dark:text-white" x-text="resultData.departure.iata_code + ' → ' + resultData.arrival.iata_code"></span>
@@ -351,27 +340,27 @@
                 </div>
 
                 <!-- Distance & Operational Route Details -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-3">
+                <div class="card p-5 space-y-3">
                     <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Parameter Jarak Tempuh Rute</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-700">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-700">
                             <span class="text-slate-400 block">Jarak Lingkar Besar (GCD)</span>
                             <span class="text-base font-bold font-mono text-slate-800 dark:text-slate-200" x-text="resultData.result.distance_gcd_km.toLocaleString() + ' km'"></span>
                         </div>
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-700">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-700">
                             <span class="text-slate-400 block">Koreksi Deviasi ICAO</span>
                             <span class="text-base font-bold font-mono text-emerald-600 dark:text-emerald-400" x-text="'+' + resultData.result.correction_km + ' km'"></span>
                         </div>
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-700">
+                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-700">
                             <span class="text-slate-400 block">Jarak Terkoreksi ICAO</span>
-                            <span class="text-base font-bold font-mono text-[#0B5A9E] dark:text-sky-400" x-text="resultData.result.distance_adjusted_km.toLocaleString() + ' km'"></span>
+                            <span class="text-base font-bold font-mono text-brand-600 dark:text-brand-400" x-text="resultData.result.distance_adjusted_km.toLocaleString() + ' km'"></span>
                         </div>
                     </div>
 
                     <!-- Operational Route Match from Master Data (if any) -->
-                    <div x-show="resultData.operational_route" class="p-3 bg-blue-50/60 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800/40 text-xs flex items-center justify-between">
+                    <div x-show="resultData.operational_route" class="p-3 bg-brand-50/60 dark:bg-brand-900/20 rounded-lg border border-brand-200 dark:border-brand-800/40 text-xs flex items-center justify-between">
                         <div>
-                            <span class="font-bold text-[#0B5A9E] dark:text-sky-300">Tersinkronisasi dengan Rute Master Data:</span>
+                            <span class="font-bold text-brand-700 dark:text-brand-300">Tersinkronisasi dengan Rute Master Data:</span>
                             <span class="text-slate-700 dark:text-slate-300 ml-1" x-text="resultData.operational_route?.name + ' (' + resultData.operational_route?.source + ')'"></span>
                         </div>
                         <span class="font-mono font-bold text-slate-800 dark:text-slate-100" x-text="resultData.operational_route?.distance_km + ' km'"></span>
@@ -379,20 +368,20 @@
                 </div>
 
                 <!-- Interactive Leaflet Map Visualizer -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 overflow-hidden shadow-sm flex flex-col">
-                    <div class="px-5 py-3 border-b border-slate-100 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div class="card overflow-hidden flex flex-col">
+                    <div class="px-5 py-3 border-b border-slate-100 dark:border-slate-700/80 flex flex-wrap items-center justify-between gap-2 text-xs bg-slate-50/50 dark:bg-slate-800/50">
                         <div class="flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full" :class="mapMode === 'local' ? 'bg-emerald-500 animate-pulse' : 'bg-blue-500'"></span>
-                            <span class="font-bold text-slate-800 dark:text-slate-100">Peta Visual Jalur Penerbangan</span>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-semibold"
-                                  :class="mapMode === 'local' ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300' : 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300'"
+                            <span class="w-2 h-2 rounded-full" :class="mapMode === 'local' ? 'bg-emerald-500' : 'bg-brand-500'"></span>
+                            <span class="font-semibold text-slate-800 dark:text-slate-100">Peta Visual Jalur Penerbangan</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-medium"
+                                  :class="mapMode === 'local' ? 'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50' : 'bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800/50'"
                                   x-text="mapMode === 'local' ? 'Peta Vektor Lokal (Offline)' : 'Mode Satelit / CDN'">
                             </span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="font-mono text-slate-500 dark:text-slate-400 font-bold" x-text="resultData.departure.iata_code + ' → ' + resultData.arrival.iata_code"></span>
+                            <span class="font-mono text-slate-500 dark:text-slate-400 font-semibold" x-text="resultData.departure.iata_code + ' → ' + resultData.arrival.iata_code"></span>
                             <button type="button" @click="toggleMapMode"
-                                    class="px-2.5 py-1 text-[11px] font-medium bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 flex items-center gap-1.5 shadow-sm">
+                                    class="px-2.5 py-1 text-[11px] font-medium bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 rounded-lg transition text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 flex items-center gap-1.5 shadow-xs">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
                                 <span x-text="mapMode === 'local' ? 'Opsi: Beralih ke CDN' : 'Opsi: Beralih ke Vektor Lokal'"></span>
                             </button>
@@ -402,10 +391,10 @@
                 </div>
 
                 <!-- ICAO Step-by-Step Formula Breakdown -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-2">
+                <div class="card p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/80 pb-2">
                         <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Audit Perhitungan Formula ICAO</h3>
-                        <span class="text-xs font-mono text-[#0B5A9E] dark:text-sky-400 font-bold">CO₂/pax = CF × (Fuel × P/F) / (Seats × LF)</span>
+                        <span class="text-xs font-mono text-brand-600 dark:text-brand-400 font-semibold">CO₂/pax = CF × (Fuel × P/F) / (Seats × LF)</span>
                     </div>
 
                     <div class="space-y-2.5 text-xs font-mono">

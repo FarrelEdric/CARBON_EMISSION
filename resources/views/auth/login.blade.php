@@ -214,6 +214,19 @@
                     Login
                 </h1>
 
+                <!-- Session Alerts (if any) -->
+                @if (session('error'))
+                <div style="margin-bottom: 1rem; background: rgba(239, 68, 68, 0.25); border: 1px solid rgba(248, 113, 113, 0.4); color: #ffffff; font-size: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px;">
+                    {{ session('error') }}
+                </div>
+                @endif
+
+                @if (session('status'))
+                <div style="margin-bottom: 1rem; background: rgba(16, 185, 129, 0.25); border: 1px solid rgba(52, 211, 153, 0.4); color: #ffffff; font-size: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px;">
+                    {{ session('status') }}
+                </div>
+                @endif
+
                 <!-- Error Alerts (if any) -->
                 @if ($errors->any())
                 <div style="margin-bottom: 1rem; background: rgba(239, 68, 68, 0.25); border: 1px solid rgba(248, 113, 113, 0.4); color: #ffffff; font-size: 0.75rem; padding: 0.65rem 0.85rem; border-radius: 8px;">

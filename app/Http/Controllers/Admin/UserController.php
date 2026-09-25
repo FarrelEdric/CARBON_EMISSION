@@ -72,15 +72,24 @@ class UserController extends Controller
             'username' => 'required|string|max:50|unique:users,username,' . $user->id . '|alpha_dash',
             'email'  => 'required|email|max:200|unique:users,email,' . $user->id,
             'role'   => 'required|in:admin,viewer,operator',
-            'status' => 'boolean',
+            'status' => 'nullable|boolean',
         ]);
+
+        // Prevent self-deactivation and self-demotion
+        $status = $user->id === auth()->id()
+            ? true
+            : ($request->has('status') ? $request->boolean('status') : $user->status);
+
+        $role = $user->id === auth()->id() && $user->role === 'admin'
+            ? 'admin'
+            : $validated['role'];
 
         $user->update([
             'name'     => $validated['name'],
             'username' => $validated['username'],
             'email'    => $validated['email'],
-            'role'     => $validated['role'],
-            'status'   => $validated['status'] ?? $user->status,
+            'role'     => $role,
+            'status'   => $status,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil diperbarui.');

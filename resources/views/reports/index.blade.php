@@ -5,7 +5,7 @@
 @section('page-subtitle', 'Ekspor Data Resmi Berdasarkan Metodologi ICAO / CORSIA')
 
 @section('content')
-<div class="p-3 sm:p-4 sm:p-6 space-y-6">
+<div class="p-4 md:p-6 space-y-6">
 
     <!-- ====== UNIFIED SUMMARY STATS ====== -->
     <div class="card overflow-hidden shadow-xs">

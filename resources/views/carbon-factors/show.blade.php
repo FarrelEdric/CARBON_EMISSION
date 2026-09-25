@@ -48,11 +48,11 @@
     <!-- Info Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- Parameter Details -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-4">
+        <div class="card p-5 space-y-4">
             <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Nilai Koefisien & Satuan</h3>
             <div>
                 <span class="text-xs text-slate-400 block">Besaran Koefisien</span>
-                <span class="text-3xl font-extrabold font-mono text-[#0B5A9E] dark:text-sky-400">
+                <span class="text-3xl font-extrabold font-mono text-brand-600 dark:text-brand-400">
                     {{ number_format($carbonFactor->factor_value, 4) }}
                 </span>
             </div>
@@ -66,34 +66,34 @@
                     {{ $carbonFactor->effective_date ? $carbonFactor->effective_date->format('d F Y') : 'Berlaku Selamanya / Standar Tetap' }}
                 </span>
             </div>
-            <div class="pt-2 border-t border-slate-100 dark:border-slate-700">
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60">
                 <span class="text-xs text-slate-400 block">Terakhir Diperbarui</span>
                 <span class="text-xs font-mono text-slate-600 dark:text-slate-300">{{ $carbonFactor->updated_at?->format('d M Y H:i') }}</span>
             </div>
         </div>
 
         <!-- Formula Context -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
             <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Peran Dalam Perhitungan ICAO</h3>
             <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 Koefisien ini digunakan oleh kalkulator emisi ACE untuk mengonversi massa bahan bakar (Aviation Fuel Jet A-1) menjadi estimasi emisi gas rumah kaca.
             </p>
-            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300 space-y-1.5">
-                <div class="font-bold text-[#0B5A9E] dark:text-sky-300">// Formulasi Emisi Karbon</div>
+            <div class="p-3.5 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300 space-y-1.5">
+                <div class="font-bold text-brand-700 dark:text-brand-300">// Formulasi Emisi Karbon</div>
                 <div>CO₂ (kg) = Fuel_Burn (kg) &times; {{ number_format($carbonFactor->factor_value, 4) }}</div>
                 <div class="text-[11px] text-slate-400">Emisi per Penumpang = (CO₂ &times; P/F Ratio) / (Y_Seats &times; LF)</div>
             </div>
-            <div class="pt-2 border-t border-slate-100 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60 text-xs text-slate-500 dark:text-slate-400">
                 Status Sistem: <strong class="text-slate-800 dark:text-slate-100">{{ $carbonFactor->is_active ? 'Terkoneksi ke Mesin Kalkulasi' : 'Dinonaktifkan Sementara' }}</strong>
             </div>
         </div>
 
         <!-- Explanation & Reference -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
             <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Deskripsi & Dasar Regulasi</h3>
             <div class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed space-y-2">
                 @if($carbonFactor->description)
-                    <p class="bg-slate-50/70 dark:bg-slate-900/40 p-3 rounded-lg border border-slate-100 dark:border-slate-700/60">
+                    <p class="bg-slate-50/70 dark:bg-slate-900/40 p-3 rounded-lg border border-slate-200/80 dark:border-slate-700/60">
                         {{ $carbonFactor->description }}
                     </p>
                 @else

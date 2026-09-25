@@ -39,7 +39,7 @@
     <!-- Info Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- Details -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
             <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Informasi Wilayah</h3>
             <div>
                 <span class="text-xs text-slate-400 block">Kota / Wilayah</span>
@@ -60,7 +60,7 @@
         </div>
 
         <!-- Coordinates & Stats -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-5 shadow-sm space-y-3">
+        <div class="card p-5 space-y-3">
             <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Koordinat Geografis</h3>
             <div>
                 <span class="text-xs text-slate-400 block">Latitude</span>
@@ -80,8 +80,8 @@
         </div>
 
         <!-- Mini Map -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 overflow-hidden shadow-sm flex flex-col">
-            <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-700 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <div class="card overflow-hidden flex flex-col">
+            <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-700/80 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/50">
                 Titik Lokasi Bandara
             </div>
             <div id="airport-map" class="flex-1 min-h-[180px]"></div>

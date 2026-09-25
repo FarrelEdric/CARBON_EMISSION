@@ -68,14 +68,14 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 px-4">
             <div class="mb-4">
                 <a href="/" class="flex flex-col items-center gap-2">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0B5A9E] to-[#1976D2] flex items-center justify-center shadow-lg">
+                    <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center shadow-xs">
                         <span class="text-white font-black text-sm tracking-tight">ACE</span>
                     </div>
                     <span class="font-bold text-sm tracking-wide text-slate-800 dark:text-slate-200">AIRNAV CARBON EMISSION</span>
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-4 px-6 py-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 shadow-xl overflow-hidden rounded-2xl">
+            <div class="w-full sm:max-w-md mt-2 p-6 card">
                 {{ $slot }}
             </div>
         </div>
