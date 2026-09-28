@@ -120,7 +120,7 @@ class DashboardController extends Controller
     private function getFilters(Request $request): array
     {
         return [
-            'period'     => $request->get('period', 'this-year'),
+            'period'     => $request->get('period', 'all'),
             'date_from'  => $request->get('date_from'),
             'date_to'    => $request->get('date_to'),
             'origin'     => $request->get('origin'),

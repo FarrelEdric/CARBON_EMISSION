@@ -23,64 +23,90 @@ Route::get('/', function () {
 // =============================================================
 Route::middleware(['auth', 'active'])->group(function () {
 
-    // Dashboard
+    // ---------------------------------------------------------
+    // 1. ALL ROLES (Admin, Operator, Viewer): DASHBOARD, REPORTS & FLIGHT VIEW
+    // ---------------------------------------------------------
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/map-data', [DashboardController::class, 'mapData'])->name('dashboard.map-data');
     Route::get('/dashboard/chart-data', [DashboardController::class, 'chartData'])->name('dashboard.chart-data');
     Route::get('/dashboard/live-flights', [DashboardController::class, 'liveFlights'])->name('dashboard.live-flights');
 
-    // Carbon Calculator
-    Route::get('/carbon-calculator', [CarbonCalculatorController::class, 'index'])->name('carbon-calculator.index');
-    Route::post('/carbon-calculator/calculate', [CarbonCalculatorController::class, 'calculate'])->name('carbon-calculator.calculate');
-
-    // Flight Monitoring
-    Route::get('/flights', [FlightController::class, 'index'])->name('flights.index');
-    Route::get('/flights/create', [FlightController::class, 'create'])->name('flights.create');
-    Route::post('/flights', [FlightController::class, 'store'])->name('flights.store');
-    Route::get('/flights/{flight}', [FlightController::class, 'show'])->name('flights.show');
-    Route::get('/flights/{flight}/edit', [FlightController::class, 'edit'])->name('flights.edit');
-    Route::put('/flights/{flight}', [FlightController::class, 'update'])->name('flights.update');
-    Route::delete('/flights/{flight}', [FlightController::class, 'destroy'])->name('flights.destroy');
-    Route::get('/flights/export/excel', [FlightController::class, 'exportExcel'])->name('flights.export-excel');
-    Route::post('/flights/import/excel', [FlightController::class, 'importExcel'])->name('flights.import-excel');
-
-    // Master Data - Airports
-    Route::get('/airports', [AirportController::class, 'index'])->name('airports.index');
-    Route::get('/airports/create', [AirportController::class, 'create'])->name('airports.create');
-    Route::post('/airports', [AirportController::class, 'store'])->name('airports.store');
-    Route::get('/airports/{airport}', [AirportController::class, 'show'])->name('airports.show');
-    Route::get('/airports/{airport}/edit', [AirportController::class, 'edit'])->name('airports.edit');
-    Route::put('/airports/{airport}', [AirportController::class, 'update'])->name('airports.update');
-    Route::delete('/airports/{airport}', [AirportController::class, 'destroy'])->name('airports.destroy');
-    Route::get('/airports/export/excel', [AirportController::class, 'exportExcel'])->name('airports.export-excel');
-    Route::post('/airports/import/excel', [AirportController::class, 'importExcel'])->name('airports.import-excel');
-    Route::get('/airports/search/json', [AirportController::class, 'search'])->name('airports.search');
-
-    // Master Data - Aircraft
-    Route::get('/aircraft', [AircraftController::class, 'index'])->name('aircraft.index');
-    Route::get('/aircraft/create', [AircraftController::class, 'create'])->name('aircraft.create');
-    Route::post('/aircraft', [AircraftController::class, 'store'])->name('aircraft.store');
-    Route::get('/aircraft/{aircraft}', [AircraftController::class, 'show'])->name('aircraft.show');
-    Route::get('/aircraft/{aircraft}/edit', [AircraftController::class, 'edit'])->name('aircraft.edit');
-    Route::put('/aircraft/{aircraft}', [AircraftController::class, 'update'])->name('aircraft.update');
-    Route::delete('/aircraft/{aircraft}', [AircraftController::class, 'destroy'])->name('aircraft.destroy');
-    Route::get('/aircraft/export/excel', [AircraftController::class, 'exportExcel'])->name('aircraft.export-excel');
-    Route::post('/aircraft/import/excel', [AircraftController::class, 'importExcel'])->name('aircraft.import-excel');
-
-    // Master Data - Operational Routes
-    Route::get('/operational-routes/export/excel', [OperationalRouteController::class, 'exportExcel'])->name('operational-routes.export-excel');
-    Route::resource('operational-routes', OperationalRouteController::class);
-
-    // Master Data - Carbon Factors
-    Route::get('/carbon-factors/export/excel', [CarbonFactorController::class, 'exportExcel'])->name('carbon-factors.export-excel');
-    Route::resource('carbon-factors', CarbonFactorController::class);
-
-    // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export-excel');
 
-    // Admin
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/flights', [FlightController::class, 'index'])->name('flights.index');
+    Route::get('/flights/export/excel', [FlightController::class, 'exportExcel'])->name('flights.export-excel');
+
+
+    // ---------------------------------------------------------
+    // 2. OPERATOR & ADMIN ONLY: MANAGE FLIGHTS, CALCULATOR & MASTER DATA
+    // ---------------------------------------------------------
+    Route::middleware(['role:admin,operator'])->group(function () {
+
+        // Carbon Calculator
+        Route::get('/carbon-calculator', [CarbonCalculatorController::class, 'index'])->name('carbon-calculator.index');
+        Route::post('/carbon-calculator/calculate', [CarbonCalculatorController::class, 'calculate'])->name('carbon-calculator.calculate');
+
+        // Flights Management
+        Route::get('/flights/create', [FlightController::class, 'create'])->name('flights.create');
+        Route::post('/flights', [FlightController::class, 'store'])->name('flights.store');
+        Route::get('/flights/{flight}/edit', [FlightController::class, 'edit'])->name('flights.edit');
+        Route::put('/flights/{flight}', [FlightController::class, 'update'])->name('flights.update');
+        Route::delete('/flights/{flight}', [FlightController::class, 'destroy'])->name('flights.destroy');
+        Route::post('/flights/import/excel', [FlightController::class, 'importExcel'])->name('flights.import-excel');
+
+        // Master Data - Airports
+        Route::get('/airports', [AirportController::class, 'index'])->name('airports.index');
+        Route::get('/airports/create', [AirportController::class, 'create'])->name('airports.create');
+        Route::post('/airports', [AirportController::class, 'store'])->name('airports.store');
+        Route::get('/airports/export/excel', [AirportController::class, 'exportExcel'])->name('airports.export-excel');
+        Route::post('/airports/import/excel', [AirportController::class, 'importExcel'])->name('airports.import-excel');
+        Route::get('/airports/search/json', [AirportController::class, 'search'])->name('airports.search');
+        Route::get('/airports/{airport}', [AirportController::class, 'show'])->name('airports.show')->whereNumber('airport');
+        Route::get('/airports/{airport}/edit', [AirportController::class, 'edit'])->name('airports.edit');
+        Route::put('/airports/{airport}', [AirportController::class, 'update'])->name('airports.update');
+        Route::delete('/airports/{airport}', [AirportController::class, 'destroy'])->name('airports.destroy');
+
+        // Master Data - Aircraft
+        Route::get('/aircraft', [AircraftController::class, 'index'])->name('aircraft.index');
+        Route::get('/aircraft/create', [AircraftController::class, 'create'])->name('aircraft.create');
+        Route::post('/aircraft', [AircraftController::class, 'store'])->name('aircraft.store');
+        Route::get('/aircraft/export/excel', [AircraftController::class, 'exportExcel'])->name('aircraft.export-excel');
+        Route::post('/aircraft/import/excel', [AircraftController::class, 'importExcel'])->name('aircraft.import-excel');
+        Route::get('/aircraft/{aircraft}', [AircraftController::class, 'show'])->name('aircraft.show')->whereNumber('aircraft');
+        Route::get('/aircraft/{aircraft}/edit', [AircraftController::class, 'edit'])->name('aircraft.edit');
+        Route::put('/aircraft/{aircraft}', [AircraftController::class, 'update'])->name('aircraft.update');
+        Route::delete('/aircraft/{aircraft}', [AircraftController::class, 'destroy'])->name('aircraft.destroy');
+
+        // Master Data - Operational Routes
+        Route::get('/operational-routes', [OperationalRouteController::class, 'index'])->name('operational-routes.index');
+        Route::get('/operational-routes/create', [OperationalRouteController::class, 'create'])->name('operational-routes.create');
+        Route::post('/operational-routes', [OperationalRouteController::class, 'store'])->name('operational-routes.store');
+        Route::get('/operational-routes/export/excel', [OperationalRouteController::class, 'exportExcel'])->name('operational-routes.export-excel');
+        Route::get('/operational-routes/{operational_route}', [OperationalRouteController::class, 'show'])->name('operational-routes.show')->whereNumber('operational_route');
+        Route::get('/operational-routes/{operational_route}/edit', [OperationalRouteController::class, 'edit'])->name('operational-routes.edit');
+        Route::put('/operational-routes/{operational_route}', [OperationalRouteController::class, 'update'])->name('operational-routes.update');
+        Route::delete('/operational-routes/{operational_route}', [OperationalRouteController::class, 'destroy'])->name('operational-routes.destroy');
+
+        // Master Data - Carbon Factors
+        Route::get('/carbon-factors', [CarbonFactorController::class, 'index'])->name('carbon-factors.index');
+        Route::get('/carbon-factors/create', [CarbonFactorController::class, 'create'])->name('carbon-factors.create');
+        Route::post('/carbon-factors', [CarbonFactorController::class, 'store'])->name('carbon-factors.store');
+        Route::get('/carbon-factors/export/excel', [CarbonFactorController::class, 'exportExcel'])->name('carbon-factors.export-excel');
+        Route::get('/carbon-factors/{carbon_factor}', [CarbonFactorController::class, 'show'])->name('carbon-factors.show')->whereNumber('carbon_factor');
+        Route::get('/carbon-factors/{carbon_factor}/edit', [CarbonFactorController::class, 'edit'])->name('carbon-factors.edit');
+        Route::put('/carbon-factors/{carbon_factor}', [CarbonFactorController::class, 'update'])->name('carbon-factors.update');
+        Route::delete('/carbon-factors/{carbon_factor}', [CarbonFactorController::class, 'destroy'])->name('carbon-factors.destroy');
+    });
+
+    // Flight detail (viewable by all roles)
+    Route::get('/flights/{flight}', [FlightController::class, 'show'])->name('flights.show')->whereNumber('flight');
+
+
+    // ---------------------------------------------------------
+    // 3. ADMIN ONLY: USER MANAGEMENT & SYSTEM SETTINGS
+    // ---------------------------------------------------------
+    Route::prefix('admin')->name('admin.')->middleware(['role:admin'])->group(function () {
         // Users
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');

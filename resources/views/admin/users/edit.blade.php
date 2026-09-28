@@ -76,8 +76,9 @@
                            id="username"
                            name="username"
                            value="{{ old('username', $user->username) }}"
-                           placeholder="username"
+                           placeholder="Contoh: budi_santoso atau budi@airnav.id"
                            class="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border @error('username') border-rose-400 dark:border-rose-500 @else border-slate-200 dark:border-slate-600 @enderror rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-600 focus:outline-none font-mono transition">
+                    <p class="mt-1 text-[11px] text-slate-400">Boleh menggunakan huruf, angka, titik (.), strip (-), underscore (_), atau format email.</p>
                     @error('username')
                         <p class="mt-1 text-xs text-rose-600 dark:text-rose-400">{{ $message }}</p>
                     @enderror
@@ -175,27 +176,63 @@
                 @method('PUT')
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
+                    {{-- Password Baru --}}
+                    <div x-data="{ showPass: false }">
                         <label for="new_password" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                             Password Baru <span class="text-rose-500">*</span>
                         </label>
-                        <input type="password"
-                               id="new_password"
-                               name="password"
-                               placeholder="Minimal 8 karakter"
-                               autocomplete="new-password"
-                               class="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+                        <div class="relative">
+                            <input :type="showPass ? 'text' : 'password'"
+                                   id="new_password"
+                                   name="password"
+                                   placeholder="Minimal 8 karakter"
+                                   autocomplete="new-password"
+                                   required
+                                   class="w-full px-3 py-2 pr-10 text-sm bg-white dark:bg-slate-900 border @error('password') border-rose-400 @else border-slate-200 dark:border-slate-600 @enderror rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none transition">
+                            <button type="button"
+                                    @click="showPass = !showPass"
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition focus:outline-none"
+                                    title="Lihat / Sembunyikan Password">
+                                <svg x-show="!showPass" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <svg x-show="showPass" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+                                </svg>
+                            </button>
+                        </div>
+                        @error('password')
+                            <p class="mt-1 text-xs text-rose-600 dark:text-rose-400">{{ $message }}</p>
+                        @enderror
                     </div>
-                    <div>
+
+                    {{-- Konfirmasi Password --}}
+                    <div x-data="{ showConfirm: false }">
                         <label for="password_confirmation" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                             Konfirmasi Password <span class="text-rose-500">*</span>
                         </label>
-                        <input type="password"
-                               id="password_confirmation"
-                               name="password_confirmation"
-                               placeholder="Ulangi password baru"
-                               autocomplete="new-password"
-                               class="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+                        <div class="relative">
+                            <input :type="showConfirm ? 'text' : 'password'"
+                                   id="password_confirmation"
+                                   name="password_confirmation"
+                                   placeholder="Ulangi password baru"
+                                   autocomplete="new-password"
+                                   required
+                                   class="w-full px-3 py-2 pr-10 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none transition">
+                            <button type="button"
+                                    @click="showConfirm = !showConfirm"
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition focus:outline-none"
+                                    title="Lihat / Sembunyikan Password">
+                                <svg x-show="!showConfirm" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <svg x-show="showConfirm" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -237,3 +274,27 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    @if(session('error_same_password'))
+        Swal.fire({
+            icon: 'warning',
+            title: 'Password Sedang Digunakan!',
+            text: '{{ session('error_same_password') }}',
+            confirmButtonColor: '#0B5A9E',
+            confirmButtonText: 'Tutup'
+        });
+    @elseif(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            timer: 2500,
+            showConfirmButton: false
+        });
+    @endif
+});
+</script>
+@endpush

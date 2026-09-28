@@ -27,9 +27,11 @@
         </div>
 
         <div class="flex gap-2">
+            @can('manage-airports')
             <a href="{{ route('airports.edit', $airport) }}" class="px-4 py-2 bg-[#0B5A9E] hover:bg-[#084a82] text-white text-xs font-semibold rounded-lg transition shadow-sm">
                 Edit Bandara
             </a>
+            @endcan
             <a href="{{ route('airports.index') }}" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition">
                 &larr; Daftar Bandara
             </a>

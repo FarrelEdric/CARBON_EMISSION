@@ -91,10 +91,12 @@
                 Export Excel
             </a>
 
+            @can('manage-routes')
             <!-- Create Route -->
             <a href="{{ route('operational-routes.create') }}" class="btn-primary">
                 + Tambah Rute Operasional
             </a>
+            @endcan
         </div>
     </div>
 
@@ -103,9 +105,11 @@
         @if($routes->isEmpty())
             <div class="flex flex-col items-center justify-center py-20 text-center">
                 <p class="text-slate-500 dark:text-slate-400 font-medium">Belum ada rute operasional ditemukan.</p>
+                @can('manage-routes')
                 <a href="{{ route('operational-routes.create') }}" class="mt-3 px-4 py-2 bg-[#0B5A9E] text-white text-sm font-semibold rounded-lg hover:bg-[#084a82]">
                     Tambah Rute Pertama
                 </a>
+                @endcan
             </div>
         @else
             <div class="overflow-x-auto">
@@ -170,6 +174,7 @@
                                     <a href="{{ route('operational-routes.show', $route) }}" class="px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition">
                                         Lihat
                                     </a>
+                                    @can('manage-routes')
                                     <a href="{{ route('operational-routes.edit', $route) }}" class="px-2 py-1 text-xs font-medium text-[#0B5A9E] dark:text-sky-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded transition">
                                         Edit
                                     </a>
@@ -180,6 +185,7 @@
                                             Hapus
                                         </button>
                                     </form>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>
@@ -192,6 +198,8 @@
                 <div class="px-4 py-3 border-t border-slate-200 dark:border-slate-800">
                     {{ $routes->links() }}
                 </div>
+            @endif
+        @endif
     </div>
 
     </div>{{-- end real content --}}

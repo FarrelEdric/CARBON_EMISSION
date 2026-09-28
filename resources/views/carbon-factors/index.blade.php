@@ -38,10 +38,12 @@
                 Export Excel
             </a>
 
+            @can('manage-factors')
             <!-- Create Factor -->
             <a href="{{ route('carbon-factors.create') }}" class="btn-primary">
                 + Tambah Faktor Karbon
             </a>
+            @endcan
         </div>
     </div>
 
@@ -50,9 +52,11 @@
         @if($factors->isEmpty())
             <div class="flex flex-col items-center justify-center py-20 text-center">
                 <p class="text-slate-500 dark:text-slate-400 font-medium">Belum ada data faktor karbon ditemukan.</p>
+                @can('manage-factors')
                 <a href="{{ route('carbon-factors.create') }}" class="mt-3 btn-primary">
                     Tambah Faktor Pertama
                 </a>
+                @endcan
             </div>
         @else
             <div class="overflow-x-auto">
@@ -101,6 +105,7 @@
                                     <a href="{{ route('carbon-factors.show', $factor) }}" class="px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition">
                                         Lihat
                                     </a>
+                                    @can('manage-factors')
                                     <a href="{{ route('carbon-factors.edit', $factor) }}" class="px-2 py-1 text-xs font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/30 rounded transition">
                                         Edit
                                     </a>
@@ -111,6 +116,7 @@
                                             Hapus
                                         </button>
                                     </form>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>

@@ -41,11 +41,17 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name'                  => 'required|string|max:100',
-            'username'              => 'required|string|max:50|unique:users,username|alpha_dash',
+            'username'              => ['required', 'string', 'max:100', 'unique:users,username', 'regex:/^[a-zA-Z0-9._@-]+$/'],
             'email'                 => 'required|email|max:200|unique:users,email',
             'password'              => 'required|string|min:8|confirmed',
             'role'                  => 'required|in:admin,viewer,operator',
             'status'                => 'boolean',
+        ], [
+            'username.regex'     => 'Username hanya boleh berisi huruf, angka, titik (.), strip (-), garis bawah (_), atau alamat email.',
+            'username.unique'    => 'Username ini sudah terdaftar.',
+            'email.unique'       => 'Email ini sudah terdaftar.',
+            'password.min'       => 'Password minimal harus 8 karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
         User::create([
@@ -68,11 +74,15 @@ class UserController extends Controller
     public function update(Request $request, User $user): RedirectResponse
     {
         $validated = $request->validate([
-            'name'   => 'required|string|max:100',
-            'username' => 'required|string|max:50|unique:users,username,' . $user->id . '|alpha_dash',
-            'email'  => 'required|email|max:200|unique:users,email,' . $user->id,
-            'role'   => 'required|in:admin,viewer,operator',
-            'status' => 'nullable|boolean',
+            'name'     => 'required|string|max:100',
+            'username' => ['required', 'string', 'max:100', 'unique:users,username,' . $user->id, 'regex:/^[a-zA-Z0-9._@-]+$/'],
+            'email'    => 'required|email|max:200|unique:users,email,' . $user->id,
+            'role'     => 'required|in:admin,viewer,operator',
+            'status'   => 'nullable|boolean',
+        ], [
+            'username.regex'  => 'Username hanya boleh berisi huruf, angka, titik (.), strip (-), garis bawah (_), atau alamat email.',
+            'username.unique' => 'Username ini sudah terdaftar.',
+            'email.unique'    => 'Email ini sudah terdaftar.',
         ]);
 
         // Prevent self-deactivation and self-demotion
@@ -111,6 +121,11 @@ class UserController extends Controller
         $validated = $request->validate([
             'password' => 'required|string|min:8|confirmed',
         ]);
+
+        if (Hash::check($validated['password'], $user->password)) {
+            return back()->with('error_same_password', 'Password sedang digunakan! Silakan masukkan password baru yang berbeda.')
+                         ->withErrors(['password' => 'Password baru tidak boleh sama dengan password sebelumnya.']);
+        }
 
         $user->update(['password' => Hash::make($validated['password'])]);
 

@@ -85,6 +85,7 @@
         </form>
 
         <div class="flex flex-wrap items-center gap-2">
+            @can('manage-airports')
             <!-- Import Excel Modal -->
             <div x-data="{ open: false }">
                 <button @click="open = true" class="btn-secondary">
@@ -111,16 +112,19 @@
                     </div>
                 </div>
             </div>
+            @endcan
 
             <!-- Export Excel -->
             <a href="{{ route('airports.export-excel') }}" class="btn-success">
                 Export Excel
             </a>
 
+            @can('manage-airports')
             <!-- Create Airport -->
             <a href="{{ route('airports.create') }}" class="btn-primary">
                 + Tambah Bandara
             </a>
+            @endcan
         </div>
     </div>
 
@@ -129,9 +133,11 @@
         @if($airports->isEmpty())
             <div class="flex flex-col items-center justify-center py-20 text-center">
                 <p class="text-slate-500 dark:text-slate-400 font-medium">Belum ada data bandara ditemukan.</p>
+                @can('manage-airports')
                 <a href="{{ route('airports.create') }}" class="mt-3 px-4 py-2 bg-[#0B5A9E] text-white text-sm font-semibold rounded-lg hover:bg-[#084a82]">
                     Tambah Bandara Pertama
                 </a>
+                @endcan
             </div>
         @else
             <div class="overflow-x-auto">
@@ -185,6 +191,7 @@
                                     <a href="{{ route('airports.show', $airport) }}" class="px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition">
                                         Lihat
                                     </a>
+                                    @can('manage-airports')
                                     <a href="{{ route('airports.edit', $airport) }}" class="px-2 py-1 text-xs font-medium text-[#0B5A9E] dark:text-sky-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded transition">
                                         Edit
                                     </a>
@@ -195,6 +202,7 @@
                                             Hapus
                                         </button>
                                     </form>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>

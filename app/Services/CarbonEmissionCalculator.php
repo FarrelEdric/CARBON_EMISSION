@@ -160,26 +160,36 @@ class CarbonEmissionCalculator
         $loadFactor = (float) $params['passenger_load_factor'];
 
         $passengerFuelKg = $totalFuelKg * $paxFreightFactor;
+        $freightFuelKg = max(0.0, $totalFuelKg - $passengerFuelKg);
         $estimatedPassengers = $this->calculatePassengerCount($ySeats, $loadFactor);
         $co2TotalKg = $this->calculateTotalCo2($totalFuelKg, $co2Factor);
+        $passengerCo2TotalKg = round($passengerFuelKg * $co2Factor, 2);
+        $passengerCo2TotalTonnes = round($passengerCo2TotalKg / 1000, 4);
+        $freightCo2TotalKg = round($freightFuelKg * $co2Factor, 2);
+        $freightCo2TotalTonnes = round($freightCo2TotalKg / 1000, 4);
         $co2PerPassenger = $this->calculateCo2PerPassenger(
             $totalFuelKg, $paxFreightFactor, $ySeats, $loadFactor, $co2Factor
         );
 
         return [
-            'distance_gcd_km'         => $gcd,
-            'distance_adjusted_km'    => $adjustedDistance,
-            'correction_km'           => $adjustedDistance - $gcd,
-            'total_fuel_kg'           => $totalFuelKg,
-            'passenger_fuel_kg'       => round($passengerFuelKg, 2),
+            'distance_gcd_km'             => $gcd,
+            'distance_adjusted_km'        => $adjustedDistance,
+            'correction_km'               => $adjustedDistance - $gcd,
+            'total_fuel_kg'               => $totalFuelKg,
+            'passenger_fuel_kg'           => round($passengerFuelKg, 2),
+            'freight_fuel_kg'             => round($freightFuelKg, 2),
             'passenger_to_freight_factor' => $paxFreightFactor,
-            'y_seats'                 => $ySeats,
-            'passenger_load_factor'   => $loadFactor,
-            'passenger_count'         => $estimatedPassengers,
-            'co2_factor'              => $co2Factor,
-            'co2_total_kg'            => $co2TotalKg,
-            'co2_total_tonnes'        => round($co2TotalKg / 1000, 4),
-            'co2_per_passenger_kg'    => $co2PerPassenger,
+            'y_seats'                     => $ySeats,
+            'passenger_load_factor'       => $loadFactor,
+            'passenger_count'             => $estimatedPassengers,
+            'co2_factor'                  => $co2Factor,
+            'co2_total_kg'                => $co2TotalKg,
+            'co2_total_tonnes'            => round($co2TotalKg / 1000, 4),
+            'passenger_co2_total_kg'      => $passengerCo2TotalKg,
+            'passenger_co2_total_tonnes'  => $passengerCo2TotalTonnes,
+            'freight_co2_total_kg'        => $freightCo2TotalKg,
+            'freight_co2_total_tonnes'    => $freightCo2TotalTonnes,
+            'co2_per_passenger_kg'        => $co2PerPassenger,
         ];
     }
 

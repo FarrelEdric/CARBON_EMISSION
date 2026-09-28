@@ -70,6 +70,7 @@
         </form>
 
         <div class="flex flex-wrap items-center gap-2">
+            @can('manage-aircraft')
             <!-- Import Excel Modal -->
             <div x-data="{ open: false }">
                 <button @click="open = true" class="btn-secondary">
@@ -96,16 +97,19 @@
                     </div>
                 </div>
             </div>
+            @endcan
 
             <!-- Export Excel -->
             <a href="{{ route('aircraft.export-excel') }}" class="btn-success">
                 Export Excel
             </a>
 
+            @can('manage-aircraft')
             <!-- Create Aircraft -->
             <a href="{{ route('aircraft.create') }}" class="btn-primary">
                 + Tambah Pesawat
             </a>
+            @endcan
         </div>
     </div>
 
@@ -114,9 +118,11 @@
         @if($aircrafts->isEmpty())
             <div class="flex flex-col items-center justify-center py-20 text-center">
                 <p class="text-slate-500 dark:text-slate-400 font-medium">Belum ada data armada pesawat ditemukan.</p>
+                @can('manage-aircraft')
                 <a href="{{ route('aircraft.create') }}" class="mt-3 px-4 py-2 bg-[#0B5A9E] text-white text-sm font-semibold rounded-lg hover:bg-[#084a82]">
                     Tambah Pesawat Pertama
                 </a>
+                @endcan
             </div>
         @else
             <div class="overflow-x-auto">
@@ -172,6 +178,7 @@
                                     <a href="{{ route('aircraft.show', $aircraft) }}" class="px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition">
                                         Lihat
                                     </a>
+                                    @can('manage-aircraft')
                                     <a href="{{ route('aircraft.edit', $aircraft) }}" class="px-2 py-1 text-xs font-medium text-[#0B5A9E] dark:text-sky-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded transition">
                                         Edit
                                     </a>
@@ -182,6 +189,7 @@
                                             Hapus
                                         </button>
                                     </form>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>

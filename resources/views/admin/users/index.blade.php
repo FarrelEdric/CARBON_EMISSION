@@ -6,46 +6,10 @@
 
 @section('content')
 <div class="p-4 md:p-6 space-y-4"
-     x-data="{ loading: true }"
-     x-init="setTimeout(() => loading = false, 400)">
-
-    {{-- ===== SKELETON ===== --}}
-    <div x-show="loading" x-cloak>
-        <div class="flex flex-wrap gap-3 items-center justify-between mb-4">
-            <div class="flex gap-2">
-                <div class="skeleton h-9 w-52 rounded-lg"></div>
-                <div class="skeleton h-9 w-36 rounded-lg"></div>
-                <div class="skeleton h-9 w-20 rounded-lg"></div>
-            </div>
-            <div class="skeleton h-9 w-32 rounded-lg"></div>
-        </div>
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700/80 shadow-sm overflow-hidden">
-            <div class="flex gap-4 px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
-                @foreach([120, 160, 200, 100, 80, 80] as $w)
-                    <div class="skeleton h-4 rounded" style="width:{{ $w }}px; flex-shrink:0"></div>
-                @endforeach
-            </div>
-            @for($i = 0; $i < 8; $i++)
-            <div class="flex gap-4 items-center px-4 py-3.5 border-b border-slate-100 dark:border-slate-700/50 last:border-0">
-                <div class="flex items-center gap-3" style="width:160px; flex-shrink:0">
-                    <div class="skeleton h-8 w-8 rounded-full"></div>
-                    <div class="skeleton h-4 w-24 rounded"></div>
-                </div>
-                <div class="skeleton h-4 flex-1 rounded"></div>
-                <div class="skeleton h-4 w-32 rounded" style="flex-shrink:0"></div>
-                <div class="skeleton h-5 w-20 rounded-full" style="flex-shrink:0"></div>
-                <div class="skeleton h-5 w-14 rounded-full" style="flex-shrink:0"></div>
-                <div class="flex gap-1" style="flex-shrink:0">
-                    <div class="skeleton h-6 w-12 rounded"></div>
-                    <div class="skeleton h-6 w-10 rounded"></div>
-                </div>
-            </div>
-            @endfor
-        </div>
-    </div>
+     x-data="{ loading: false }">
 
     {{-- ===== REAL CONTENT ===== --}}
-    <div x-show="!loading" class="space-y-4">
+    <div class="space-y-4">
 
         {{-- Filter & Action Bar --}}
         <div class="flex flex-wrap gap-3 items-center justify-between">
@@ -54,30 +18,27 @@
                        name="search"
                        value="{{ request('search') }}"
                        placeholder="Cari nama, username, email..."
-                       class="px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-600 focus:outline-none w-60 shadow-sm">
+                       class="form-input-base w-60">
 
-                <select name="role" class="px-3 py-2 text-sm bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-600 shadow-sm">
+                <select name="role" class="form-select-base">
                     <option value="">Semua Role</option>
                     <option value="admin"    {{ request('role') === 'admin'    ? 'selected' : '' }}>Administrator</option>
                     <option value="operator" {{ request('role') === 'operator' ? 'selected' : '' }}>Operator</option>
                     <option value="viewer"   {{ request('role') === 'viewer'   ? 'selected' : '' }}>Viewer</option>
                 </select>
 
-                <button type="submit"
-                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm">
+                <button type="submit" class="btn-primary">
                     Cari
                 </button>
 
                 @if(request()->hasAny(['search', 'role']))
-                    <a href="{{ route('admin.users.index') }}"
-                       class="px-3 py-2 text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+                    <a href="{{ route('admin.users.index') }}" class="btn-secondary">
                         Reset
                     </a>
                 @endif
             </form>
 
-            <a href="{{ route('admin.users.create') }}"
-               class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm whitespace-nowrap">
+            <a href="{{ route('admin.users.create') }}" class="btn-primary whitespace-nowrap">
                 + Tambah User
             </a>
         </div>
@@ -88,7 +49,7 @@
         </div>
 
         {{-- Table Card --}}
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700/80 shadow-sm overflow-hidden">
+        <div class="card overflow-hidden">
             @if($users->isEmpty())
                 <div class="flex flex-col items-center justify-center py-20 text-center">
                     <svg class="w-10 h-10 text-slate-300 dark:text-slate-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,7 +113,7 @@
 
                                 {{-- Username --}}
                                 <td class="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400 hidden md:table-cell">
-                                    @{{ $user->username }}
+                                    {{ $user->username }}
                                 </td>
 
                                 {{-- Role Badge --}}

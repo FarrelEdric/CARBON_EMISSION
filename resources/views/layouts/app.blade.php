@@ -130,6 +130,7 @@
             Dashboard
         </a>
 
+        @can('use-calculator')
         <a href="{{ route('carbon-calculator.index') }}"
            class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs transition-colors
                   {{ request()->routeIs('carbon-calculator.*') ? 'bg-slate-800 text-white font-medium border-l-2 border-[#0B5A9E]' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border-l-2 border-transparent' }}">
@@ -138,6 +139,7 @@
             </svg>
             Kalkulator Emisi
         </a>
+        @endcan
 
         <a href="{{ route('flights.index') }}"
            class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs transition-colors
@@ -157,6 +159,7 @@
             Laporan
         </a>
 
+        @can('manage-data')
         {{-- Master Data --}}
         <div class="px-2.5 pt-4 pb-1">
             <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Master Data</span>
@@ -196,7 +199,9 @@
                 </a>
             </div>
         </div>
+        @endcan
 
+        @can('admin-only')
         {{-- Administrasi --}}
         <div class="px-2.5 pt-4 pb-1">
             <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Administrasi</span>
@@ -210,6 +215,7 @@
             </svg>
             Kelola User
         </a>
+        @endcan
 
         <!-- <a href="{{ route('admin.settings.index') }}"
            class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs transition-colors
@@ -404,6 +410,7 @@
 <script src="{{ asset('vendor/leaflet/leaflet.js') }}"></script>
 <script src="{{ asset('vendor/chartjs/chart.umd.js') }}"></script>
 <script defer src="{{ asset('vendor/alpine/collapse.min.js') }}"></script>
+<script src="{{ asset('vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
 
 @stack('scripts')
 </body>

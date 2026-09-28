@@ -80,6 +80,7 @@ class Flight extends Model
             'this-year' => $query->whereYear('flight_date', now()->year),
             'custom' => $query->when($dateFrom, fn($q) => $q->whereDate('flight_date', '>=', $dateFrom))
                                ->when($dateTo, fn($q) => $q->whereDate('flight_date', '<=', $dateTo)),
+            'all', null, '' => $query,
             default => $query,
         };
     }

@@ -38,6 +38,27 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function isOperator(): bool
+    {
+        return $this->role === 'operator';
+    }
+
+    public function isViewer(): bool
+    {
+        return $this->role === 'viewer';
+    }
+
+    public function hasRole(string|array $roles): bool
+    {
+        $roles = is_array($roles) ? $roles : explode(',', $roles);
+        return in_array($this->role, array_map('trim', $roles), true);
+    }
+
+    public function canManageData(): bool
+    {
+        return in_array($this->role, ['admin', 'operator'], true);
+    }
+
     public function isActive(): bool
     {
         return $this->status === true;

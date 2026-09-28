@@ -2,73 +2,75 @@
 
 @section('title', 'Kalkulator Emisi Karbon ICAO')
 @section('page-title', 'Kalkulator Emisi Karbon')
-@section('page-subtitle', 'Simulasi Perhitungan Emisi Aviasi Berdasarkan Metodologi Resmi ICAO')
+@section('page-subtitle', 'Sistem Perhitungan Estimasi Emisi Aviasi Berdasarkan Standar ICAO Doc 9889')
 
 @section('content')
 <div class="p-4 md:p-6 space-y-6" x-data="carbonCalculatorApp()">
 
-    <!-- Header & Methodology Banner -->
-    <div class="card p-5">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                    <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                        ICAO Standard Methodology
-                    </span>
-                    <span class="text-xs text-slate-400">Doc 9889 / CORSIA Framework</span>
-                </div>
-                <h1 class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">
-                    Perhitungan Estimasi Emisi CO₂ Penerbangan per Penumpang
-                </h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400 max-w-3xl">
-                    Kalkulator ini mengimplementasikan formula resmi ICAO: menghitung jarak lingkaran besar (Great Circle Distance / GCD) dengan koreksi deviasi rute operasional, mengalokasikan konsumsi bahan bakar melalui faktor penumpang-kargo, dan membaginya dengan estimasi keterisian kursi.
-                </p>
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                    ICAO Doc 9889
+                </span>
+                <span class="text-xs text-slate-500 dark:text-slate-400">CORSIA Standard Framework</span>
             </div>
+            <h1 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100 mt-1">
+                Kalkulator Emisi CO₂ Penerbangan
+            </h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Estimasi emisi bahan bakar penerbangan komersial berdasarkan jarak GCD terkoreksi dan alokasi penumpang-kargo.
+            </p>
+        </div>
 
-            <!-- Preset Buttons -->
-            <div class="flex flex-wrap items-center gap-2">
-                <span class="text-xs font-medium text-slate-400 w-full lg:w-auto">Preset:</span>
+        <!-- Quick Route Presets -->
+        <div class="flex items-center gap-2 text-xs">
+            <span class="text-slate-400 font-medium hidden md:inline">Contoh Rute:</span>
+            <div class="inline-flex p-0.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
                 <button type="button" @click="applyPreset('icao')"
-                        class="px-2.5 py-1 text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-md transition border border-slate-300 dark:border-slate-700 shadow-xs">
-                    Contoh ICAO
+                        class="px-2.5 py-1 font-medium rounded-md hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
+                    Sampel ICAO
                 </button>
                 <button type="button" @click="applyPreset('cgk-dps')"
-                        class="px-2.5 py-1 text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-md transition border border-slate-300 dark:border-slate-700 shadow-xs">
-                    CGK &rarr; DPS (B738)
+                        class="px-2.5 py-1 font-medium rounded-md hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
+                    CGK &rarr; DPS
                 </button>
                 <button type="button" @click="applyPreset('cgk-upg')"
-                        class="px-2.5 py-1 text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-md transition border border-slate-300 dark:border-slate-700 shadow-xs">
-                    CGK &rarr; UPG (A320)
+                        class="px-2.5 py-1 font-medium rounded-md hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
+                    CGK &rarr; UPG
                 </button>
             </div>
         </div>
     </div>
 
     <!-- Main Grid: Left = Form Inputs, Right = Results & Map -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
         <!-- ================= LEFT COLUMN: FORM CONTROLS (5 cols) ================= -->
-        <div class="lg:col-span-5 space-y-5">
-            <form @submit.prevent="submitCalculation" class="space-y-5">
+        <div class="lg:col-span-5">
+            <form @submit.prevent="submitCalculation" class="card divide-y divide-slate-100 dark:divide-slate-800">
 
-                <!-- 1. Flight Route Card -->
-                <div class="card p-5 space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-                        <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">1. Rute Penerbangan</h3>
+                <!-- 1. Flight Route Section -->
+                <div class="p-5 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            1. Rute Penerbangan
+                        </span>
                         <button type="button" @click="swapAirports"
-                                class="text-xs font-medium text-[#0B5A9E] dark:text-sky-400 hover:underline flex items-center gap-1">
+                                class="text-xs font-medium text-[#0B5A9E] dark:text-sky-400 hover:underline flex items-center gap-1 transition">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
-                            Tukar Asal/Tujuan
+                            Tukar Rute
                         </button>
                     </div>
 
                     <!-- Departure Airport -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            Bandara Keberangkatan (Asal) <span class="text-red-500">*</span>
+                            Bandara Asal (Origin) <span class="text-red-500">*</span>
                         </label>
                         <select x-model="form.departure_airport_id" @change="onRouteChanged" required
-                                class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
+                                class="w-full form-select-base">
                             <option value="">-- Pilih Bandara Asal --</option>
                             @foreach($airports as $ap)
                                 <option value="{{ $ap->id }}" data-lat="{{ $ap->latitude }}" data-lng="{{ $ap->longitude }}" data-iata="{{ $ap->iata_code }}">
@@ -81,10 +83,10 @@
                     <!-- Arrival Airport -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            Bandara Kedatangan (Tujuan) <span class="text-red-500">*</span>
+                            Bandara Tujuan (Destination) <span class="text-red-500">*</span>
                         </label>
                         <select x-model="form.arrival_airport_id" @change="onRouteChanged" required
-                                class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
+                                class="w-full form-select-base">
                             <option value="">-- Pilih Bandara Tujuan --</option>
                             @foreach($airports as $ap)
                                 <option value="{{ $ap->id }}" data-lat="{{ $ap->latitude }}" data-lng="{{ $ap->longitude }}" data-iata="{{ $ap->iata_code }}">
@@ -94,38 +96,39 @@
                         </select>
                     </div>
 
-                    <!-- Realtime Route Distance Preview Badge -->
-                    <div x-show="previewDistance.gcd > 0" x-cloak class="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-700/60 text-xs space-y-1">
-                        <div class="flex justify-between text-slate-600 dark:text-slate-300">
+                    <!-- Route Distance Live Info -->
+                    <div x-show="previewDistance.gcd > 0" x-cloak class="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-lg border border-slate-200 dark:border-slate-800 text-xs space-y-1.5 font-mono">
+                        <div class="flex justify-between text-slate-600 dark:text-slate-400">
                             <span>Jarak Lingkar Besar (GCD):</span>
-                            <strong class="font-mono" x-text="previewDistance.gcd.toLocaleString() + ' km'"></strong>
+                            <span class="font-semibold text-slate-800 dark:text-slate-200" x-text="previewDistance.gcd.toLocaleString() + ' km'"></span>
                         </div>
-                        <div class="flex justify-between text-slate-600 dark:text-slate-300">
-                            <span>Koreksi Deviasi ICAO:</span>
-                            <span class="font-mono text-emerald-600 dark:text-emerald-400 font-semibold" x-text="'+' + previewDistance.correction + ' km'"></span>
+                        <div class="flex justify-between text-slate-600 dark:text-slate-400">
+                            <span>Koreksi Deviasi Rute ICAO:</span>
+                            <span class="font-semibold text-slate-800 dark:text-slate-200" x-text="'+' + previewDistance.correction + ' km'"></span>
                         </div>
-                        <div class="flex justify-between border-t border-slate-200 dark:border-slate-700 pt-1 text-slate-800 dark:text-slate-100 font-semibold">
-                            <span>Estimasi Jarak Rute Terkoreksi:</span>
-                            <span class="font-mono text-[#0B5A9E] dark:text-sky-400" x-text="previewDistance.adjusted.toLocaleString() + ' km'"></span>
+                        <div class="flex justify-between border-t border-slate-200 dark:border-slate-800 pt-1.5 text-slate-900 dark:text-slate-100 font-bold">
+                            <span>Estimasi Jarak Terkoreksi:</span>
+                            <span class="text-[#0B5A9E] dark:text-sky-400" x-text="previewDistance.adjusted.toLocaleString() + ' km'"></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. Aircraft & Capacity Card -->
-                <div class="card p-5 space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-                        <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">2. Armada & Kapasitas Kursi</h3>
-                        <span class="text-xs text-slate-400">Master Data Pesawat</span>
+                <!-- 2. Aircraft & Configuration Section -->
+                <div class="p-5 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            2. Tipe Pesawat & Kapasitas
+                        </span>
                     </div>
 
                     <!-- Aircraft Selector -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            Pilih Tipe Pesawat
+                            Pilih Model Armada
                         </label>
                         <select x-model="form.aircraft_id" @change="onAircraftChanged"
-                                class="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-1 focus:ring-[#0B5A9E] focus:outline-none">
-                            <option value="">-- Kustom / Input Manual --</option>
+                                class="w-full form-select-base">
+                            <option value="">-- Input Bebas / Kustom --</option>
                             @foreach($aircraft as $ac)
                                 <option value="{{ $ac->id }}"
                                         data-seats="{{ $ac->y_seats }}"
@@ -141,33 +144,37 @@
                     <!-- Y-Seats -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            Kapasitas Kursi Kelas Ekonomi (Y-Seats) <span class="text-red-500">*</span>
+                            Kapasitas Kursi Ekonomi (Y-Seats) <span class="text-red-500">*</span>
                         </label>
-                        <input type="number"
-                               min="1"
-                               x-model.number="form.y_seats"
-                               required
-                               placeholder="Contoh: 180"
-                               class="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-1 focus:ring-[#0B5A9E] focus:outline-none">
+                        <div class="relative">
+                            <input type="number"
+                                   min="1"
+                                   x-model.number="form.y_seats"
+                                   required
+                                   placeholder="200"
+                                   class="w-full form-input-base pr-16 font-mono">
+                            <span class="absolute right-3 top-2 text-xs text-slate-400 pointer-events-none">kursi</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 3. Fuel & Operational Factors Card -->
-                <div class="card p-5 space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-                        <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">3. Bahan Bakar & Parameter Beban</h3>
-                        <span class="text-xs text-slate-400">Parameter ICAO</span>
+                <!-- 3. Fuel & Operational Parameters Section -->
+                <div class="p-5 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            3. Parameter Konsumsi Bahan Bakar
+                        </span>
                     </div>
 
                     <!-- Total Fuel Burn -->
                     <div>
                         <div class="flex items-center justify-between mb-1">
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                                Total Bahan Bakar Terbakar (kg Fuel) <span class="text-red-500">*</span>
+                                Total Bahan Bakar Penerbangan <span class="text-red-500">*</span>
                             </label>
                             <button type="button" x-show="canEstimateFuel" @click="estimateFuelFromDistance" x-cloak
                                     class="text-xs text-[#0B5A9E] dark:text-sky-400 hover:underline font-semibold">
-                                &approx; Hitung dari Jarak
+                                Estimasi dari Jarak
                             </button>
                         </div>
                         <div class="relative">
@@ -176,9 +183,9 @@
                                    min="0.1"
                                    x-model.number="form.total_fuel_kg"
                                    required
-                                   placeholder="Contoh: 5000"
-                                   class="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-1 focus:ring-[#0B5A9E] focus:outline-none pr-12">
-                            <span class="absolute right-3.5 top-2 text-xs text-slate-400 font-mono">kg</span>
+                                   placeholder="5000"
+                                   class="w-full form-input-base pr-12 font-mono">
+                            <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">kg</span>
                         </div>
                     </div>
 
@@ -186,29 +193,29 @@
                     <div>
                         <div class="flex items-center justify-between mb-1">
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                                Passenger-to-Freight Ratio (0.0 – 1.0)
+                                Alokasi Penumpang vs Kargo
                             </label>
                             <span class="text-xs font-mono font-bold text-[#0B5A9E] dark:text-sky-400" x-text="(form.passenger_to_freight_factor * 100).toFixed(0) + '% Pax'"></span>
                         </div>
-                        <div class="grid grid-cols-4 gap-2 mb-2">
+                        <div class="grid grid-cols-4 gap-1.5 p-1 bg-slate-100 dark:bg-slate-900 rounded-lg">
                             <button type="button" @click="form.passenger_to_freight_factor = 0.80"
-                                    :class="form.passenger_to_freight_factor === 0.80 ? 'bg-[#0B5A9E] text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300'"
-                                    class="py-1 text-xs font-semibold rounded transition">
+                                    :class="form.passenger_to_freight_factor === 0.80 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                                    class="py-1 text-xs rounded transition">
                                 80% (ICAO)
                             </button>
                             <button type="button" @click="form.passenger_to_freight_factor = 0.85"
-                                    :class="form.passenger_to_freight_factor === 0.85 ? 'bg-[#0B5A9E] text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300'"
-                                    class="py-1 text-xs font-semibold rounded transition">
+                                    :class="form.passenger_to_freight_factor === 0.85 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                                    class="py-1 text-xs rounded transition">
                                 85%
                             </button>
                             <button type="button" @click="form.passenger_to_freight_factor = 0.90"
-                                    :class="form.passenger_to_freight_factor === 0.90 ? 'bg-[#0B5A9E] text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300'"
-                                    class="py-1 text-xs font-semibold rounded transition">
+                                    :class="form.passenger_to_freight_factor === 0.90 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                                    class="py-1 text-xs rounded transition">
                                 90%
                             </button>
                             <button type="button" @click="form.passenger_to_freight_factor = 1.00"
-                                    :class="form.passenger_to_freight_factor === 1.00 ? 'bg-[#0B5A9E] text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300'"
-                                    class="py-1 text-xs font-semibold rounded transition">
+                                    :class="form.passenger_to_freight_factor === 1.00 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                                    class="py-1 text-xs rounded transition">
                                 100%
                             </button>
                         </div>
@@ -216,34 +223,37 @@
 
                     <!-- Passenger Load Factor -->
                     <div>
-                        <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center justify-between mb-1.5">
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                                Tingkat Keterisian Kursi (Load Factor)
+                                Keterisian Kursi (Passenger Load Factor)
                             </label>
-                            <span class="text-xs font-mono font-bold text-[#0B5A9E] dark:text-sky-400" x-text="(form.passenger_load_factor * 100).toFixed(0) + '% (' + estimatedPaxCount + ' Penumpang)'"></span>
+                            <span class="text-xs font-mono font-bold text-slate-800 dark:text-slate-200" x-text="(form.passenger_load_factor * 100).toFixed(0) + '% (' + estimatedPaxCount + ' Penumpang)'"></span>
                         </div>
                         <input type="range" min="0.10" max="1.00" step="0.01"
                                x-model.number="form.passenger_load_factor"
-                               class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#0B5A9E]">
+                               class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#0B5A9E]">
                     </div>
 
                     <!-- CO2 Factor -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            Faktor Konversi CO₂ (kg CO₂ / kg Fuel)
+                            Faktor Konversi Emisi CO₂
                         </label>
-                        <input type="number"
-                               step="0.01"
-                               x-model.number="form.co2_factor"
-                               required
-                               placeholder="3.16"
-                               class="w-full px-3.5 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-1 focus:ring-[#0B5A9E] focus:outline-none">
-                        <span class="text-[11px] text-slate-400 mt-1 block">Standar resmi ICAO Doc 9889 = 3.16</span>
+                        <div class="relative">
+                            <input type="number"
+                                   step="0.01"
+                                   x-model.number="form.co2_factor"
+                                   required
+                                   placeholder="3.16"
+                                   class="w-full form-input-base pr-28 font-mono">
+                            <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">t CO₂ / t fuel</span>
+                        </div>
+                        <span class="text-[11px] text-slate-400 mt-1 block">Konversi standar ICAO: 1 ton bahan bakar = 3.16 ton CO₂.</span>
                     </div>
                 </div>
 
-                <!-- Submit Button -->
-                <div class="flex items-center gap-3">
+                <!-- Form Action Buttons -->
+                <div class="p-5 bg-slate-50/50 dark:bg-slate-800/40 flex items-center gap-3">
                     <button type="submit"
                             :disabled="isLoading"
                             class="btn-primary flex-1 h-10 text-xs sm:text-sm font-semibold rounded-lg shadow-xs">
@@ -251,9 +261,9 @@
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                         </svg>
-                        <span x-text="isLoading ? 'Menghitung Emisi...' : 'Hitung Estimasi Emisi Karbon'"></span>
+                        <span x-text="isLoading ? 'Memproses Perhitungan...' : 'Hitung Estimasi Emisi'"></span>
                     </button>
-                    <button type="button" @click="resetForm" class="btn-secondary h-10 px-4 text-xs sm:text-sm font-medium rounded-lg shadow-xs">
+                    <button type="button" @click="resetForm" class="btn-secondary h-10 px-4 text-xs sm:text-sm font-medium rounded-lg">
                         Reset
                     </button>
                 </div>
@@ -264,197 +274,210 @@
         <div class="lg:col-span-7 space-y-5">
 
             <!-- Initial Placeholder (when not calculated yet) -->
-            <div x-show="!hasResult && !isLoading" class="card p-8 flex flex-col items-center justify-center text-center min-h-[460px] space-y-4">
-                <div class="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center text-[#0B5A9E] dark:text-sky-300">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            <div x-show="!hasResult && !isLoading" class="card p-10 flex flex-col items-center justify-center text-center min-h-[460px] space-y-4">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                 </div>
-                <div class="max-w-md space-y-1.5">
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">Siap Menghitung Estimasi Emisi Karbon</h3>
+                <div class="max-w-md space-y-1">
+                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">Siap Menghitung Estimasi Emisi</h3>
                     <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                        Pilih bandara asal dan tujuan pada formulir di sebelah kiri atau klik tombol <strong>"Contoh ICAO"</strong> di bagian atas untuk melihat demonstrasi kalkulasi instan.
+                        Pilih bandara asal, tujuan, dan parameter armada pada panel di sebelah kiri untuk menghitung kalkulasi emisi CO₂ sesuai metodologi resmi ICAO.
                     </p>
                 </div>
                 <div class="pt-2">
-                    <button type="button" @click="applyPreset('icao')" class="btn-primary">
-                        Gunakan Contoh Resmi ICAO (79.00 kg/pax)
+                    <button type="button" @click="applyPreset('cgk-dps')" class="btn-secondary">
+                        Coba Simulasi: CGK &rarr; DPS (B738)
                     </button>
                 </div>
             </div>
 
             <!-- Loading State -->
-            <div x-show="isLoading" class="card p-8 flex flex-col items-center justify-center text-center min-h-[460px] space-y-3">
-                <div class="w-8 h-8 border-3 border-[#0B5A9E] border-t-transparent rounded-full animate-spin"></div>
-                <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">Memproses Algoritma ICAO...</div>
-                <div class="text-xs text-slate-400">Menghitung jarak Haversine, deviasi rute, dan alokasi penumpang.</div>
+            <div x-show="isLoading" class="card p-10 flex flex-col items-center justify-center text-center min-h-[460px] space-y-3">
+                <div class="w-7 h-7 border-2 border-[#0B5A9E] border-t-transparent rounded-full animate-spin"></div>
+                <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">Menghitung Estimasi Emisi...</div>
+                <div class="text-xs text-slate-400 font-mono">Memproses formula ICAO Doc 9889</div>
             </div>
 
             <!-- Result Cards & Dashboard (when calculated) -->
             <div x-show="hasResult && !isLoading" x-cloak class="space-y-5">
 
-                <!-- Top Route & Benchmark Banner -->
-                <div class="card p-5">
-                    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-700 pb-3">
-                        <div class="flex items-center gap-3">
-                            <span class="text-2xl font-black font-mono text-slate-900 dark:text-white" x-text="resultData.departure.iata_code + ' → ' + resultData.arrival.iata_code"></span>
-                            <span class="text-xs text-slate-500 dark:text-slate-400" x-text="resultData.departure.city + ' ke ' + resultData.arrival.city"></span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <!-- Efficiency Pill -->
-                            <span class="px-3 py-1 rounded-full text-xs font-semibold"
-                                  :class="getEfficiencyBadgeClass(resultData.result.co2_per_passenger_kg)"
-                                  x-text="getEfficiencyLabel(resultData.result.co2_per_passenger_kg)">
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- 4 Main KPI Result Metrics -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
-                        <!-- Metric 1: CO2 per Pax -->
-                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/60">
-                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">CO₂ / Penumpang</div>
-                            <div class="text-2xl font-black font-mono text-[#0B5A9E] dark:text-sky-400 mt-1" x-text="resultData.result.co2_per_passenger_kg.toFixed(2)"></div>
-                            <div class="text-[11px] text-slate-400 mt-0.5">kg CO₂ / pax</div>
-                        </div>
-
-                        <!-- Metric 2: Total CO2 Flight -->
-                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/60">
-                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Emisi Flight</div>
-                            <div class="text-2xl font-black font-mono text-slate-800 dark:text-slate-100 mt-1" x-text="resultData.result.co2_total_tonnes.toFixed(2)"></div>
-                            <div class="text-[11px] text-slate-400 mt-0.5" x-text="resultData.result.co2_total_kg.toLocaleString() + ' kg'"></div>
-                        </div>
-
-                        <!-- Metric 3: Passenger Count -->
-                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/60">
-                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Est. Penumpang</div>
-                            <div class="text-2xl font-black font-mono text-slate-800 dark:text-slate-100 mt-1" x-text="resultData.result.passenger_count"></div>
-                            <div class="text-[11px] text-slate-400 mt-0.5" x-text="'Dari ' + resultData.result.y_seats + ' kursi (' + (resultData.result.passenger_load_factor * 100).toFixed(0) + '%)'"></div>
-                        </div>
-
-                        <!-- Metric 4: Pax Fuel Allocation -->
-                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/60">
-                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Fuel Penumpang</div>
-                            <div class="text-2xl font-black font-mono text-slate-800 dark:text-slate-100 mt-1" x-text="resultData.result.passenger_fuel_kg.toLocaleString()"></div>
-                            <div class="text-[11px] text-slate-400 mt-0.5" x-text="'Dari ' + resultData.result.total_fuel_kg.toLocaleString() + ' kg total'"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Distance & Operational Route Details -->
-                <div class="card p-5 space-y-3">
-                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Parameter Jarak Tempuh Rute</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-700">
-                            <span class="text-slate-400 block">Jarak Lingkar Besar (GCD)</span>
-                            <span class="text-base font-bold font-mono text-slate-800 dark:text-slate-200" x-text="resultData.result.distance_gcd_km.toLocaleString() + ' km'"></span>
-                        </div>
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-700">
-                            <span class="text-slate-400 block">Koreksi Deviasi ICAO</span>
-                            <span class="text-base font-bold font-mono text-emerald-600 dark:text-emerald-400" x-text="'+' + resultData.result.correction_km + ' km'"></span>
-                        </div>
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-700">
-                            <span class="text-slate-400 block">Jarak Terkoreksi ICAO</span>
-                            <span class="text-base font-bold font-mono text-brand-600 dark:text-brand-400" x-text="resultData.result.distance_adjusted_km.toLocaleString() + ' km'"></span>
-                        </div>
-                    </div>
-
-                    <!-- Operational Route Match from Master Data (if any) -->
-                    <div x-show="resultData.operational_route" class="p-3 bg-brand-50/60 dark:bg-brand-900/20 rounded-lg border border-brand-200 dark:border-brand-800/40 text-xs flex items-center justify-between">
-                        <div>
-                            <span class="font-bold text-brand-700 dark:text-brand-300">Tersinkronisasi dengan Rute Master Data:</span>
-                            <span class="text-slate-700 dark:text-slate-300 ml-1" x-text="resultData.operational_route?.name + ' (' + resultData.operational_route?.source + ')'"></span>
-                        </div>
-                        <span class="font-mono font-bold text-slate-800 dark:text-slate-100" x-text="resultData.operational_route?.distance_km + ' km'"></span>
-                    </div>
-                </div>
-
-                <!-- Interactive Leaflet Map Visualizer -->
-                <div class="card overflow-hidden flex flex-col">
-                    <div class="px-5 py-3 border-b border-slate-100 dark:border-slate-700/80 flex flex-wrap items-center justify-between gap-2 text-xs bg-slate-50/50 dark:bg-slate-800/50">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full" :class="mapMode === 'local' ? 'bg-emerald-500' : 'bg-brand-500'"></span>
-                            <span class="font-semibold text-slate-800 dark:text-slate-100">Peta Visual Jalur Penerbangan</span>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-medium"
-                                  :class="mapMode === 'local' ? 'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50' : 'bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800/50'"
-                                  x-text="mapMode === 'local' ? 'Peta Vektor Lokal (Offline)' : 'Mode Satelit / CDN'">
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-mono text-slate-500 dark:text-slate-400 font-semibold" x-text="resultData.departure.iata_code + ' → ' + resultData.arrival.iata_code"></span>
-                            <button type="button" @click="toggleMapMode"
-                                    class="px-2.5 py-1 text-[11px] font-medium bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 rounded-lg transition text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 flex items-center gap-1.5 shadow-xs">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                                <span x-text="mapMode === 'local' ? 'Opsi: Beralih ke CDN' : 'Opsi: Beralih ke Vektor Lokal'"></span>
-                            </button>
-                        </div>
-                    </div>
-                    <div id="calculator-map" class="w-full h-80 bg-[#e0f2fe] dark:bg-[#0b1329] transition-colors relative"></div>
-                </div>
-
-                <!-- ICAO Step-by-Step Formula Breakdown -->
+                <!-- 1. Executive Summary & Hero KPI Card -->
                 <div class="card p-5 space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/80 pb-2">
-                        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Audit Perhitungan Formula ICAO</h3>
-                        <span class="text-xs font-mono text-brand-600 dark:text-brand-400 font-semibold">CO₂/pax = CF × (Fuel × P/F) / (Seats × LF)</span>
+                    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-700/80 pb-3">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl font-bold font-mono text-slate-900 dark:text-white" x-text="resultData.departure.iata_code + ' → ' + resultData.arrival.iata_code"></span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400" x-text="resultData.departure.city + ' (' + resultData.departure.iata_code + ') ke ' + resultData.arrival.city + ' (' + resultData.arrival.iata_code + ')'"></span>
+                        </div>
+                        <span class="px-2.5 py-1 rounded text-xs font-semibold"
+                              :class="getEfficiencyBadgeClass(resultData.result.co2_per_passenger_kg)"
+                              x-text="getEfficiencyLabel(resultData.result.co2_per_passenger_kg)">
+                        </span>
                     </div>
 
-                    <div class="space-y-2.5 text-xs font-mono">
-                        <!-- Step 1 -->
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700/80">
-                            <span class="text-slate-400 block font-sans text-[11px] mb-0.5">Langkah 1: Alokasi Bahan Bakar Penumpang (Passenger Fuel)</span>
-                            <span class="text-slate-700 dark:text-slate-300">
-                                Fuel_Pax = <strong class="text-slate-900 dark:text-white" x-text="resultData.result.total_fuel_kg.toLocaleString() + ' kg'"></strong> &times; <strong class="text-slate-900 dark:text-white" x-text="resultData.result.passenger_to_freight_factor"></strong>
-                                = <strong class="text-[#0B5A9E] dark:text-sky-400" x-text="resultData.result.passenger_fuel_kg.toLocaleString() + ' kg'"></strong>
-                            </span>
+                    <!-- HERO METRIC: Clean Professional Focus -->
+                    <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <div class="text-[11px] font-bold tracking-wider uppercase text-slate-500 dark:text-slate-400">
+                                ESTIMATED CO₂
+                            </div>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span class="text-4xl sm:text-5xl font-extrabold font-mono text-[#0B5A9E] dark:text-sky-400 tracking-tight"
+                                      x-text="resultData.result.co2_per_passenger_kg.toFixed(2)"></span>
+                                <span class="text-xl font-bold text-slate-700 dark:text-slate-300 font-mono">kg CO₂</span>
+                            </div>
+                            <div class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+                                per passenger (kelas ekonomi)
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-500 dark:text-slate-400 sm:text-right border-t sm:border-t-0 sm:border-l border-slate-200 dark:border-slate-800 pt-3 sm:pt-0 sm:pl-5 space-y-1">
+                            <div>Standar: <span class="font-mono font-semibold text-slate-700 dark:text-slate-300">ICAO Doc 9889</span></div>
+                            <div>Faktor Konversi: <span class="font-mono font-semibold text-slate-700 dark:text-slate-300" x-text="resultData.result.co2_factor + ' t CO₂ / t fuel'"></span></div>
+                            <div class="text-[11px] text-slate-400">(1 kg Fuel = 3.16 kg CO₂)</div>
+                        </div>
+                    </div>
+
+                    <!-- 4 Main Secondary KPI Metrics -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                        <!-- 1. Total Passenger CO2 -->
+                        <div class="p-3.5 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Passenger CO₂</div>
+                            <div class="text-lg sm:text-xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">
+                                <span x-text="(resultData.result.passenger_co2_total_tonnes || (resultData.result.passenger_fuel_kg * resultData.result.co2_factor / 1000)).toFixed(2)"></span>
+                                <span class="text-xs font-normal text-slate-500">tonnes</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="(resultData.result.passenger_co2_total_kg || Math.round(resultData.result.passenger_fuel_kg * resultData.result.co2_factor)).toLocaleString() + ' kg CO₂'"></div>
                         </div>
 
-                        <!-- Step 2 -->
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700/80">
-                            <span class="text-slate-400 block font-sans text-[11px] mb-0.5">Langkah 2: Estimasi Total Penumpang Terangkut</span>
-                            <span class="text-slate-700 dark:text-slate-300">
-                                Pax_Count = <strong class="text-slate-900 dark:text-white" x-text="resultData.result.y_seats + ' kursi'"></strong> &times; <strong class="text-slate-900 dark:text-white" x-text="resultData.result.passenger_load_factor"></strong>
-                                = <strong class="text-[#0B5A9E] dark:text-sky-400" x-text="resultData.result.passenger_count + ' orang'"></strong>
-                            </span>
+                        <!-- 2. Fuel Consumption -->
+                        <div class="p-3.5 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Fuel Consumption</div>
+                            <div class="text-lg sm:text-xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">
+                                <span x-text="resultData.result.total_fuel_kg.toLocaleString()"></span>
+                                <span class="text-xs font-normal text-slate-500">kg</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="'Pax: ' + resultData.result.passenger_fuel_kg.toLocaleString() + ' kg (' + (resultData.result.passenger_to_freight_factor * 100).toFixed(0) + '%)'"></div>
                         </div>
 
-                        <!-- Step 3 -->
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700/80">
-                            <span class="text-slate-400 block font-sans text-[11px] mb-0.5">Langkah 3: Emisi CO₂ per Penumpang</span>
-                            <span class="text-slate-700 dark:text-slate-300">
-                                CO₂/pax = <strong class="text-slate-900 dark:text-white" x-text="resultData.result.co2_factor"></strong> &times; (<strong class="text-slate-900 dark:text-white" x-text="resultData.result.passenger_fuel_kg.toLocaleString()"></strong> / <strong class="text-slate-900 dark:text-white" x-text="resultData.result.passenger_count"></strong>)
-                                = <strong class="text-emerald-600 dark:text-emerald-400 text-sm" x-text="resultData.result.co2_per_passenger_kg.toFixed(4) + ' kg CO₂/pax'"></strong>
-                            </span>
+                        <!-- 3. Flight Distance -->
+                        <div class="p-3.5 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Flight Distance</div>
+                            <div class="text-lg sm:text-xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">
+                                <span x-text="resultData.result.distance_adjusted_km.toLocaleString()"></span>
+                                <span class="text-xs font-normal text-slate-500">km</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="'GCD ' + resultData.result.distance_gcd_km.toLocaleString() + ' (+' + resultData.result.correction_km + ' km)'"></div>
                         </div>
 
-                        <!-- Step 4 -->
-                        <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700/80">
-                            <span class="text-slate-400 block font-sans text-[11px] mb-0.5">Langkah 4: Total Emisi CO₂ Keseluruhan Penerbangan</span>
-                            <span class="text-slate-700 dark:text-slate-300">
-                                Total_CO₂ = <strong class="text-slate-900 dark:text-white" x-text="resultData.result.total_fuel_kg.toLocaleString() + ' kg'"></strong> &times; <strong class="text-slate-900 dark:text-white" x-text="resultData.result.co2_factor"></strong>
-                                = <strong class="text-slate-900 dark:text-white" x-text="resultData.result.co2_total_kg.toLocaleString() + ' kg'"></strong>
-                                (<strong class="text-[#0B5A9E] dark:text-sky-400" x-text="resultData.result.co2_total_tonnes.toFixed(2) + ' Tonne'"></strong>)
-                            </span>
+                        <!-- 4. Passengers -->
+                        <div class="p-3.5 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Passengers</div>
+                            <div class="text-lg sm:text-xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">
+                                <span x-text="resultData.result.passenger_count"></span>
+                                <span class="text-xs font-normal text-slate-500">pax</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="resultData.result.y_seats + ' kursi (' + (resultData.result.passenger_load_factor * 100).toFixed(0) + '% LF)'"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Export & Action Bar -->
-                <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                <!-- 2. Interactive Map Visualizer -->
+                <div class="card overflow-hidden flex flex-col">
+                    <div class="px-4 py-2.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs bg-slate-50 dark:bg-slate-800/50">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-[#0B5A9E]"></span>
+                            <span class="font-semibold text-slate-800 dark:text-slate-200">Peta Rute Penerbangan</span>
+                        </div>
+                        <span class="font-mono text-slate-500 dark:text-slate-400" x-text="resultData.departure.iata_code + ' → ' + resultData.arrival.iata_code + ' (' + resultData.result.distance_adjusted_km + ' km)'"></span>
+                    </div>
+                    <div id="calculator-map" class="w-full h-72 bg-[#e0f2fe] dark:bg-[#0b1329] transition-colors relative"></div>
+                </div>
+
+                <!-- 3. Audit & Calculation Table Breakdown -->
+                <div class="card overflow-hidden">
+                    <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Audit Perhitungan Formula ICAO</h3>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">Verifikasi substitusi parameter ke dalam formula resmi Doc 9889</p>
+                        </div>
+                        <span class="text-xs font-mono text-slate-500 dark:text-slate-400 hidden sm:inline">
+                            CO₂/pax = 3.16 × (Fuel × P/F) / (Seats × LF)
+                        </span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                                    <th class="px-4 py-2.5">Tahap / Parameter</th>
+                                    <th class="px-4 py-2.5">Formula Metodologi</th>
+                                    <th class="px-4 py-2.5">Substitusi Nilai Input</th>
+                                    <th class="px-4 py-2.5 text-right">Hasil</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300 font-mono">
+                                <tr>
+                                    <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
+                                        1. Jarak Rute Terkoreksi
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-500">GCD + Koreksi Deviasi ICAO</td>
+                                    <td class="px-4 py-3" x-text="resultData.result.distance_gcd_km.toLocaleString() + ' km + ' + resultData.result.correction_km + ' km'"></td>
+                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.distance_adjusted_km.toLocaleString() + ' km'"></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
+                                        2. Bahan Bakar Porsi Penumpang
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-500">Total Fuel × Pax Factor</td>
+                                    <td class="px-4 py-3" x-text="resultData.result.total_fuel_kg.toLocaleString() + ' kg × ' + resultData.result.passenger_to_freight_factor"></td>
+                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.passenger_fuel_kg.toLocaleString() + ' kg'"></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
+                                        3. Estimasi Penumpang Terangkut
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-500">Y-Seats × Load Factor</td>
+                                    <td class="px-4 py-3" x-text="resultData.result.y_seats + ' kursi × ' + resultData.result.passenger_load_factor"></td>
+                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.passenger_count + ' pax'"></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
+                                        4. Total Emisi Penumpang
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-500">Fuel Penumpang × 3.16</td>
+                                    <td class="px-4 py-3" x-text="resultData.result.passenger_fuel_kg.toLocaleString() + ' kg × ' + resultData.result.co2_factor"></td>
+                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="(resultData.result.passenger_co2_total_tonnes || (resultData.result.passenger_fuel_kg * resultData.result.co2_factor / 1000)).toFixed(2) + ' tonnes'"></td>
+                                </tr>
+                                <tr class="bg-blue-50/40 dark:bg-blue-950/20">
+                                    <td class="px-4 py-3 font-sans font-bold text-[#0B5A9E] dark:text-sky-400">
+                                        5. Emisi CO₂ per Penumpang
+                                    </td>
+                                    <td class="px-4 py-3 text-[#0B5A9E] dark:text-sky-400">Total Emisi Pax / Jumlah Pax</td>
+                                    <td class="px-4 py-3 text-[#0B5A9E] dark:text-sky-400" x-text="(resultData.result.passenger_co2_total_kg || Math.round(resultData.result.passenger_fuel_kg * resultData.result.co2_factor)).toLocaleString() + ' kg / ' + resultData.result.passenger_count + ' pax'"></td>
+                                    <td class="px-4 py-3 text-right font-black text-sm text-[#0B5A9E] dark:text-sky-400" x-text="resultData.result.co2_per_passenger_kg.toFixed(2) + ' kg CO₂/pax'"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 4. Action & Navigation Bar -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
                     <div class="flex gap-2">
                         <button type="button" @click="copySummary"
-                                class="px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-lg transition shadow-sm flex items-center gap-1.5">
+                                class="btn-secondary h-9 text-xs flex items-center gap-1.5">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-                            <span x-text="copied ? 'Tersalin!' : 'Salin Ringkasan'"></span>
+                            <span x-text="copied ? 'Tersalin ke Clipboard!' : 'Salin Ringkasan'"></span>
                         </button>
                         <button type="button" @click="window.print()"
-                                class="px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-lg transition shadow-sm flex items-center gap-1.5">
+                                class="btn-secondary h-9 text-xs flex items-center gap-1.5">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                             Cetak Laporan
                         </button>
                     </div>
 
                     <a href="{{ route('flights.index') }}"
-                       class="px-4 py-2 bg-[#0B5A9E] hover:bg-[#084a82] text-white text-xs font-semibold rounded-lg transition shadow-sm">
-                        Buka Monitoring Penerbangan &rarr;
+                       class="text-xs font-semibold text-[#0B5A9E] dark:text-sky-400 hover:underline flex items-center gap-1">
+                        Monitoring Penerbangan &rarr;
                     </a>
                 </div>
 
@@ -497,19 +520,9 @@ function carbonCalculatorApp() {
         },
         mapInstance: null,
         selectedAircraftFuelBurn: null,
-        mapMode: 'cdn',
-        localGeoJsonData: null,
-        worldGeoJsonData: null,
         tileLayerInstance: null,
         resizeObs: null,
         themeListenerAttached: false,
-
-        toggleMapMode() {
-            this.mapMode = this.mapMode === 'local' ? 'cdn' : 'local';
-            if (this.hasResult && this.resultData?.departure?.lat) {
-                this.renderMap(this.resultData.departure, this.resultData.arrival);
-            }
-        },
 
         get estimatedPaxCount() {
             return Math.round((this.form.y_seats || 0) * (this.form.passenger_load_factor || 0));
@@ -710,98 +723,13 @@ function carbonCalculatorApp() {
                 [arr.lat, arr.lng]
             ]);
 
-            if (this.mapMode === 'local') {
-                // ==================== 100% LOCAL VECTOR MODE ====================
-                if (!this.localGeoJsonData) {
-                    try {
-                        const [idRes, worldRes] = await Promise.all([
-                            fetch('{{ asset('data/indonesia-provinces.geojson') }}').then(r => r.json()),
-                            fetch('{{ asset('data/world-countries.geojson') }}').then(r => r.json()).catch(() => null)
-                        ]);
-                        this.localGeoJsonData = idRes;
-                        this.worldGeoJsonData = worldRes;
-                    } catch(e) {
-                        console.error('Local geojson error:', e);
-                    }
-                }
-
-                // Render world landmass (surrounding ASEAN countries)
-                if (this.worldGeoJsonData) {
-                    L.geoJSON(this.worldGeoJsonData, {
-                        style: {
-                            fillColor: isDark ? '#111827' : '#cbd5e1',
-                            fillOpacity: isDark ? 0.7 : 0.6,
-                            color: isDark ? '#1f2937' : '#94a3b8',
-                            weight: 0.8
-                        }
-                    }).addTo(this.mapInstance);
-                }
-
-                // Render Indonesian provinces (Local GeoJSON)
-                if (this.localGeoJsonData) {
-                    L.geoJSON(this.localGeoJsonData, {
-                        style: {
-                            fillColor: isDark ? '#1e293b' : '#ffffff',
-                            fillOpacity: isDark ? 0.95 : 1,
-                            color: isDark ? '#0284c7' : '#0B5A9E',
-                            weight: 1.2,
-                            dashArray: '3, 3'
-                        }
-                    }).addTo(this.mapInstance);
-                }
-
-                // Major Indonesian reference cities & airport points
-                const referenceCities = [
-                    { name: 'Jakarta', iata: 'CGK', lat: -6.1256, lng: 106.6558 },
-                    { name: 'Surabaya', iata: 'SUB', lat: -7.3798, lng: 112.7875 },
-                    { name: 'Denpasar', iata: 'DPS', lat: -8.7482, lng: 115.1672 },
-                    { name: 'Medan', iata: 'KNO', lat: 3.6422, lng: 98.8853 },
-                    { name: 'Makassar', iata: 'UPG', lat: -5.0617, lng: 119.5540 },
-                    { name: 'Balikpapan', iata: 'BPN', lat: -1.2683, lng: 116.8944 },
-                    { name: 'Yogyakarta', iata: 'YIA', lat: -7.9072, lng: 110.0544 },
-                    { name: 'Semarang', iata: 'SRG', lat: -6.9744, lng: 110.3750 },
-                    { name: 'Batam', iata: 'BTH', lat: 1.1211, lng: 104.1189 },
-                    { name: 'Palembang', iata: 'PLM', lat: -2.8986, lng: 104.7003 },
-                    { name: 'Banjarmasin', iata: 'BDJ', lat: -3.4422, lng: 114.7628 },
-                    { name: 'Manado', iata: 'MDC', lat: 1.5492, lng: 124.9258 },
-                    { name: 'Ambon', iata: 'AMQ', lat: -3.7083, lng: 128.0894 },
-                    { name: 'Jayapura', iata: 'DJJ', lat: -2.5769, lng: 140.5161 },
-                    { name: 'Kupang', iata: 'KOE', lat: -10.1714, lng: 123.6708 },
-                    { name: 'Lombok', iata: 'LOP', lat: -8.7589, lng: 116.2764 },
-                    { name: 'Pekanbaru', iata: 'PKU', lat: 0.4608, lng: 101.4447 },
-                    { name: 'Pontianak', iata: 'PNK', lat: -0.1506, lng: 109.4039 },
-                    { name: 'Padang', iata: 'PDG', lat: -0.7867, lng: 100.2806 },
-                    { name: 'Sorong', iata: 'SOQ', lat: -0.8906, lng: 131.2869 }
-                ];
-
-                referenceCities.forEach(c => {
-                    if (c.iata === dep.iata_code || c.iata === arr.iata_code) return;
-
-                    const cityDiv = L.divIcon({
-                        className: 'city-vector-marker',
-                        html: `
-                            <div style="display:flex;align-items:center;gap:4px;white-space:nowrap;transform:translate(-50%,-50%);pointer-events:none;">
-                                <span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${isDark ? '#38bdf8' : '#0B5A9E'};box-shadow:0 0 4px ${isDark ? '#38bdf8' : '#0B5A9E'};"></span>
-                                <span style="font-size:9px;font-weight:700;font-family:Inter,sans-serif;color:${isDark ? '#94a3b8' : '#475569'};background:${isDark ? 'rgba(15,23,42,0.92)' : 'rgba(255,255,255,0.92)'};padding:1px 5px;border-radius:3px;border:1px solid ${isDark ? '#334155' : '#cbd5e1'};box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-                                    ${c.name} (${c.iata})
-                                </span>
-                            </div>
-                        `,
-                        iconSize: [0, 0]
-                    });
-                    L.marker([c.lat, c.lng], { icon: cityDiv, interactive: false }).addTo(this.mapInstance);
-                });
-
-            } else {
-                // ==================== TILE MODE (100% WATERMARK-FREE) ====================
-                const tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
-
-                this.tileLayerInstance = L.tileLayer(tileUrl, {
-                    subdomains: 'abc',
-                    maxZoom: 19,
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                }).addTo(this.mapInstance);
-            }
+            // OpenStreetMap Tile Layer
+            const tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+            this.tileLayerInstance = L.tileLayer(tileUrl, {
+                subdomains: 'abc',
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(this.mapInstance);
 
 
             // High-visibility Departure Pin (Asal)
@@ -884,9 +812,9 @@ function carbonCalculatorApp() {
         },
 
         getEfficiencyBadgeClass(co2Pax) {
-            if (co2Pax < 90) return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300';
-            if (co2Pax <= 140) return 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300';
-            return 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300';
+            if (co2Pax < 90) return 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800';
+            if (co2Pax <= 140) return 'bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800';
+            return 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800';
         },
 
         getEfficiencyLabel(co2Pax) {
@@ -898,15 +826,22 @@ function carbonCalculatorApp() {
         copySummary() {
             if (!this.hasResult) return;
             const r = this.resultData;
-            const text = `ACE CARBON EMISSION REPORT\n` +
+            const paxCo2Tonnes = (r.result.passenger_co2_total_tonnes || (r.result.passenger_fuel_kg * r.result.co2_factor / 1000)).toFixed(2);
+            const paxCo2Kg = (r.result.passenger_co2_total_kg || Math.round(r.result.passenger_fuel_kg * r.result.co2_factor)).toLocaleString();
+            const text = `ACE AVIATION CARBON EMISSION REPORT\n` +
+                `====================================\n` +
                 `Rute: ${r.departure.iata_code} (${r.departure.city}) -> ${r.arrival.iata_code} (${r.arrival.city})\n` +
-                `Jarak GCD: ${r.result.distance_gcd_km} km | Koreksi ICAO: +${r.result.correction_km} km | Jarak Efektif: ${r.result.distance_adjusted_km} km\n` +
-                `Total Fuel: ${r.result.total_fuel_kg} kg | Passenger Fuel: ${r.result.passenger_fuel_kg} kg (${(r.result.passenger_to_freight_factor*100).toFixed(0)}%)\n` +
-                `Kapasitas Kursi: ${r.result.y_seats} | Load Factor: ${(r.result.passenger_load_factor*100).toFixed(0)}% | Est. Pax: ${r.result.passenger_count}\n` +
+                `Jarak Tempuh: ${r.result.distance_adjusted_km.toLocaleString()} km (GCD: ${r.result.distance_gcd_km.toLocaleString()} km, Koreksi ICAO: +${r.result.correction_km} km)\n` +
+                `Bahan Bakar: ${r.result.total_fuel_kg.toLocaleString()} kg (Porsi Pax: ${r.result.passenger_fuel_kg.toLocaleString()} kg / ${(r.result.passenger_to_freight_factor*100).toFixed(0)}%)\n` +
+                `Kapasitas & Keterisian: ${r.result.y_seats} kursi (LF: ${(r.result.passenger_load_factor*100).toFixed(0)}%, Penumpang: ${r.result.passenger_count} pax)\n` +
                 `------------------------------------\n` +
-                `CO2 per Penumpang: ${r.result.co2_per_passenger_kg.toFixed(2)} kg CO2/pax\n` +
-                `Total Emisi Penerbangan: ${r.result.co2_total_tonnes.toFixed(2)} Tonne (${r.result.co2_total_kg.toLocaleString()} kg CO2)\n` +
-                `Metodologi: Standar ICAO Doc 9889 & CORSIA`;
+                `ESTIMATED CO2: ${r.result.co2_per_passenger_kg.toFixed(2)} kg CO2 per passenger\n` +
+                `Total Passenger CO2: ${paxCo2Tonnes} tonnes (${paxCo2Kg} kg CO2)\n` +
+                `Total Flight Fuel: ${r.result.total_fuel_kg.toLocaleString()} kg\n` +
+                `Total Flight CO2: ${r.result.co2_total_tonnes.toFixed(2)} tonnes (${r.result.co2_total_kg.toLocaleString()} kg CO2)\n` +
+                `------------------------------------\n` +
+                `Metodologi: ICAO Doc 9889 & CORSIA Framework\n` +
+                `Formula: CO2/pax = 3.16 * (Total Fuel * Pax Factor) / (Y-Seats * Load Factor)`;
 
             navigator.clipboard.writeText(text).then(() => {
                 this.copied = true;

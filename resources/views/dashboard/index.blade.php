@@ -92,30 +92,30 @@
         <form method="GET" action="{{ route('dashboard') }}" id="filter-form" class="flex flex-wrap gap-3 items-end">
 
             <!-- Period -->
-            <div class="flex flex-col gap-1 min-w-[130px]">
-                <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Periode</label>
+            <div class="flex flex-col gap-1 min-w-[140px]">
+                <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Periode</label>
                 <select name="period" onchange="toggleDateRange(this.value)" class="form-select-base">
-                    @foreach(['today'=>'Hari Ini','yesterday'=>'Kemarin','this-week'=>'Minggu Ini','this-month'=>'Bulan Ini','this-quarter'=>'Kuartal Ini','this-year'=>'Tahun Ini','custom'=>'Custom'] as $val => $label)
-                        <option value="{{ $val }}" {{ $filters['period'] === $val ? 'selected' : '' }}>{{ $label }}</option>
+                    @foreach(['all'=>'Semua Periode','today'=>'Hari Ini','yesterday'=>'Kemarin','this-week'=>'Minggu Ini','this-month'=>'Bulan Ini','this-quarter'=>'Kuartal Ini','this-year'=>'Tahun Ini','custom'=>'Custom'] as $val => $label)
+                        <option value="{{ $val }}" {{ ($filters['period'] ?? 'all') === $val ? 'selected' : '' }}>{{ $label }}</option>
                     @endforeach
                 </select>
             </div>
 
             <!-- Date Range (shown for custom) -->
-            <div id="date-range-wrapper" class="{{ $filters['period'] === 'custom' ? 'flex' : 'hidden' }} gap-2">
+            <div id="date-range-wrapper" class="{{ ($filters['period'] ?? '') === 'custom' ? 'flex' : 'hidden' }} gap-2">
                 <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Dari</label>
-                    <input type="date" name="date_from" value="{{ $filters['date_from'] }}" class="form-input-base">
+                    <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Dari</label>
+                    <input type="date" name="date_from" value="{{ $filters['date_from'] }}" class="form-input-base font-mono">
                 </div>
                 <div class="flex flex-col gap-1">
-                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Sampai</label>
-                    <input type="date" name="date_to" value="{{ $filters['date_to'] }}" class="form-input-base">
+                    <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sampai</label>
+                    <input type="date" name="date_to" value="{{ $filters['date_to'] }}" class="form-input-base font-mono">
                 </div>
             </div>
 
             <!-- Origin -->
-            <div class="flex flex-col gap-1 min-w-[130px]">
-                <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Departure</label>
+            <div class="flex flex-col gap-1 min-w-[140px]">
+                <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Departure</label>
                 <select name="origin" class="form-select-base">
                     <option value="">Semua Asal</option>
                     @foreach($airports as $airport)
@@ -127,8 +127,8 @@
             </div>
 
             <!-- Destination -->
-            <div class="flex flex-col gap-1 min-w-[130px]">
-                <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Destination</label>
+            <div class="flex flex-col gap-1 min-w-[140px]">
+                <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Destination</label>
                 <select name="destination" class="form-select-base">
                     <option value="">Semua Tujuan</option>
                     @foreach($airports as $airport)
@@ -140,8 +140,8 @@
             </div>
 
             <!-- Aircraft -->
-            <div class="flex flex-col gap-1 min-w-[130px]">
-                <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Pesawat</label>
+            <div class="flex flex-col gap-1 min-w-[140px]">
+                <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Pesawat</label>
                 <select name="aircraft" class="form-select-base">
                     <option value="">Semua Pesawat</option>
                     @foreach($aircraft as $ac)
@@ -153,10 +153,10 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <button type="submit" class="btn-primary">
+                <button type="submit" class="btn-primary h-9">
                     Terapkan Filter
                 </button>
-                <a href="{{ route('dashboard') }}" class="btn-secondary">
+                <a href="{{ route('dashboard') }}" class="btn-secondary h-9">
                     Reset
                 </a>
             </div>
@@ -166,40 +166,40 @@
     <!-- ====== KPI CARDS ====== -->
     <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3.5">
 
-        <div class="kpi-card card p-4">
-            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Penerbangan</div>
-            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_flights']) }}</div>
+        <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
+            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Penerbangan</div>
+            <div class="text-2xl font-bold font-mono tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_flights']) }}</div>
             <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">penerbangan</div>
         </div>
 
-        <div class="kpi-card card p-4">
-            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total CO₂</div>
-            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_co2_tonnes'], 2) }}</div>
+        <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
+            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total CO₂</div>
+            <div class="text-2xl font-bold font-mono tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_co2_tonnes'], 2) }}</div>
             <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">tonnes CO₂</div>
         </div>
 
-        <div class="kpi-card card p-4">
-            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Rata-rata CO₂ / Pax</div>
-            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['avg_co2_per_pax'], 2) }}</div>
-            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">kg CO₂/pax</div>
+        <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
+            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Rata-rata CO₂ / Pax</div>
+            <div class="text-2xl font-bold font-mono tabular-nums text-[#0B5A9E] dark:text-sky-400 tracking-tight">{{ number_format($kpis['avg_co2_per_pax'], 2) }}</div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">kg CO₂ / pax</div>
         </div>
 
-        <div class="kpi-card card p-4">
-            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Bahan Bakar</div>
-            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_fuel_kg'] / 1000, 1) }}</div>
+        <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
+            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Bahan Bakar</div>
+            <div class="text-2xl font-bold font-mono tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_fuel_kg'] / 1000, 1) }}</div>
             <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">tonnes Jet-A1</div>
         </div>
 
-        <div class="kpi-card card p-4">
-            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Penumpang</div>
-            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_passengers']) }}</div>
+        <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
+            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Penumpang</div>
+            <div class="text-2xl font-bold font-mono tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_passengers']) }}</div>
             <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">penumpang est.</div>
         </div>
 
-        <div class="kpi-card card p-4">
-            <div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Rata-rata Load Factor</div>
-            <div class="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white tracking-tight">{{ $kpis['avg_load_factor'] }}<span class="text-base font-normal text-slate-400 dark:text-slate-500">%</span></div>
-            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">load factor</div>
+        <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
+            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Rata-rata Load Factor</div>
+            <div class="text-2xl font-bold font-mono tabular-nums text-slate-900 dark:text-white tracking-tight">{{ $kpis['avg_load_factor'] }}<span class="text-sm font-normal text-slate-400">%</span></div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">keterisian kursi</div>
         </div>
     </div>
 
@@ -238,6 +238,9 @@
             </h3>
             <div class="relative h-52">
                 <canvas id="chart-route"></canvas>
+                @if(empty($charts['byRoute']['labels']) || count($charts['byRoute']['labels']) === 0)
+                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">Tidak ada data untuk periode ini.</div>
+                @endif
             </div>
         </div>
 
@@ -248,6 +251,9 @@
             </h3>
             <div class="relative h-52">
                 <canvas id="chart-pax"></canvas>
+                @if(empty($charts['avgPerPax']['labels']) || count($charts['avgPerPax']['labels']) === 0)
+                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">Tidak ada data untuk periode ini.</div>
+                @endif
             </div>
         </div>
     </div>
@@ -439,9 +445,10 @@
         @endif
     </div>
 
-    <!-- DEMO disclaimer -->
-    <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg px-4 py-3 text-xs text-amber-800 dark:text-amber-300">
-        <strong>⚠️ DEMO DATA:</strong> Data penerbangan, bandara, dan pesawat dalam sistem ini adalah data demonstrasi. Hasil kalkulasi emisi CO₂ adalah estimasi berdasarkan metodologi ICAO, bukan pengukuran langsung.
+    <!-- Standard methodology note -->
+    <div class="flex items-center gap-2.5 px-4 py-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200/80 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>Data operasional penerbangan dan estimasi emisi karbon dihitung berdasarkan metodologi standar ICAO Doc 9889 & CORSIA untuk keperluan pemantauan efisiensi bahan bakar.</span>
     </div>
 
     </div>{{-- end real content --}}
@@ -540,8 +547,9 @@ if (chartData.byRoute.labels.length > 0) {
             datasets: [{
                 label: 'CO₂ (kg)',
                 data: chartData.byRoute.co2,
-                backgroundColor: 'rgba(210,34,40,0.8)',
-                borderRadius: 6,
+                backgroundColor: 'rgba(11, 90, 158, 0.85)',
+                hoverBackgroundColor: '#0B5A9E',
+                borderRadius: 4,
             }]
         },
         options: { ...chartDefaults, indexAxis: 'y' }
@@ -558,8 +566,9 @@ if (chartData.avgPerPax.labels.length > 0) {
             datasets: [{
                 label: 'CO₂/Pax (kg)',
                 data: chartData.avgPerPax.values,
-                backgroundColor: 'rgba(16,185,129,0.8)',
-                borderRadius: 6,
+                backgroundColor: 'rgba(14, 165, 233, 0.85)',
+                hoverBackgroundColor: '#0284c7',
+                borderRadius: 4,
             }]
         },
         options: { ...chartDefaults }
