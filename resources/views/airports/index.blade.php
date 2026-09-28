@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Data Bandara')
-@section('page-title', 'Master Data Bandara')
-@section('page-subtitle', 'Bandara & Titik Koordinat')
+@section('title', 'Airports')
+@section('page-title', 'Airport Master Data')
+@section('page-subtitle', 'Airports & Coordinates Directory')
 
 @section('content')
 <div class="p-4 md:p-6 space-y-4"
@@ -65,17 +65,17 @@
             <input type="text"
                    name="search"
                    value="{{ request('search') }}"
-                   placeholder="Cari IATA, ICAO, nama, kota..."
+                   placeholder="Search IATA, ICAO, name, city..."
                    class="form-input-base w-64">
             
             <select name="status" class="form-select-base">
-                <option value="">Semua Status</option>
-                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
-                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Nonaktif</option>
+                <option value="">All Statuses</option>
+                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Active</option>
+                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactive</option>
             </select>
 
             <button type="submit" class="btn-primary">
-                Cari
+                Search
             </button>
             @if(request()->hasAny(['search', 'status']))
                 <a href="{{ route('airports.index') }}" class="px-2.5 py-1.5 text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
@@ -94,15 +94,15 @@
                 <div x-show="open" @click.away="open = false" x-cloak
                      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
                     <div class="bg-white dark:bg-slate-800 rounded-xl p-5 w-full max-w-md shadow-lg border border-slate-200 dark:border-slate-800">
-                        <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-1.5">Import Data Bandara</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Unggah file format .xlsx atau .xls dengan kolom kode IATA, ICAO, Nama, Latitude, Longitude.</p>
+                        <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-1.5">Import Airport Data</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Upload an .xlsx or .xls spreadsheet with IATA, ICAO, Name, Latitude, and Longitude columns.</p>
                         <form method="POST" action="{{ route('airports.import-excel') }}" enctype="multipart/form-data">
                             @csrf
                             <input type="file" name="file" accept=".xlsx,.xls" required
                                    class="w-full text-xs text-slate-600 dark:text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#0B5A9E] file:text-white hover:file:bg-[#084a82] mb-4">
                             <div class="flex justify-end gap-2">
                                 <button type="button" @click="open = false" class="btn-secondary">
-                                    Batal
+                                    Cancel
                                 </button>
                                 <button type="submit" class="btn-primary">
                                     Upload & Import
@@ -122,7 +122,7 @@
             @can('manage-airports')
             <!-- Create Airport -->
             <a href="{{ route('airports.create') }}" class="btn-primary">
-                + Tambah Bandara
+                + Add Airport
             </a>
             @endcan
         </div>
@@ -132,10 +132,10 @@
     <div class="card overflow-hidden">
         @if($airports->isEmpty())
             <div class="flex flex-col items-center justify-center py-20 text-center">
-                <p class="text-slate-500 dark:text-slate-400 font-medium">Belum ada data bandara ditemukan.</p>
+                <p class="text-slate-500 dark:text-slate-400 font-medium">No airports found.</p>
                 @can('manage-airports')
                 <a href="{{ route('airports.create') }}" class="mt-3 px-4 py-2 bg-[#0B5A9E] text-white text-sm font-semibold rounded-lg hover:bg-[#084a82]">
-                    Tambah Bandara Pertama
+                    Add First Airport
                 </a>
                 @endcan
             </div>
@@ -145,12 +145,12 @@
                     <thead>
                         <tr class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800">
                             <th class="px-4 py-2.5 text-left text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">IATA / ICAO</th>
-                            <th class="px-4 py-2.5 text-left text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nama Bandara</th>
-                            <th class="px-4 py-2.5 text-left text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Kota / Lokasi</th>
-                            <th class="px-4 py-2.5 text-right text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Koordinat</th>
-                            <th class="px-4 py-2.5 text-right text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Elevasi</th>
+                            <th class="px-4 py-2.5 text-left text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Airport Name</th>
+                            <th class="px-4 py-2.5 text-left text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">City / Location</th>
+                            <th class="px-4 py-2.5 text-right text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Coordinates</th>
+                            <th class="px-4 py-2.5 text-right text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Elevation</th>
                             <th class="px-4 py-2.5 text-center text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
-                            <th class="px-4 py-2.5 text-center text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Aksi</th>
+                            <th class="px-4 py-2.5 text-center text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
@@ -178,28 +178,28 @@
                             <td class="px-4 py-2.5 text-center">
                                 @if($airport->status)
                                     <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                                        Aktif
+                                        Active
                                     </span>
                                 @else
                                     <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
-                                        Nonaktif
+                                        Inactive
                                     </span>
                                 @endif
                             </td>
                             <td class="px-4 py-2.5 text-center">
                                 <div class="inline-flex items-center gap-1.5">
                                     <a href="{{ route('airports.show', $airport) }}" class="px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition">
-                                        Lihat
+                                        View
                                     </a>
                                     @can('manage-airports')
                                     <a href="{{ route('airports.edit', $airport) }}" class="px-2 py-1 text-xs font-medium text-[#0B5A9E] dark:text-sky-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded transition">
                                         Edit
                                     </a>
-                                    <form method="POST" action="{{ route('airports.destroy', $airport) }}" onsubmit="return confirm('Hapus bandara {{ $airport->name }}?')" class="inline">
+                                    <form method="POST" action="{{ route('airports.destroy', $airport) }}" onsubmit="return confirm('Delete airport {{ $airport->name }}? This action cannot be undone.')" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="px-2 py-1 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded transition">
-                                            Hapus
+                                            Delete
                                         </button>
                                     </form>
                                     @endcan

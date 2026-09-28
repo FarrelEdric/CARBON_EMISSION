@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Penerbangan — ' . $flight->flight_number)
-@section('page-title', 'Edit Data Penerbangan')
+@section('title', 'Edit Flight — ' . $flight->flight_number)
+@section('page-title', 'Edit Flight Record')
 @section('page-subtitle', $flight->flight_number . ' (' . ($flight->departureAirport?->iata_code ?? '') . ' → ' . ($flight->arrivalAirport?->iata_code ?? '') . ')')
 
 @section('content')
@@ -9,17 +9,17 @@
 
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Edit Penerbangan {{ $flight->flight_number }}</h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Perbarui parameter operasional penerbangan. Sistem akan menghitung ulang emisi karbon.</p>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Edit Flight {{ $flight->flight_number }}</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Update operational flight parameters. The system will recalculate carbon emissions automatically.</p>
         </div>
         <a href="{{ route('flights.index') }}" class="btn-secondary">
-            &larr; Kembali
+            &larr; Back
         </a>
     </div>
 
     @if($errors->any())
     <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700/60 rounded-xl p-4 text-xs text-red-700 dark:text-red-300">
-        <div class="font-bold mb-1">Terdapat kesalahan pengisian data:</div>
+        <div class="font-bold mb-1">There are errors in the submitted form:</div>
         <ul class="list-disc pl-4 space-y-0.5">
             @foreach($errors->all() as $err)
                 <li>{{ $err }}</li>
@@ -37,7 +37,7 @@
                 <!-- Flight Number -->
                 <div>
                     <label for="flight_number" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Nomor Penerbangan <span class="text-rose-500">*</span>
+                        Flight Number <span class="text-rose-500">*</span>
                     </label>
                     <input type="text"
                            id="flight_number"
@@ -50,7 +50,7 @@
                 <!-- Flight Date -->
                 <div>
                     <label for="flight_date" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Tanggal Penerbangan <span class="text-rose-500">*</span>
+                        Flight Date <span class="text-rose-500">*</span>
                     </label>
                     <input type="date"
                            id="flight_date"
@@ -63,7 +63,7 @@
                 <!-- Departure Airport -->
                 <div>
                     <label for="departure_airport_id" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Bandara Asal (Origin) <span class="text-rose-500">*</span>
+                        Origin Airport <span class="text-rose-500">*</span>
                     </label>
                     <select id="departure_airport_id"
                             name="departure_airport_id"
@@ -80,7 +80,7 @@
                 <!-- Arrival Airport -->
                 <div>
                     <label for="arrival_airport_id" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Bandara Tujuan (Destination) <span class="text-rose-500">*</span>
+                        Destination Airport <span class="text-rose-500">*</span>
                     </label>
                     <select id="arrival_airport_id"
                             name="arrival_airport_id"
@@ -97,7 +97,7 @@
                 <!-- Aircraft -->
                 <div>
                     <label for="aircraft_id" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Armada Pesawat <span class="text-rose-500">*</span>
+                        Aircraft Fleet <span class="text-rose-500">*</span>
                     </label>
                     <select id="aircraft_id"
                             name="aircraft_id"
@@ -105,7 +105,7 @@
                             class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
                         @foreach($aircraft as $ac)
                             <option value="{{ $ac->id }}" {{ old('aircraft_id', $flight->aircraft_id) == $ac->id ? 'selected' : '' }}>
-                                {{ $ac->manufacturer }} {{ $ac->model }} ({{ $ac->icao_type }}) — {{ $ac->y_seats }} Kursi
+                                {{ $ac->manufacturer }} {{ $ac->model }} ({{ $ac->icao_type }}) — {{ $ac->y_seats }} Seats
                             </option>
                         @endforeach
                     </select>
@@ -114,7 +114,7 @@
                 <!-- Fuel (kg) -->
                 <div>
                     <label for="total_fuel_kg" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Konsumsi Bahan Bakar (kg Jet-A1) <span class="text-rose-500">*</span>
+                        Fuel Consumption (kg Jet-A1) <span class="text-rose-500">*</span>
                     </label>
                     <input type="number"
                            step="0.01"
@@ -144,7 +144,7 @@
                 <!-- CO2 Factor -->
                 <div>
                     <label for="co2_factor" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Faktor Emisi CO₂
+                        CO₂ Emission Factor (kg CO₂ / kg fuel)
                     </label>
                     <input type="number"
                            step="0.01"
@@ -158,7 +158,7 @@
             <!-- Notes -->
             <div>
                 <label for="notes" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Catatan Operasional
+                    Operational Notes
                 </label>
                 <textarea id="notes"
                           name="notes"
@@ -169,10 +169,10 @@
             <!-- Action buttons -->
             <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <a href="{{ route('flights.index') }}" class="btn-secondary">
-                    Batal
+                    Cancel
                 </a>
                 <button type="submit" class="btn-primary">
-                    Perbarui Penerbangan
+                    Update Flight
                 </button>
             </div>
         </form>

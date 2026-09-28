@@ -1,25 +1,25 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Faktor Karbon')
-@section('page-title', 'Tambah Faktor Karbon')
-@section('page-subtitle', 'Master Parameter ICAO')
+@section('title', 'Add Carbon Factor')
+@section('page-title', 'Add Carbon Factor')
+@section('page-subtitle', 'ICAO Parameter Master Data')
 
 @section('content')
 <div class="p-4 md:p-6 max-w-4xl mx-auto space-y-6">
 
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Form Tambah Faktor Karbon</h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Tentukan koefisien konversi emisi atau faktor perhitungan ICAO.</p>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Add Carbon Factor</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Define emission conversion coefficients or ICAO calculation parameters.</p>
         </div>
         <a href="{{ route('carbon-factors.index') }}" class="px-3.5 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition border border-slate-200 dark:border-slate-700">
-            &larr; Kembali
+            &larr; Back
         </a>
     </div>
 
     @if($errors->any())
     <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700/60 rounded-xl p-4 text-xs text-red-700 dark:text-red-300">
-        <div class="font-bold mb-1">Terdapat kesalahan pengisian data:</div>
+        <div class="font-bold mb-1">There were errors with your submission:</div>
         <ul class="list-disc pl-4 space-y-0.5">
             @foreach($errors->all() as $err)
                 <li>{{ $err }}</li>
@@ -36,35 +36,35 @@
                 <!-- Name -->
                 <div>
                     <label for="name" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Nama Parameter <span class="text-red-500">*</span>
+                        Parameter Name <span class="text-red-500">*</span>
                     </label>
                     <input type="text"
                            id="name"
                            name="name"
                            value="{{ old('name') }}"
                            required
-                           placeholder="Contoh: ICAO Jet Fuel CO2 Conversion Factor"
+                           placeholder="e.g. ICAO Jet Fuel CO2 Conversion Factor"
                            class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
                 </div>
 
                 <!-- Factor Key -->
                 <div>
                     <label for="factor_key" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Kunci Parameter (Unique Key) <span class="text-red-500">*</span>
+                        Parameter Key (Unique Key) <span class="text-red-500">*</span>
                     </label>
                     <input type="text"
                            id="factor_key"
                            name="factor_key"
                            value="{{ old('factor_key') }}"
                            required
-                           placeholder="Contoh: icao_co2_factor"
+                           placeholder="e.g. icao_co2_factor"
                            class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
                 </div>
 
                 <!-- Factor Value -->
                 <div>
                     <label for="factor_value" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Nilai Angka Koefisien <span class="text-red-500">*</span>
+                        Coefficient Value <span class="text-red-500">*</span>
                     </label>
                     <input type="number"
                            step="0.0001"
@@ -72,27 +72,27 @@
                            name="factor_value"
                            value="{{ old('factor_value') }}"
                            required
-                           placeholder="Contoh: 3.16"
+                           placeholder="e.g. 3.16"
                            class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
                 </div>
 
                 <!-- Unit -->
                 <div>
                     <label for="unit" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Satuan Unit
+                        Measurement Unit
                     </label>
                     <input type="text"
                            id="unit"
                            name="unit"
                            value="{{ old('unit', 'kg CO2 / kg Fuel') }}"
-                           placeholder="Contoh: kg CO2 / kg Fuel"
+                           placeholder="e.g. kg CO2 / kg Fuel"
                            class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
                 </div>
 
                 <!-- Source -->
                 <div>
                     <label for="source" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Sumber Regulasi / Acuan
+                        Regulatory Source / Reference
                     </label>
                     <input type="text"
                            id="source"
@@ -104,7 +104,7 @@
                 <!-- Effective Date -->
                 <div>
                     <label for="effective_date" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Tanggal Efektif Berlaku
+                        Effective Date
                     </label>
                     <input type="date"
                            id="effective_date"
@@ -116,12 +116,12 @@
                 <!-- Description -->
                 <div class="md:col-span-2">
                     <label for="description" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Deskripsi Penjelasan
+                        Description / Explanation
                     </label>
                     <textarea id="description"
                               name="description"
                               rows="2"
-                              placeholder="Keterangan cara kerja dan penggunaan parameter dalam rumus kalkulator..."
+                              placeholder="Explanation of parameter behavior and formula usage in calculator..."
                               class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">{{ old('description') }}</textarea>
                 </div>
 
@@ -135,17 +135,17 @@
                            {{ old('is_active', '1') == '1' ? 'checked' : '' }}
                            class="w-4 h-4 rounded text-[#0B5A9E] focus:ring-[#0B5A9E] border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700">
                     <label for="is_active" class="text-sm font-medium text-slate-700 dark:text-slate-300">
-                        Parameter Aktif (Digunakan dalam kalkulator emisi)
+                        Active Parameter (Applied in emission calculator)
                     </label>
                 </div>
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-5 border-t border-slate-200 dark:border-slate-700">
                 <a href="{{ route('carbon-factors.index') }}" class="px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-800">
-                    Batal
+                    Cancel
                 </a>
                 <button type="submit" class="px-5 py-2.5 bg-[#0B5A9E] hover:bg-[#084a82] text-white text-sm font-semibold rounded-lg shadow-sm transition">
-                    Simpan Faktor Karbon
+                    Save Carbon Factor
                 </button>
             </div>
         </form>

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan Emisi Karbon')
-@section('page-title', 'Laporan & Rekapitulasi Emisi')
-@section('page-subtitle', 'Ekspor Data Resmi Berdasarkan Metodologi ICAO / CORSIA')
+@section('title', 'Carbon Emission Reports')
+@section('page-title', 'Emission Reports & Analytics')
+@section('page-subtitle', 'Official Emission Records based on ICAO / CORSIA Methodology')
 
 @section('content')
 <div class="p-4 md:p-6 space-y-6">
@@ -12,16 +12,16 @@
         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 dark:divide-slate-800">
             <!-- 1. Total Flights -->
             <div class="p-4 sm:p-5">
-                <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block mb-1">Total Penerbangan</span>
+                <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block mb-1">Total Flights</span>
                 <div class="text-2xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">
                     {{ number_format($summary->total_flights ?? 0) }}
                 </div>
-                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">penerbangan dalam filter</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">flights within filter</div>
             </div>
 
             <!-- 2. Total Fuel -->
             <div class="p-4 sm:p-5">
-                <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block mb-1">Total Bahan Bakar</span>
+                <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block mb-1">Total Fuel Consumption</span>
                 <div class="text-2xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">
                     {{ number_format(($summary->total_fuel_kg ?? 0) / 1000, 1) }}
                 </div>
@@ -30,7 +30,7 @@
 
             <!-- 3. Total CO2 (Tonnes) -->
             <div class="p-4 sm:p-5">
-                <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block mb-1">Total Emisi Karbon</span>
+                <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block mb-1">Total Carbon Emissions</span>
                 <div class="text-2xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">
                     {{ number_format(($summary->total_co2_kg ?? 0) / 1000, 2) }}
                 </div>
@@ -39,20 +39,20 @@
 
             <!-- 4. Avg CO2 / Pax -->
             <div class="p-4 sm:p-5">
-                <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block mb-1">Rata-rata CO₂ / Pax</span>
+                <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block mb-1">Average CO₂ / Pax</span>
                 <div class="text-2xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">
                     {{ number_format($summary->avg_co2_per_pax ?? 0, 2) }}
                 </div>
-                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">kg CO₂ / penumpang</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">kg CO₂ / passenger</div>
             </div>
 
             <!-- 5. Total Passengers -->
             <div class="p-4 sm:p-5">
-                <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block mb-1">Total Penumpang</span>
+                <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block mb-1">Total Passengers</span>
                 <div class="text-2xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">
                     {{ number_format($summary->total_passengers ?? 0) }}
                 </div>
-                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">estimasi penumpang</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">estimated passengers</div>
             </div>
         </div>
     </div>
@@ -65,10 +65,10 @@
             <div class="flex flex-wrap items-end gap-3 flex-1">
                 <!-- Period -->
                 <div class="flex flex-col gap-1 min-w-[130px]">
-                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Periode</label>
+                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Period</label>
                     <select name="period" onchange="toggleDateRange(this.value)"
                             class="px-2.5 py-1.5 text-xs sm:text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-1 focus:ring-blue-600/30">
-                        @foreach(['today'=>'Hari Ini','yesterday'=>'Kemarin','this-week'=>'Minggu Ini','this-month'=>'Bulan Ini','this-quarter'=>'Kuartal Ini','this-year'=>'Tahun Ini','custom'=>'Rentang Kustom'] as $val => $label)
+                        @foreach(['today'=>'Today','yesterday'=>'Yesterday','this-week'=>'This Week','this-month'=>'This Month','this-quarter'=>'This Quarter','this-year'=>'This Year','custom'=>'Custom Range'] as $val => $label)
                             <option value="{{ $val }}" {{ ($filters['period'] ?? '') === $val ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
@@ -77,12 +77,12 @@
                 <!-- Custom Range -->
                 <div id="date-range-wrapper" class="{{ ($filters['period'] ?? '') === 'custom' ? 'flex' : 'hidden' }} gap-2">
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Dari</label>
+                        <label class="text-xs font-medium text-slate-600 dark:text-slate-400">From</label>
                         <input type="date" name="date_from" value="{{ $filters['date_from'] ?? '' }}"
                                class="px-2.5 py-1.5 text-xs sm:text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-1 focus:ring-blue-600/30">
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Sampai</label>
+                        <label class="text-xs font-medium text-slate-600 dark:text-slate-400">To</label>
                         <input type="date" name="date_to" value="{{ $filters['date_to'] ?? '' }}"
                                class="px-2.5 py-1.5 text-xs sm:text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-1 focus:ring-blue-600/30">
                     </div>
@@ -90,10 +90,10 @@
 
                 <!-- Origin -->
                 <div class="flex flex-col gap-1 min-w-[130px]">
-                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Bandara Asal</label>
+                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Origin Airport</label>
                     <select name="origin"
                             class="px-2.5 py-1.5 text-xs sm:text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-1 focus:ring-blue-600/30">
-                        <option value="">Semua Asal</option>
+                        <option value="">All Origins</option>
                         @foreach($airports as $ap)
                             <option value="{{ $ap->iata_code }}" {{ ($filters['origin'] ?? '') === $ap->iata_code ? 'selected' : '' }}>
                                 {{ $ap->iata_code }} &mdash; {{ $ap->name }}
@@ -104,10 +104,10 @@
 
                 <!-- Destination -->
                 <div class="flex flex-col gap-1 min-w-[130px]">
-                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Bandara Tujuan</label>
+                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Destination Airport</label>
                     <select name="destination"
                             class="px-2.5 py-1.5 text-xs sm:text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-1 focus:ring-blue-600/30">
-                        <option value="">Semua Tujuan</option>
+                        <option value="">All Destinations</option>
                         @foreach($airports as $ap)
                             <option value="{{ $ap->iata_code }}" {{ ($filters['destination'] ?? '') === $ap->iata_code ? 'selected' : '' }}>
                                 {{ $ap->iata_code }} &mdash; {{ $ap->name }}
@@ -118,10 +118,10 @@
 
                 <!-- Aircraft -->
                 <div class="flex flex-col gap-1 min-w-[130px]">
-                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Pesawat</label>
+                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Aircraft</label>
                     <select name="aircraft"
                             class="px-2.5 py-1.5 text-xs sm:text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-md text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-1 focus:ring-blue-600/30">
-                        <option value="">Semua Pesawat</option>
+                        <option value="">All Aircraft</option>
                         @foreach($aircraft as $ac)
                             <option value="{{ $ac->id }}" {{ ($filters['aircraft'] ?? '') == $ac->id ? 'selected' : '' }}>
                                 {{ $ac->manufacturer }} {{ $ac->model }}
@@ -133,7 +133,7 @@
                 <!-- Buttons -->
                 <div class="flex items-center gap-2">
                     <button type="submit" class="btn-primary">
-                        Filter
+                        Apply Filters
                     </button>
                     @if(request()->hasAny(['period', 'origin', 'destination', 'aircraft', 'date_from', 'date_to']))
                     <a href="{{ route('reports.index') }}" class="btn-secondary">
@@ -149,7 +149,7 @@
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
-                    <span>Ekspor ke Excel</span>
+                    <span>Export to Excel</span>
                 </a>
             </div>
         </form>
@@ -159,9 +159,9 @@
     <div class="card overflow-hidden">
         <div class="card-header">
             <h3 class="text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100">
-                Detail Log Emisi Penerbangan ({{ $flights->total() }} Data)
+                Flight Emission Logs ({{ $flights->total() }} Records)
             </h3>
-            <span class="text-xs text-slate-400">Formula ICAO Doc 9889</span>
+            <span class="text-xs text-slate-400">ICAO Doc 9889 Methodology</span>
         </div>
 
         @if($flights->isEmpty())
@@ -171,7 +171,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
             </div>
-            <p class="text-slate-500 text-xs">Tidak ada data emisi sesuai filter.</p>
+            <p class="text-slate-500 text-xs">No emission records match the selected filters.</p>
         </div>
         @else
 
@@ -181,9 +181,9 @@
                 <thead>
                     <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
                         <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Flight No.</th>
-                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Tanggal</th>
-                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Rute</th>
-                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Pesawat</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Date</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Route</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Aircraft</th>
                         <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">GCD</th>
                         <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">Fuel</th>
                         <th class="px-4 py-2.5 text-center font-medium uppercase tracking-wider text-[11px]">Load Factor</th>
@@ -243,9 +243,9 @@
                 <thead>
                     <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
                         <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Flight No.</th>
-                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Tanggal</th>
-                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Rute</th>
-                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Pesawat</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Date</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Route</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Aircraft</th>
                         <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">Total CO₂</th>
                         <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">CO₂/Pax</th>
                     </tr>

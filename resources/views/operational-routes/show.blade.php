@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Rute Operasional')
-@section('page-title', 'Detail Rute Operasional')
+@section('title', 'Operational Route Details')
+@section('page-title', 'Operational Route Details')
 @section('page-subtitle', ($operationalRoute->departureAirport?->iata_code ?? '???') . ' → ' . ($operationalRoute->arrivalAirport?->iata_code ?? '???'))
 
 @section('content')
@@ -19,18 +19,18 @@
                 </span>
             </div>
             <h1 class="text-sm font-semibold text-slate-600 dark:text-slate-300 mt-1">
-                {{ $operationalRoute->route_name ?? 'Rute Operasional' }}
+                {{ $operationalRoute->route_name ?? 'Operational Route' }}
             </h1>
         </div>
 
         <div class="flex gap-2">
             @can('manage-routes')
             <a href="{{ route('operational-routes.edit', $operationalRoute) }}" class="px-4 py-2 bg-[#0B5A9E] hover:bg-[#084a82] text-white text-xs font-semibold rounded-lg transition shadow-sm">
-                Edit Rute
+                Edit Route
             </a>
             @endcan
             <a href="{{ route('operational-routes.index') }}" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition">
-                &larr; Daftar Rute
+                &larr; Route Directory
             </a>
         </div>
     </div>
@@ -39,21 +39,21 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- Route Specs -->
         <div class="card p-5 space-y-3">
-            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Parameter Jalur</h3>
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Flight Corridor Parameters</h3>
             <div>
-                <span class="text-xs text-slate-400 block">Bandara Asal</span>
+                <span class="text-xs text-slate-400 block">Origin Airport</span>
                 <span class="text-sm font-semibold text-slate-800 dark:text-slate-100">
                     {{ $operationalRoute->departureAirport?->iata_code }} — {{ $operationalRoute->departureAirport?->name }}
                 </span>
             </div>
             <div>
-                <span class="text-xs text-slate-400 block">Bandara Tujuan</span>
+                <span class="text-xs text-slate-400 block">Destination Airport</span>
                 <span class="text-sm font-semibold text-slate-800 dark:text-slate-100">
                     {{ $operationalRoute->arrivalAirport?->iata_code }} — {{ $operationalRoute->arrivalAirport?->name }}
                 </span>
             </div>
             <div>
-                <span class="text-xs text-slate-400 block">Jarak Tempuh Operasional</span>
+                <span class="text-xs text-slate-400 block">Operational Distance</span>
                 <span class="text-xl font-bold font-mono text-brand-600 dark:text-brand-400">
                     {{ $operationalRoute->distance_km ? number_format($operationalRoute->distance_km, 1) . ' km' : '-' }}
                 </span>
@@ -62,7 +62,7 @@
 
         <!-- Waypoints List -->
         <div class="card p-5 space-y-3">
-            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Waypoints Jalur</h3>
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Corridor Waypoints</h3>
             @if(is_array($operationalRoute->waypoints) && count($operationalRoute->waypoints) > 0)
                 <div class="space-y-1.5 max-h-48 overflow-y-auto">
                     @foreach($operationalRoute->waypoints as $idx => $wp)
@@ -73,14 +73,14 @@
                     @endforeach
                 </div>
             @else
-                <p class="text-xs text-slate-400 italic">Rute ini menggunakan kalkulasi jarak total tanpa rincian waypoint spesifik.</p>
+                <p class="text-xs text-slate-400 italic">This route uses total operational distance calculation without detailed waypoints.</p>
             @endif
         </div>
 
         <!-- Route Leaflet Map -->
         <div class="card overflow-hidden flex flex-col">
             <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-700/80 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/50">
-                Peta Visual Rute
+                Route Map View
             </div>
             <div id="route-map" class="flex-1 min-h-[220px]"></div>
         </div>
@@ -98,16 +98,18 @@
         const arrLng = {{ $operationalRoute->arrivalAirport?->longitude ?? 0 }};
 
         if (depLat !== 0 && arrLat !== 0) {
+            const map = L.map('route-map', {
+                zoomControl: true
+            });
             const tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
             L.tileLayer(tileUrl, { subdomains: 'abc', maxZoom: 19 }).addTo(map);
-
 
             const bounds = L.latLngBounds([[depLat, depLng], [arrLat, arrLng]]);
             map.fitBounds(bounds, { padding: [30, 30] });
             setTimeout(() => { map.invalidateSize(); }, 150);
 
-            L.marker([depLat, depLng]).addTo(map).bindPopup('Asal: {{ $operationalRoute->departureAirport?->iata_code }}');
-            L.marker([arrLat, arrLng]).addTo(map).bindPopup('Tujuan: {{ $operationalRoute->arrivalAirport?->iata_code }}');
+            L.marker([depLat, depLng]).addTo(map).bindPopup('Origin: {{ $operationalRoute->departureAirport?->iata_code }}');
+            L.marker([arrLat, arrLng]).addTo(map).bindPopup('Destination: {{ $operationalRoute->arrivalAirport?->iata_code }}');
 
             // Draw line
             L.polyline([[depLat, depLng], [arrLat, arrLng]], {

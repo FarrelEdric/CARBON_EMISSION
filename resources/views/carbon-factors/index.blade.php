@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Faktor Karbon')
-@section('page-title', 'Master Faktor Karbon')
-@section('page-subtitle', 'Koefisien Emisi & Standar Konversi ICAO')
+@section('title', 'Carbon Factors')
+@section('page-title', 'Carbon Emission Factors')
+@section('page-subtitle', 'Emission Coefficients & ICAO Conversion Standards')
 
 @section('content')
 <div class="p-4 md:p-6 space-y-4">
@@ -13,17 +13,17 @@
             <input type="text"
                    name="search"
                    value="{{ request('search') }}"
-                   placeholder="Cari parameter, key, sumber..."
+                   placeholder="Search parameter, key, source..."
                    class="form-input-base w-64">
 
             <select name="status" class="form-select-base">
-                <option value="">Semua Status</option>
-                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
-                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Nonaktif</option>
+                <option value="">All Statuses</option>
+                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Active</option>
+                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Inactive</option>
             </select>
 
             <button type="submit" class="btn-primary">
-                Cari
+                Search
             </button>
             @if(request()->hasAny(['search', 'status']))
                 <a href="{{ route('carbon-factors.index') }}" class="btn-secondary">
@@ -41,7 +41,7 @@
             @can('manage-factors')
             <!-- Create Factor -->
             <a href="{{ route('carbon-factors.create') }}" class="btn-primary">
-                + Tambah Faktor Karbon
+                + Add Carbon Factor
             </a>
             @endcan
         </div>
@@ -51,10 +51,10 @@
     <div class="card overflow-hidden">
         @if($factors->isEmpty())
             <div class="flex flex-col items-center justify-center py-20 text-center">
-                <p class="text-slate-500 dark:text-slate-400 font-medium">Belum ada data faktor karbon ditemukan.</p>
+                <p class="text-slate-500 dark:text-slate-400 font-medium">No carbon factor data found.</p>
                 @can('manage-factors')
                 <a href="{{ route('carbon-factors.create') }}" class="mt-3 btn-primary">
-                    Tambah Faktor Pertama
+                    Add First Factor
                 </a>
                 @endcan
             </div>
@@ -63,12 +63,12 @@
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="bg-slate-50/80 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-700/80">
-                            <th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nama & Kunci Faktor</th>
-                            <th class="px-4 py-3 text-right text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nilai Koefisien</th>
-                            <th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Satuan Unit</th>
-                            <th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sumber Acuan</th>
+                            <th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Factor Name & Key</th>
+                            <th class="px-4 py-3 text-right text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Coefficient Value</th>
+                            <th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Unit</th>
+                            <th class="px-4 py-3 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Reference Source</th>
                             <th class="px-4 py-3 text-center text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
-                            <th class="px-4 py-3 text-center text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Aksi</th>
+                            <th class="px-4 py-3 text-center text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 dark:divide-slate-700/60">
@@ -87,33 +87,33 @@
                                 {{ $factor->unit ?? '-' }}
                             </td>
                             <td class="px-4 py-3 text-slate-600 dark:text-slate-400 text-xs">
-                                {{ $factor->source ?? 'Standar ICAO' }}
+                                {{ $factor->source ?? 'ICAO Standard' }}
                             </td>
                             <td class="px-4 py-3 text-center">
                                 @if($factor->is_active)
                                     <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/50">
-                                        Aktif
+                                        Active
                                     </span>
                                 @else
                                     <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200/80 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700">
-                                        Nonaktif
+                                        Inactive
                                     </span>
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-center">
                                 <div class="inline-flex items-center gap-1.5">
                                     <a href="{{ route('carbon-factors.show', $factor) }}" class="px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition">
-                                        Lihat
+                                        View
                                     </a>
                                     @can('manage-factors')
                                     <a href="{{ route('carbon-factors.edit', $factor) }}" class="px-2 py-1 text-xs font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/30 rounded transition">
                                         Edit
                                     </a>
-                                    <form method="POST" action="{{ route('carbon-factors.destroy', $factor) }}" onsubmit="return confirm('Hapus faktor karbon {{ $factor->name }}?')" class="inline">
+                                    <form method="POST" action="{{ route('carbon-factors.destroy', $factor) }}" onsubmit="return confirm('Delete carbon factor {{ $factor->name }}? This action cannot be undone.')" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="px-2 py-1 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded transition">
-                                            Hapus
+                                            Delete
                                         </button>
                                     </form>
                                     @endcan

@@ -1,25 +1,25 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Pesawat')
-@section('page-title', 'Tambah Armada Pesawat')
-@section('page-subtitle', 'Master Data Pesawat')
+@section('title', 'Add Aircraft')
+@section('page-title', 'Add Aircraft')
+@section('page-subtitle', 'Aircraft Master Data')
 
 @section('content')
 <div class="p-4 md:p-6 max-w-4xl mx-auto space-y-6">
 
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Form Tambah Pesawat</h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Masukkan spesifikasi jenis pesawat dan parameter konsumsi bahan bakar ICAO.</p>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Add New Aircraft</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Enter aircraft specifications and ICAO fuel consumption parameters.</p>
         </div>
         <a href="{{ route('aircraft.index') }}" class="px-3.5 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition border border-slate-200 dark:border-slate-700">
-            &larr; Kembali
+            &larr; Back
         </a>
     </div>
 
     @if($errors->any())
     <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700/60 rounded-xl p-4 text-xs text-red-700 dark:text-red-300">
-        <div class="font-bold mb-1">Terdapat kesalahan pengisian data:</div>
+        <div class="font-bold mb-1">There were errors with your submission:</div>
         <ul class="list-disc pl-4 space-y-0.5">
             @foreach($errors->all() as $err)
                 <li>{{ $err }}</li>
@@ -36,74 +36,74 @@
                 <!-- Manufacturer -->
                 <div>
                     <label for="manufacturer" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Pabrikan Pesawat <span class="text-red-500">*</span>
+                        Aircraft Manufacturer <span class="text-red-500">*</span>
                     </label>
                     <input type="text"
                            id="manufacturer"
                            name="manufacturer"
                            value="{{ old('manufacturer') }}"
                            required
-                           placeholder="Contoh: Boeing, Airbus, ATR"
+                           placeholder="e.g. Boeing, Airbus, ATR"
                            class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
                 </div>
 
                 <!-- Model -->
                 <div>
                     <label for="model" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Model Pesawat <span class="text-red-500">*</span>
+                        Aircraft Model <span class="text-red-500">*</span>
                     </label>
                     <input type="text"
                            id="model"
                            name="model"
                            value="{{ old('model') }}"
                            required
-                           placeholder="Contoh: 737-800, A320-200"
+                           placeholder="e.g. 737-800, A320-200"
                            class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
                 </div>
 
                 <!-- ICAO Type -->
                 <div>
                     <label for="icao_type" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Tipe ICAO
+                        ICAO Type
                     </label>
                     <input type="text"
                            id="icao_type"
                            name="icao_type"
                            value="{{ old('icao_type') }}"
-                           placeholder="Contoh: B738, A320"
+                           placeholder="e.g. B738, A320"
                            class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 uppercase font-mono focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
                 </div>
 
                 <!-- IATA Type -->
                 <div>
                     <label for="iata_type" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Tipe IATA
+                        IATA Type
                     </label>
                     <input type="text"
                            id="iata_type"
                            name="iata_type"
                            value="{{ old('iata_type') }}"
-                           placeholder="Contoh: 738, 320"
+                           placeholder="e.g. 738, 320"
                            class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 uppercase font-mono focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
                 </div>
 
                 <!-- Equivalent Aircraft -->
                 <div>
                     <label for="equivalent_aircraft" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Equivalent Aircraft (Tipe Rujukan ICAO)
+                        Equivalent Aircraft (ICAO Reference Type)
                     </label>
                     <input type="text"
                            id="equivalent_aircraft"
                            name="equivalent_aircraft"
                            value="{{ old('equivalent_aircraft') }}"
-                           placeholder="Contoh: B738"
+                           placeholder="e.g. B738"
                            class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 uppercase font-mono focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
                 </div>
 
                 <!-- Y-Seats -->
                 <div>
                     <label for="y_seats" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Kapasitas Kursi Standar (Y-Seats) <span class="text-red-500">*</span>
+                        Standard Seat Capacity (Y-Seats) <span class="text-red-500">*</span>
                     </label>
                     <input type="number"
                            id="y_seats"
@@ -124,7 +124,7 @@
                            id="fuel_burn_factor"
                            name="fuel_burn_factor"
                            value="{{ old('fuel_burn_factor') }}"
-                           placeholder="Contoh: 3.2500"
+                           placeholder="e.g. 3.2500"
                            class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 font-mono focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">
                 </div>
 
@@ -144,7 +144,7 @@
                 <!-- CO2 Factor -->
                 <div>
                     <label for="co2_factor" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Faktor Emisi CO₂ ICAO (kg CO₂ / kg Fuel)
+                        ICAO CO₂ Emission Factor (kg CO₂ / kg Fuel)
                     </label>
                     <input type="number"
                            step="0.01"
@@ -157,7 +157,7 @@
                 <!-- Data Source -->
                 <div>
                     <label for="data_source" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Sumber Data
+                        Data Source
                     </label>
                     <input type="text"
                            id="data_source"
@@ -169,12 +169,12 @@
                 <!-- Notes -->
                 <div class="md:col-span-2">
                     <label for="notes" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Catatan Tambahan
+                        Additional Notes
                     </label>
                     <textarea id="notes"
                               name="notes"
                               rows="2"
-                              placeholder="Keterangan spesifikasi varian pesawat..."
+                              placeholder="Aircraft variant specifications and notes..."
                               class="w-full px-3.5 py-2.5 text-sm bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none">{{ old('notes') }}</textarea>
                 </div>
 
@@ -188,17 +188,17 @@
                            {{ old('status', '1') == '1' ? 'checked' : '' }}
                            class="w-4 h-4 rounded text-[#0B5A9E] focus:ring-[#0B5A9E] border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700">
                     <label for="status" class="text-sm font-medium text-slate-700 dark:text-slate-300">
-                        Armada Aktif
+                        Active Aircraft
                     </label>
                 </div>
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-5 border-t border-slate-200 dark:border-slate-700">
                 <a href="{{ route('aircraft.index') }}" class="px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-800">
-                    Batal
+                    Cancel
                 </a>
                 <button type="submit" class="px-5 py-2.5 bg-[#0B5A9E] hover:bg-[#084a82] text-white text-sm font-semibold rounded-lg shadow-sm transition">
-                    Simpan Pesawat
+                    Save Aircraft
                 </button>
             </div>
         </form>

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah User Baru')
-@section('page-title', 'Tambah User Baru')
-@section('page-subtitle', 'Kelola User')
+@section('title', 'Add New User')
+@section('page-title', 'Add New User')
+@section('page-subtitle', 'User Management')
 
 @section('content')
 <div class="p-4 md:p-6">
@@ -10,15 +10,15 @@
 
         {{-- Breadcrumb --}}
         <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-            <a href="{{ route('admin.users.index') }}" class="hover:text-blue-600 dark:hover:text-sky-400 transition-colors">Kelola User</a>
+            <a href="{{ route('admin.users.index') }}" class="hover:text-blue-600 dark:hover:text-sky-400 transition-colors">User Management</a>
             <span class="text-slate-300 dark:text-slate-600">/</span>
-            <span class="text-slate-700 dark:text-slate-200 font-medium">Tambah User Baru</span>
+            <span class="text-slate-700 dark:text-slate-200 font-medium">Add New User</span>
         </div>
 
         {{-- Validation Errors --}}
         @if($errors->any())
         <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-lg px-4 py-3">
-            <p class="text-xs font-semibold text-rose-800 dark:text-rose-200 mb-1.5">Terdapat kesalahan pada input:</p>
+            <p class="text-xs font-semibold text-rose-800 dark:text-rose-200 mb-1.5">There were errors with your input:</p>
             <ul class="list-disc list-inside space-y-0.5">
                 @foreach($errors->all() as $error)
                     <li class="text-xs text-rose-700 dark:text-rose-300">{{ $error }}</li>
@@ -30,8 +30,8 @@
         {{-- Form Card --}}
         <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700/80 shadow-sm overflow-hidden">
             <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-                <h2 class="text-sm font-semibold text-slate-800 dark:text-slate-100">Informasi Akun</h2>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Isi semua field yang diperlukan untuk membuat akun baru.</p>
+                <h2 class="text-sm font-semibold text-slate-800 dark:text-slate-100">Account Information</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Fill in all required fields to create a new user account.</p>
             </div>
 
             <form method="POST" action="{{ route('admin.users.store') }}" class="px-5 py-5 space-y-4">
@@ -40,13 +40,13 @@
                 {{-- Name --}}
                 <div>
                     <label for="name" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                        Nama Lengkap <span class="text-rose-500">*</span>
+                        Full Name <span class="text-rose-500">*</span>
                     </label>
                     <input type="text"
                            id="name"
                            name="name"
                            value="{{ old('name') }}"
-                           placeholder="Contoh: Budi Santoso"
+                           placeholder="e.g. John Doe"
                            autocomplete="name"
                            class="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border @error('name') border-rose-400 dark:border-rose-500 @else border-slate-200 dark:border-slate-600 @enderror rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
                     @error('name')
@@ -63,10 +63,10 @@
                            id="username"
                            name="username"
                            value="{{ old('username') }}"
-                           placeholder="Contoh: budi_santoso atau budi@airnav.id"
+                           placeholder="e.g. john_doe or john@airnav.id"
                            autocomplete="username"
                            class="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border @error('username') border-rose-400 dark:border-rose-500 @else border-slate-200 dark:border-slate-600 @enderror rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-600 focus:outline-none font-mono transition">
-                    <p class="mt-1 text-[11px] text-slate-400">Boleh menggunakan huruf, angka, titik (.), strip (-), underscore (_), atau format email.</p>
+                    <p class="mt-1 text-[11px] text-slate-400">Allowed characters: letters, numbers, dot (.), hyphen (-), underscore (_), or email format.</p>
                     @error('username')
                         <p class="mt-1 text-xs text-rose-600 dark:text-rose-400">{{ $message }}</p>
                     @enderror
@@ -81,7 +81,7 @@
                            id="email"
                            name="email"
                            value="{{ old('email') }}"
-                           placeholder="Contoh: budi@airnav.id"
+                           placeholder="e.g. john@airnav.id"
                            autocomplete="email"
                            class="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border @error('email') border-rose-400 dark:border-rose-500 @else border-slate-200 dark:border-slate-600 @enderror rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
                     @error('email')
@@ -98,14 +98,14 @@
                         <input :type="showPass ? 'text' : 'password'"
                                id="password"
                                name="password"
-                               placeholder="Minimal 8 karakter"
+                               placeholder="Minimum 8 characters"
                                autocomplete="new-password"
                                required
                                class="w-full px-3 py-2 pr-10 text-sm bg-white dark:bg-slate-900 border @error('password') border-rose-400 dark:border-rose-500 @else border-slate-200 dark:border-slate-600 @enderror rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none transition">
                         <button type="button"
                                 @click="showPass = !showPass"
                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition focus:outline-none"
-                                title="Lihat / Sembunyikan Password">
+                                title="Show / Hide Password">
                             <svg x-show="!showPass" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -123,20 +123,20 @@
                 {{-- Confirm Password --}}
                 <div x-data="{ showConfirm: false }">
                     <label for="password_confirmation" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                        Konfirmasi Password <span class="text-rose-500">*</span>
+                        Confirm Password <span class="text-rose-500">*</span>
                     </label>
                     <div class="relative">
                         <input :type="showConfirm ? 'text' : 'password'"
                                id="password_confirmation"
                                name="password_confirmation"
-                               placeholder="Ulangi password"
+                               placeholder="Repeat password"
                                autocomplete="new-password"
                                required
                                class="w-full px-3 py-2 pr-10 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-[#0B5A9E] focus:outline-none transition">
                         <button type="button"
                                 @click="showConfirm = !showConfirm"
                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition focus:outline-none"
-                                title="Lihat / Sembunyikan Password">
+                                title="Show / Hide Password">
                             <svg x-show="!showConfirm" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -150,7 +150,7 @@
 
                 {{-- Divider --}}
                 <div class="border-t border-slate-100 dark:border-slate-700 pt-4 space-y-4">
-                    <h3 class="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Hak Akses & Status</h3>
+                    <h3 class="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Access Rights & Status</h3>
 
                     {{-- Role + Status in a row --}}
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -162,7 +162,7 @@
                             <select id="role"
                                     name="role"
                                     class="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border @error('role') border-rose-400 @else border-slate-200 dark:border-slate-600 @enderror rounded-lg text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
-                                <option value="">Pilih Role...</option>
+                                <option value="">Select Role...</option>
                                 <option value="admin"    {{ old('role') === 'admin'    ? 'selected' : '' }}>Administrator</option>
                                 <option value="operator" {{ old('role') === 'operator' ? 'selected' : '' }}>Operator</option>
                                 <option value="viewer"   {{ old('role') === 'viewer'   ? 'selected' : '' }}>Viewer</option>
@@ -174,7 +174,7 @@
 
                         {{-- Status --}}
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Status Akun</label>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Account Status</label>
                             <label class="flex items-center gap-3 mt-2 cursor-pointer select-none">
                                 <input type="hidden" name="status" value="0">
                                 <input type="checkbox"
@@ -183,9 +183,9 @@
                                        value="1"
                                        {{ old('status', '1') == '1' ? 'checked' : '' }}
                                        class="w-4 h-4 text-blue-600 border-slate-300 dark:border-slate-600 rounded focus:ring-blue-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Aktifkan akun ini</span>
+                                <span class="text-sm text-slate-700 dark:text-slate-300">Activate this account</span>
                             </label>
-                            <p class="mt-1 text-[11px] text-slate-400">Akun nonaktif tidak dapat login.</p>
+                            <p class="mt-1 text-[11px] text-slate-400">Inactive accounts cannot log in.</p>
                         </div>
                     </div>
 
@@ -193,15 +193,15 @@
                     <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3 text-xs text-slate-500 dark:text-slate-400 space-y-1.5">
                         <div class="flex items-start gap-2">
                             <span class="inline-flex px-1.5 py-0.5 rounded text-[10px] font-semibold bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 flex-shrink-0 mt-0.5">Admin</span>
-                            <span>Akses penuh ke semua fitur termasuk kelola user dan pengaturan sistem.</span>
+                            <span>Full access to all system features including user management and system settings.</span>
                         </div>
                         <div class="flex items-start gap-2">
                             <span class="inline-flex px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 flex-shrink-0 mt-0.5">Operator</span>
-                            <span>Dapat mengelola data penerbangan, bandara, pesawat, dan kalkulator emisi.</span>
+                            <span>Can manage flight operations, airports, aircraft, and emission calculations.</span>
                         </div>
                         <div class="flex items-start gap-2">
                             <span class="inline-flex px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex-shrink-0 mt-0.5">Viewer</span>
-                            <span>Hanya dapat melihat data dan laporan. Tidak dapat menambah atau mengubah data.</span>
+                            <span>View-only access to records and reports. Cannot create or edit data.</span>
                         </div>
                     </div>
                 </div>
@@ -210,11 +210,11 @@
                 <div class="flex flex-wrap justify-end gap-3 pt-2 border-t border-slate-100 dark:border-slate-700">
                     <a href="{{ route('admin.users.index') }}"
                        class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors">
-                        Batal
+                        Cancel
                     </a>
                     <button type="submit"
                             class="px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-colors">
-                        Simpan User
+                        Save User
                     </button>
                 </div>
             </form>

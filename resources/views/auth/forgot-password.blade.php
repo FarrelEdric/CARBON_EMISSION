@@ -12,16 +12,16 @@
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block w-full" type="email" name="email" :value="old('email')" required autofocus placeholder="Masukkan email Anda" />
+            <x-text-input id="email" class="block w-full" type="email" name="email" :value="old('email')" required autofocus placeholder="Enter your email" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-between pt-2">
             <a href="{{ route('login') }}" class="text-xs text-[#0B5A9E] dark:text-sky-400 hover:underline">
-                &larr; Kembali ke Login
+                &larr; Back to Login
             </a>
             <x-primary-button>
-                {{ __('Kirim Link Reset') }}
+                {{ __('Email Password Reset Link') }}
             </x-primary-button>
         </div>
     </form>

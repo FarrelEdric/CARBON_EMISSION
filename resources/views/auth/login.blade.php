@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -276,7 +276,7 @@
                                     @click="showPassword = !showPassword"
                                     tabindex="-1"
                                     style="position: absolute; top: 0; bottom: 0; right: 0; padding-right: 0.75rem; display: flex; align-items: center; background: none; border: none; cursor: pointer; color: #94a3b8;"
-                                    title="Lihat password">
+                                    title="Toggle password visibility">
                                 <!-- Eye closed -->
                                 <svg x-show="!showPassword" style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

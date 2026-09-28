@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="en" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>403 — Akses Ditolak | ACE</title>
+    <title>403 — Access Denied | ACE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,20 +22,20 @@
         </div>
 
         <div class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 mb-3">
-            Error 403 — Dilarang
+            Error 403 — Forbidden
         </div>
 
         <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
-            Akses Ditolak
+            Access Denied
         </h1>
 
         <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
-            {{ $exception->getMessage() ?: 'Anda tidak memiliki hak akses atau izin untuk melihat halaman/fitur ini.' }}
+            {{ $exception->getMessage() ?: 'You do not have the necessary permissions to access this page or feature.' }}
         </p>
 
         @auth
         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 mb-6">
-            <span>Peran Anda saat ini:</span>
+            <span>Your current role:</span>
             <span class="font-semibold text-[#0B5A9E] dark:text-sky-400">{{ auth()->user()->getRoleLabel() }}</span>
         </div>
         @endauth
@@ -46,7 +46,7 @@
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                 </svg>
-                Kembali ke Dashboard
+                Back to Dashboard
             </a>
         </div>
     </div>

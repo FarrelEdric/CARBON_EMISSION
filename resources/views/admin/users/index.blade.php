@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Kelola User')
-@section('page-title', 'Kelola User')
-@section('page-subtitle', 'Manajemen Akun & Akses')
+@section('title', 'Manage Users')
+@section('page-title', 'User Management')
+@section('page-subtitle', 'Accounts & Access Control')
 
 @section('content')
 <div class="p-4 md:p-6 space-y-4"
@@ -17,18 +17,18 @@
                 <input type="text"
                        name="search"
                        value="{{ request('search') }}"
-                       placeholder="Cari nama, username, email..."
+                       placeholder="Search name, username, email..."
                        class="form-input-base w-60">
 
                 <select name="role" class="form-select-base">
-                    <option value="">Semua Role</option>
+                    <option value="">All Roles</option>
                     <option value="admin"    {{ request('role') === 'admin'    ? 'selected' : '' }}>Administrator</option>
                     <option value="operator" {{ request('role') === 'operator' ? 'selected' : '' }}>Operator</option>
                     <option value="viewer"   {{ request('role') === 'viewer'   ? 'selected' : '' }}>Viewer</option>
                 </select>
 
                 <button type="submit" class="btn-primary">
-                    Cari
+                    Search
                 </button>
 
                 @if(request()->hasAny(['search', 'role']))
@@ -39,13 +39,13 @@
             </form>
 
             <a href="{{ route('admin.users.create') }}" class="btn-primary whitespace-nowrap">
-                + Tambah User
+                + Add User
             </a>
         </div>
 
         {{-- Summary Strip --}}
         <div class="flex flex-wrap gap-4 text-xs text-slate-500 dark:text-slate-400">
-            <span>Total: <strong class="text-slate-700 dark:text-slate-200">{{ $users->total() }}</strong> user</span>
+            <span>Total: <strong class="text-slate-700 dark:text-slate-200">{{ $users->total() }}</strong> users</span>
         </div>
 
         {{-- Table Card --}}
@@ -55,10 +55,10 @@
                     <svg class="w-10 h-10 text-slate-300 dark:text-slate-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
-                    <p class="text-slate-500 dark:text-slate-400 font-medium text-sm">Tidak ada user ditemukan.</p>
+                    <p class="text-slate-500 dark:text-slate-400 font-medium text-sm">No users found.</p>
                     <a href="{{ route('admin.users.create') }}"
                        class="mt-3 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-                        Tambah User Pertama
+                        Add First User
                     </a>
                 </div>
             @else
@@ -67,7 +67,7 @@
                         <thead>
                             <tr class="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-700">
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                                    Nama
+                                    Name
                                 </th>
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                                     Email
@@ -82,7 +82,7 @@
                                     Status
                                 </th>
                                 <th class="px-4 py-3 text-center text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                                    Aksi
+                                    Actions
                                 </th>
                             </tr>
                         </thead>
@@ -99,7 +99,7 @@
                                             <div class="font-semibold text-slate-800 dark:text-slate-100 truncate">
                                                 {{ $user->name }}
                                                 @if($user->id === auth()->id())
-                                                    <span class="ml-1.5 text-[10px] font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">Anda</span>
+                                                    <span class="ml-1.5 text-[10px] font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-1.5 py-0.5 rounded">You</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -137,11 +137,11 @@
                                 <td class="px-4 py-3 text-center">
                                     @if($user->status)
                                         <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
-                                            Aktif
+                                            Active
                                         </span>
                                     @else
                                         <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300">
-                                            Nonaktif
+                                            Inactive
                                         </span>
                                     @endif
                                 </td>
@@ -157,17 +157,17 @@
                                         @if($user->id !== auth()->id())
                                             <form method="POST"
                                                   action="{{ route('admin.users.destroy', $user) }}"
-                                                  onsubmit="return confirm('Hapus user {{ addslashes($user->name) }}? Tindakan ini tidak dapat dibatalkan.')"
+                                                  onsubmit="return confirm('Delete user {{ addslashes($user->name) }}? This action cannot be undone.')"
                                                   class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
                                                         class="px-2.5 py-1 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded transition-colors">
-                                                    Hapus
+                                                    Delete
                                                 </button>
                                             </form>
                                         @else
-                                            <span class="px-2.5 py-1 text-xs text-slate-300 dark:text-slate-600 cursor-not-allowed">Hapus</span>
+                                            <span class="px-2.5 py-1 text-xs text-slate-300 dark:text-slate-600 cursor-not-allowed">Delete</span>
                                         @endif
                                     </div>
                                 </td>

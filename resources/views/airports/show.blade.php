@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Bandara — ' . $airport->name)
-@section('page-title', 'Detail Bandara')
+@section('title', 'Airport Details — ' . $airport->name)
+@section('page-title', 'Airport Details')
 @section('page-subtitle', $airport->iata_code . ' — ' . $airport->name)
 
 @section('content')
@@ -15,11 +15,11 @@
                 <span class="text-sm font-mono text-slate-400">/ {{ $airport->icao_code ?? '-' }}</span>
                 @if($airport->status)
                     <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
-                        Aktif
+                        Active
                     </span>
                 @else
                     <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
-                        Nonaktif
+                        Inactive
                     </span>
                 @endif
             </div>
@@ -29,11 +29,11 @@
         <div class="flex gap-2">
             @can('manage-airports')
             <a href="{{ route('airports.edit', $airport) }}" class="px-4 py-2 bg-[#0B5A9E] hover:bg-[#084a82] text-white text-xs font-semibold rounded-lg transition shadow-sm">
-                Edit Bandara
+                Edit Airport
             </a>
             @endcan
             <a href="{{ route('airports.index') }}" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition">
-                &larr; Daftar Bandara
+                &larr; Airport Directory
             </a>
         </div>
     </div>
@@ -42,28 +42,28 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- Details -->
         <div class="card p-5 space-y-3">
-            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Informasi Wilayah</h3>
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Regional Information</h3>
             <div>
-                <span class="text-xs text-slate-400 block">Kota / Wilayah</span>
+                <span class="text-xs text-slate-400 block">City / Region</span>
                 <span class="text-sm font-medium text-slate-800 dark:text-slate-100">{{ $airport->city ?? '-' }}</span>
             </div>
             <div>
-                <span class="text-xs text-slate-400 block">Provinsi</span>
+                <span class="text-xs text-slate-400 block">Province / State</span>
                 <span class="text-sm font-medium text-slate-800 dark:text-slate-100">{{ $airport->province ?? '-' }}</span>
             </div>
             <div>
-                <span class="text-xs text-slate-400 block">Negara</span>
+                <span class="text-xs text-slate-400 block">Country</span>
                 <span class="text-sm font-medium text-slate-800 dark:text-slate-100">{{ $airport->country ?? '-' }}</span>
             </div>
             <div>
-                <span class="text-xs text-slate-400 block">Elevasi Bandara</span>
+                <span class="text-xs text-slate-400 block">Airport Elevation</span>
                 <span class="text-sm font-mono text-slate-800 dark:text-slate-100">{{ $airport->elevation ? number_format($airport->elevation) . ' ft' : '-' }}</span>
             </div>
         </div>
 
         <!-- Coordinates & Stats -->
         <div class="card p-5 space-y-3">
-            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Koordinat Geografis</h3>
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Geographic Coordinates</h3>
             <div>
                 <span class="text-xs text-slate-400 block">Latitude</span>
                 <span class="text-sm font-mono font-semibold text-slate-800 dark:text-slate-100">{{ number_format($airport->latitude, 6) }}</span>
@@ -73,10 +73,10 @@
                 <span class="text-sm font-mono font-semibold text-slate-800 dark:text-slate-100">{{ number_format($airport->longitude, 6) }}</span>
             </div>
             <div class="pt-2 border-t border-slate-100 dark:border-slate-700">
-                <span class="text-xs text-slate-400 block">Aktivitas Penerbangan Terkait</span>
+                <span class="text-xs text-slate-400 block">Associated Flight Activity</span>
                 <div class="flex items-center gap-4 mt-1 text-xs">
-                    <div>Keberangkatan: <strong class="text-slate-800 dark:text-slate-100">{{ $airport->departureFlights->count() }}</strong></div>
-                    <div>Kedatangan: <strong class="text-slate-800 dark:text-slate-100">{{ $airport->arrivalFlights->count() }}</strong></div>
+                    <div>Departures: <strong class="text-slate-800 dark:text-slate-100">{{ $airport->departureFlights->count() }}</strong></div>
+                    <div>Arrivals: <strong class="text-slate-800 dark:text-slate-100">{{ $airport->arrivalFlights->count() }}</strong></div>
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@
         <!-- Mini Map -->
         <div class="card overflow-hidden flex flex-col">
             <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-700/80 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/50">
-                Titik Lokasi Bandara
+                Airport Geographic Location
             </div>
             <div id="airport-map" class="flex-1 min-h-[180px]"></div>
         </div>

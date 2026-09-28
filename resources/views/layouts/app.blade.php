@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="ACE — Aviation Carbon Emission Tracking. Sistem monitoring dan analisis estimasi emisi karbon penerbangan nasional.">
+    <meta name="description" content="ACE — Aviation Carbon Emission Tracking. National flight carbon emissions estimation monitoring and analytics platform.">
     <title>@yield('title', 'Dashboard') — ACE AirNav</title>
 
     {{-- Anti-flicker theme script --}}
@@ -116,9 +116,9 @@
     {{-- Navigation --}}
     <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
 
-        {{-- Operasional --}}
+        {{-- Operations --}}
         <div class="px-2.5 pt-2 pb-1">
-            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Operasional</span>
+            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Operations</span>
         </div>
 
         <a href="{{ route('dashboard') }}"
@@ -137,7 +137,7 @@
             <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
             </svg>
-            Kalkulator Emisi
+            Carbon Calculator
         </a>
         @endcan
 
@@ -147,7 +147,7 @@
             <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
             </svg>
-            Penerbangan
+            Flights
         </a>
 
         <a href="{{ route('reports.index') }}"
@@ -156,7 +156,7 @@
             <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
-            Laporan
+            Reports
         </a>
 
         @can('manage-data')
@@ -171,7 +171,7 @@
                 <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                 </svg>
-                <span class="flex-1 text-left">Basis Data Aviasi</span>
+                <span class="flex-1 text-left">Aviation Database</span>
                 <svg class="w-3 h-3 transition-transform text-slate-500" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
@@ -180,31 +180,31 @@
                 <a href="{{ route('airports.index') }}"
                    class="block px-2.5 py-1.5 rounded-md text-xs transition-colors
                           {{ request()->routeIs('airports.*') ? 'text-sky-400 font-medium bg-slate-800/80' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50' }}">
-                    Bandara
+                    Airports
                 </a>
                 <a href="{{ route('aircraft.index') }}"
                    class="block px-2.5 py-1.5 rounded-md text-xs transition-colors
                           {{ request()->routeIs('aircraft.*') ? 'text-sky-400 font-medium bg-slate-800/80' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50' }}">
-                    Pesawat
+                    Aircraft
                 </a>
                 <a href="{{ route('carbon-factors.index') }}"
                    class="block px-2.5 py-1.5 rounded-md text-xs transition-colors
                           {{ request()->routeIs('carbon-factors.*') ? 'text-sky-400 font-medium bg-slate-800/80' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50' }}">
-                    Faktor Karbon
+                    Carbon Factors
                 </a>
                 <a href="{{ route('operational-routes.index') }}"
                    class="block px-2.5 py-1.5 rounded-md text-xs transition-colors
                           {{ request()->routeIs('operational-routes.*') ? 'text-sky-400 font-medium bg-slate-800/80' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50' }}">
-                    Rute Operasional
+                    Operational Routes
                 </a>
             </div>
         </div>
         @endcan
 
         @can('admin-only')
-        {{-- Administrasi --}}
+        {{-- Administration --}}
         <div class="px-2.5 pt-4 pb-1">
-            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Administrasi</span>
+            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Administration</span>
         </div>
 
         <a href="{{ route('admin.users.index') }}"
@@ -213,18 +213,9 @@
             <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
             </svg>
-            Kelola User
+            User Management
         </a>
         @endcan
-
-        <!-- <a href="{{ route('admin.settings.index') }}"
-           class="flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs transition-colors
-                  {{ request()->routeIs('admin.settings.*') ? 'bg-slate-800 text-white font-medium border-l-2 border-[#0B5A9E]' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border-l-2 border-transparent' }}">
-            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            Pengaturan
-        </a> -->
 
     </nav>
 
@@ -240,7 +231,7 @@
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="p-1 text-slate-500 hover:text-rose-400 rounded transition-colors" title="Keluar">
+                <button type="submit" class="p-1 text-slate-500 hover:text-rose-400 rounded transition-colors" title="Log Out">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                     </svg>
@@ -288,7 +279,7 @@
             <button onclick="toggleDarkMode()"
                     type="button"
                     class="p-1.5 rounded text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                    title="Toggle tema">
+                    title="Toggle theme">
                 <svg class="icon-moon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
                 </svg>
@@ -326,14 +317,6 @@
                         <div class="text-[11px] text-slate-400 truncate">{{ auth()->user()->email }}</div>
                     </div>
 
-                    <!-- <a href="{{ route('admin.settings.index') }}"
-                       class="flex items-center gap-2 px-3 py-1.5 text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-                        Pengaturan Akun
-                    </a> -->
-
                     <div class="border-t border-slate-100 dark:border-slate-800 my-1"></div>
 
                     <form method="POST" action="{{ route('logout') }}">
@@ -343,7 +326,7 @@
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                             </svg>
-                            Keluar
+                            Log Out
                         </button>
                     </form>
                 </div>
@@ -378,8 +361,8 @@
     <div x-data="{ show: true, expanded: false }" x-show="show"
          class="mx-4 sm:mx-5 mt-4 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200 px-3.5 py-2.5 rounded-md text-xs">
         <div class="flex items-center justify-between">
-            <span class="font-medium">{{ count(session('import_errors')) }} baris gagal diimpor.</span>
-            <button @click="expanded = !expanded" class="text-amber-600 dark:text-amber-400 underline">Lihat Detail</button>
+            <span class="font-medium">{{ count(session('import_errors')) }} rows failed to import.</span>
+            <button @click="expanded = !expanded" class="text-amber-600 dark:text-amber-400 underline">View Details</button>
         </div>
         <ul x-show="expanded" class="mt-2 space-y-0.5 list-disc pl-4 text-amber-700 dark:text-amber-300">
             @foreach(session('import_errors') as $err)<li>{{ $err }}</li>@endforeach

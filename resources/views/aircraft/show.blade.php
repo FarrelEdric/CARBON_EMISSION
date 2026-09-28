@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Pesawat — ' . $aircraft->manufacturer . ' ' . $aircraft->model)
-@section('page-title', 'Detail Pesawat')
+@section('title', 'Aircraft Details — ' . $aircraft->manufacturer . ' ' . $aircraft->model)
+@section('page-title', 'Aircraft Details')
 @section('page-subtitle', $aircraft->manufacturer . ' ' . $aircraft->model)
 
 @section('content')
@@ -17,25 +17,25 @@
                 </span>
                 @if($aircraft->status)
                     <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
-                        Aktif
+                        Active
                     </span>
                 @else
                     <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
-                        Nonaktif
+                        Inactive
                     </span>
                 @endif
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Sumber Data: {{ $aircraft->data_source ?? 'ICAO Methodology' }}</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Data Source: {{ $aircraft->data_source ?? 'ICAO Methodology' }}</p>
         </div>
 
         <div class="flex gap-2">
             @can('manage-aircraft')
             <a href="{{ route('aircraft.edit', $aircraft) }}" class="px-4 py-2 bg-[#0B5A9E] hover:bg-[#084a82] text-white text-xs font-semibold rounded-lg transition shadow-sm">
-                Edit Pesawat
+                Edit Aircraft
             </a>
             @endcan
             <a href="{{ route('aircraft.index') }}" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition">
-                &larr; Daftar Pesawat
+                &larr; Aircraft Directory
             </a>
         </div>
     </div>
@@ -44,9 +44,9 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- Specs -->
         <div class="card p-5 space-y-3">
-            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Spesifikasi Armada</h3>
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Fleet Specifications</h3>
             <div>
-                <span class="text-xs text-slate-400 block">Pabrikan</span>
+                <span class="text-xs text-slate-400 block">Manufacturer</span>
                 <span class="text-sm font-medium text-slate-800 dark:text-slate-100">{{ $aircraft->manufacturer }}</span>
             </div>
             <div>
@@ -54,7 +54,7 @@
                 <span class="text-sm font-medium text-slate-800 dark:text-slate-100">{{ $aircraft->model }}</span>
             </div>
             <div>
-                <span class="text-xs text-slate-400 block">Tipe IATA</span>
+                <span class="text-xs text-slate-400 block">IATA Type</span>
                 <span class="text-sm font-mono text-slate-800 dark:text-slate-100">{{ $aircraft->iata_type ?? '-' }}</span>
             </div>
             <div>
@@ -62,37 +62,37 @@
                 <span class="text-sm font-mono text-slate-800 dark:text-slate-100">{{ $aircraft->equivalent_aircraft ?? '-' }}</span>
             </div>
             <div>
-                <span class="text-xs text-slate-400 block">Kapasitas Kursi (Y-Seats)</span>
-                <span class="text-base font-bold text-slate-900 dark:text-white">{{ number_format($aircraft->y_seats) }} kursi</span>
+                <span class="text-xs text-slate-400 block">Seat Capacity (Y-Seats)</span>
+                <span class="text-base font-bold text-slate-900 dark:text-white">{{ number_format($aircraft->y_seats) }} seats</span>
             </div>
         </div>
 
         <!-- ICAO Calculation Factors -->
         <div class="card p-5 space-y-3">
-            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Faktor Emisi & Konsumsi (ICAO)</h3>
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Emission & Consumption Factors (ICAO)</h3>
             <div>
                 <span class="text-xs text-slate-400 block">Fuel Burn Factor</span>
-                <span class="text-sm font-mono font-semibold text-slate-800 dark:text-slate-100">{{ $aircraft->fuel_burn_factor ? number_format($aircraft->fuel_burn_factor, 4) . ' kg/km' : 'Berdasarkan Tabel Jarak' }}</span>
+                <span class="text-sm font-mono font-semibold text-slate-800 dark:text-slate-100">{{ $aircraft->fuel_burn_factor ? number_format($aircraft->fuel_burn_factor, 4) . ' kg/km' : 'Based on Distance Matrix' }}</span>
             </div>
             <div>
                 <span class="text-xs text-slate-400 block">Passenger to Freight Factor</span>
                 <span class="text-sm font-mono font-semibold text-slate-800 dark:text-slate-100">{{ number_format($aircraft->passenger_to_freight_factor ?? 0.85, 2) }}</span>
             </div>
             <div>
-                <span class="text-xs text-slate-400 block">Faktor Emisi CO₂</span>
+                <span class="text-xs text-slate-400 block">CO₂ Emission Factor</span>
                 <span class="text-sm font-mono font-semibold text-emerald-600 dark:text-emerald-400">{{ number_format($aircraft->co2_factor ?? 3.16, 2) }} kg CO₂ / kg Fuel</span>
             </div>
             <div class="pt-2 border-t border-slate-100 dark:border-slate-700">
-                <span class="text-xs text-slate-400 block">Riwayat Penerbangan</span>
-                <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $aircraft->flights->count() }} penerbangan tercatat</span>
+                <span class="text-xs text-slate-400 block">Flight History</span>
+                <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $aircraft->flights->count() }} recorded flights</span>
             </div>
         </div>
 
         <!-- Notes / Formula -->
         <div class="card p-5 space-y-3">
-            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Metodologi & Catatan</h3>
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Methodology & Notes</h3>
             <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                {{ $aircraft->notes ?? 'Armada ini menggunakan perhitungan konsumsi bahan bakar ICAO Fuel Consumption Curve berdasarkan parameter jarak Great Circle Distance (GCD) dan koreksi rute operasional.' }}
+                {{ $aircraft->notes ?? 'This aircraft utilizes the ICAO Fuel Consumption Curve calculation based on Great Circle Distance (GCD) and operational route corrections.' }}
             </p>
             <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300">
                 CO₂ = Total Fuel × 3.16<br>

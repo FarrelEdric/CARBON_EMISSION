@@ -1,25 +1,25 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Pesawat — ' . $aircraft->manufacturer . ' ' . $aircraft->model)
-@section('page-title', 'Edit Pesawat')
-@section('page-subtitle', 'Master Data Pesawat')
+@section('title', 'Edit Aircraft — ' . $aircraft->manufacturer . ' ' . $aircraft->model)
+@section('page-title', 'Edit Aircraft')
+@section('page-subtitle', 'Aircraft Master Data')
 
 @section('content')
 <div class="p-4 md:p-6 max-w-4xl mx-auto space-y-6">
 
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Edit Data Pesawat: {{ $aircraft->manufacturer }} {{ $aircraft->model }}</h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Kode ICAO: {{ $aircraft->icao_type ?? '-' }} | IATA: {{ $aircraft->iata_type ?? '-' }}</p>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Edit Aircraft Data: {{ $aircraft->manufacturer }} {{ $aircraft->model }}</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">ICAO Code: {{ $aircraft->icao_type ?? '-' }} | IATA: {{ $aircraft->iata_type ?? '-' }}</p>
         </div>
         <a href="{{ route('aircraft.index') }}" class="px-3.5 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition border border-slate-200 dark:border-slate-700">
-            &larr; Kembali
+            &larr; Back
         </a>
     </div>
 
     @if($errors->any())
     <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700/60 rounded-xl p-4 text-xs text-red-700 dark:text-red-300">
-        <div class="font-bold mb-1">Terdapat kesalahan pengisian data:</div>
+        <div class="font-bold mb-1">There were errors with your submission:</div>
         <ul class="list-disc pl-4 space-y-0.5">
             @foreach($errors->all() as $err)
                 <li>{{ $err }}</li>
@@ -37,7 +37,7 @@
                 <!-- Manufacturer -->
                 <div>
                     <label for="manufacturer" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Pabrikan Pesawat <span class="text-red-500">*</span>
+                        Aircraft Manufacturer <span class="text-red-500">*</span>
                     </label>
                     <input type="text"
                            id="manufacturer"
@@ -50,7 +50,7 @@
                 <!-- Model -->
                 <div>
                     <label for="model" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Model Pesawat <span class="text-red-500">*</span>
+                        Aircraft Model <span class="text-red-500">*</span>
                     </label>
                     <input type="text"
                            id="model"
@@ -63,7 +63,7 @@
                 <!-- ICAO Type -->
                 <div>
                     <label for="icao_type" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Tipe ICAO
+                        ICAO Type
                     </label>
                     <input type="text"
                            id="icao_type"
@@ -75,7 +75,7 @@
                 <!-- IATA Type -->
                 <div>
                     <label for="iata_type" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Tipe IATA
+                        IATA Type
                     </label>
                     <input type="text"
                            id="iata_type"
@@ -87,7 +87,7 @@
                 <!-- Equivalent Aircraft -->
                 <div>
                     <label for="equivalent_aircraft" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Equivalent Aircraft (Tipe Rujukan ICAO)
+                        Equivalent Aircraft (ICAO Reference Type)
                     </label>
                     <input type="text"
                            id="equivalent_aircraft"
@@ -99,7 +99,7 @@
                 <!-- Y-Seats -->
                 <div>
                     <label for="y_seats" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Kapasitas Kursi Standar (Y-Seats) <span class="text-red-500">*</span>
+                        Standard Seat Capacity (Y-Seats) <span class="text-red-500">*</span>
                     </label>
                     <input type="number"
                            id="y_seats"
@@ -139,7 +139,7 @@
                 <!-- CO2 Factor -->
                 <div>
                     <label for="co2_factor" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Faktor Emisi CO₂ ICAO (kg CO₂ / kg Fuel)
+                        ICAO CO₂ Emission Factor (kg CO₂ / kg Fuel)
                     </label>
                     <input type="number"
                            step="0.01"
@@ -152,7 +152,7 @@
                 <!-- Data Source -->
                 <div>
                     <label for="data_source" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Sumber Data
+                        Data Source
                     </label>
                     <input type="text"
                            id="data_source"
@@ -164,7 +164,7 @@
                 <!-- Notes -->
                 <div class="md:col-span-2">
                     <label for="notes" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                        Catatan Tambahan
+                        Additional Notes
                     </label>
                     <textarea id="notes"
                               name="notes"
@@ -182,17 +182,17 @@
                            {{ old('status', $aircraft->status) ? 'checked' : '' }}
                            class="w-4 h-4 rounded text-[#0B5A9E] focus:ring-[#0B5A9E] border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700">
                     <label for="status" class="text-sm font-medium text-slate-700 dark:text-slate-300">
-                        Armada Aktif
+                        Active Aircraft
                     </label>
                 </div>
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-5 border-t border-slate-200 dark:border-slate-700">
                 <a href="{{ route('aircraft.index') }}" class="px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-800">
-                    Batal
+                    Cancel
                 </a>
                 <button type="submit" class="px-5 py-2.5 bg-[#0B5A9E] hover:bg-[#084a82] text-white text-sm font-semibold rounded-lg shadow-sm transition">
-                    Perbarui Pesawat
+                    Update Aircraft
                 </button>
             </div>
         </form>

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Data Pesawat')
-@section('page-title', 'Master Data Pesawat')
-@section('page-subtitle', 'Jenis Armada & Parameter Konsumsi ICAO')
+@section('title', 'Aircraft')
+@section('page-title', 'Aircraft Master Data')
+@section('page-subtitle', 'Fleet Models & ICAO Fuel Burn Parameters')
 
 @section('content')
 <div class="p-4 md:p-6 space-y-4"
@@ -56,11 +56,11 @@
             <input type="text"
                    name="search"
                    value="{{ request('search') }}"
-                   placeholder="Cari pabrikan, model, ICAO..."
+                   placeholder="Search manufacturer, model, ICAO..."
                    class="form-input-base w-64">
 
             <button type="submit" class="btn-primary">
-                Cari
+                Search
             </button>
             @if(request('search'))
                 <a href="{{ route('aircraft.index') }}" class="px-2.5 py-1.5 text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
@@ -79,15 +79,15 @@
                 <div x-show="open" @click.away="open = false" x-cloak
                      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
                     <div class="bg-white dark:bg-slate-800 rounded-xl p-5 w-full max-w-md shadow-lg border border-slate-200 dark:border-slate-800">
-                        <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-1.5">Import Data Pesawat</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Unggah file format .xlsx atau .xls dengan parameter pabrikan, model, ICAO type, y-seats, dan fuel burn factor.</p>
+                        <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-1.5">Import Aircraft Data</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Upload an .xlsx or .xls spreadsheet with manufacturer, model, ICAO type, y-seats, and fuel burn factor parameters.</p>
                         <form method="POST" action="{{ route('aircraft.import-excel') }}" enctype="multipart/form-data">
                             @csrf
                             <input type="file" name="file" accept=".xlsx,.xls" required
                                    class="w-full text-xs text-slate-600 dark:text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#0B5A9E] file:text-white hover:file:bg-[#084a82] mb-4">
                             <div class="flex justify-end gap-2">
                                 <button type="button" @click="open = false" class="btn-secondary">
-                                    Batal
+                                    Cancel
                                 </button>
                                 <button type="submit" class="btn-primary">
                                     Upload & Import
@@ -107,7 +107,7 @@
             @can('manage-aircraft')
             <!-- Create Aircraft -->
             <a href="{{ route('aircraft.create') }}" class="btn-primary">
-                + Tambah Pesawat
+                + Add Aircraft
             </a>
             @endcan
         </div>
@@ -117,10 +117,10 @@
     <div class="card overflow-hidden">
         @if($aircrafts->isEmpty())
             <div class="flex flex-col items-center justify-center py-20 text-center">
-                <p class="text-slate-500 dark:text-slate-400 font-medium">Belum ada data armada pesawat ditemukan.</p>
+                <p class="text-slate-500 dark:text-slate-400 font-medium">No aircraft fleet data found.</p>
                 @can('manage-aircraft')
                 <a href="{{ route('aircraft.create') }}" class="mt-3 px-4 py-2 bg-[#0B5A9E] text-white text-sm font-semibold rounded-lg hover:bg-[#084a82]">
-                    Tambah Pesawat Pertama
+                    Add First Aircraft
                 </a>
                 @endcan
             </div>
@@ -129,13 +129,13 @@
                 <table class="w-full text-xs text-left">
                     <thead>
                         <tr class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
-                            <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Pabrikan & Model</th>
-                            <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Kode ICAO / IATA</th>
-                            <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">Kapasitas Kursi</th>
+                            <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Manufacturer & Model</th>
+                            <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">ICAO / IATA Code</th>
+                            <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">Seat Capacity</th>
                             <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">Fuel Burn Factor</th>
-                            <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">Faktor CO₂</th>
+                            <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">CO₂ Factor</th>
                             <th class="px-4 py-2.5 text-center font-medium uppercase tracking-wider text-[11px]">Status</th>
-                            <th class="px-4 py-2.5 text-center font-medium uppercase tracking-wider text-[11px]">Aksi</th>
+                            <th class="px-4 py-2.5 text-center font-medium uppercase tracking-wider text-[11px]">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
@@ -154,7 +154,7 @@
                                 <span class="text-slate-400">/ {{ $aircraft->iata_type ?? '-' }}</span>
                             </td>
                             <td class="px-4 py-2.5 text-right font-mono tabular-nums text-slate-700 dark:text-slate-300">
-                                {{ number_format($aircraft->y_seats) }} kursi
+                                {{ number_format($aircraft->y_seats) }} seats
                             </td>
                             <td class="px-4 py-2.5 text-right font-mono tabular-nums text-slate-600 dark:text-slate-400">
                                 {{ $aircraft->fuel_burn_factor ? number_format($aircraft->fuel_burn_factor, 4) : '-' }}
@@ -165,28 +165,28 @@
                             <td class="px-4 py-2.5 text-center">
                                 @if($aircraft->status)
                                     <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                                        Aktif
+                                        Active
                                     </span>
                                 @else
                                     <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
-                                        Nonaktif
+                                        Inactive
                                     </span>
                                 @endif
                             </td>
                             <td class="px-4 py-2.5 text-center">
                                 <div class="inline-flex items-center gap-1.5">
                                     <a href="{{ route('aircraft.show', $aircraft) }}" class="px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition">
-                                        Lihat
+                                        View
                                     </a>
                                     @can('manage-aircraft')
                                     <a href="{{ route('aircraft.edit', $aircraft) }}" class="px-2 py-1 text-xs font-medium text-[#0B5A9E] dark:text-sky-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded transition">
                                         Edit
                                     </a>
-                                    <form method="POST" action="{{ route('aircraft.destroy', $aircraft) }}" onsubmit="return confirm('Hapus pesawat {{ $aircraft->manufacturer }} {{ $aircraft->model }}?')" class="inline">
+                                    <form method="POST" action="{{ route('aircraft.destroy', $aircraft) }}" onsubmit="return confirm('Delete aircraft {{ $aircraft->manufacturer }} {{ $aircraft->model }}? This action cannot be undone.')" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="px-2 py-1 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded transition">
-                                            Hapus
+                                            Delete
                                         </button>
                                     </form>
                                     @endcan

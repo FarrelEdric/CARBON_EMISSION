@@ -2,7 +2,7 @@
 
 @section('title', 'Dashboard')
 @section('page-title', 'Dashboard')
-@section('page-subtitle', 'Ringkasan Emisi Karbon Penerbangan')
+@section('page-subtitle', 'Flight Carbon Emissions Overview')
 
 @section('content')
 <div class="p-4 md:p-6 space-y-6"
@@ -93,9 +93,9 @@
 
             <!-- Period -->
             <div class="flex flex-col gap-1 min-w-[140px]">
-                <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Periode</label>
+                <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Period</label>
                 <select name="period" onchange="toggleDateRange(this.value)" class="form-select-base">
-                    @foreach(['all'=>'Semua Periode','today'=>'Hari Ini','yesterday'=>'Kemarin','this-week'=>'Minggu Ini','this-month'=>'Bulan Ini','this-quarter'=>'Kuartal Ini','this-year'=>'Tahun Ini','custom'=>'Custom'] as $val => $label)
+                    @foreach(['all'=>'All Periods','today'=>'Today','yesterday'=>'Yesterday','this-week'=>'This Week','this-month'=>'This Month','this-quarter'=>'This Quarter','this-year'=>'This Year','custom'=>'Custom'] as $val => $label)
                         <option value="{{ $val }}" {{ ($filters['period'] ?? 'all') === $val ? 'selected' : '' }}>{{ $label }}</option>
                     @endforeach
                 </select>
@@ -104,11 +104,11 @@
             <!-- Date Range (shown for custom) -->
             <div id="date-range-wrapper" class="{{ ($filters['period'] ?? '') === 'custom' ? 'flex' : 'hidden' }} gap-2">
                 <div class="flex flex-col gap-1">
-                    <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Dari</label>
+                    <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">From</label>
                     <input type="date" name="date_from" value="{{ $filters['date_from'] }}" class="form-input-base font-mono">
                 </div>
                 <div class="flex flex-col gap-1">
-                    <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sampai</label>
+                    <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">To</label>
                     <input type="date" name="date_to" value="{{ $filters['date_to'] }}" class="form-input-base font-mono">
                 </div>
             </div>
@@ -117,7 +117,7 @@
             <div class="flex flex-col gap-1 min-w-[140px]">
                 <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Departure</label>
                 <select name="origin" class="form-select-base">
-                    <option value="">Semua Asal</option>
+                    <option value="">All Origins</option>
                     @foreach($airports as $airport)
                         <option value="{{ $airport->iata_code }}" {{ $filters['origin'] === $airport->iata_code ? 'selected' : '' }}>
                             {{ $airport->iata_code }} — {{ $airport->name }}
@@ -130,7 +130,7 @@
             <div class="flex flex-col gap-1 min-w-[140px]">
                 <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Destination</label>
                 <select name="destination" class="form-select-base">
-                    <option value="">Semua Tujuan</option>
+                    <option value="">All Destinations</option>
                     @foreach($airports as $airport)
                         <option value="{{ $airport->iata_code }}" {{ $filters['destination'] === $airport->iata_code ? 'selected' : '' }}>
                             {{ $airport->iata_code }} — {{ $airport->name }}
@@ -141,9 +141,9 @@
 
             <!-- Aircraft -->
             <div class="flex flex-col gap-1 min-w-[140px]">
-                <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Pesawat</label>
+                <label class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Aircraft</label>
                 <select name="aircraft" class="form-select-base">
-                    <option value="">Semua Pesawat</option>
+                    <option value="">All Aircraft</option>
                     @foreach($aircraft as $ac)
                         <option value="{{ $ac->id }}" {{ $filters['aircraft'] == $ac->id ? 'selected' : '' }}>
                             {{ $ac->manufacturer }} {{ $ac->model }}
@@ -154,7 +154,7 @@
 
             <div class="flex items-center gap-2">
                 <button type="submit" class="btn-primary h-9">
-                    Terapkan Filter
+                    Apply Filters
                 </button>
                 <a href="{{ route('dashboard') }}" class="btn-secondary h-9">
                     Reset
@@ -167,9 +167,9 @@
     <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3.5">
 
         <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
-            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Penerbangan</div>
+            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Flights</div>
             <div class="text-2xl font-bold font-mono tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_flights']) }}</div>
-            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">penerbangan</div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">flights</div>
         </div>
 
         <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
@@ -179,27 +179,27 @@
         </div>
 
         <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
-            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Rata-rata CO₂ / Pax</div>
+            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Avg CO₂ / Pax</div>
             <div class="text-2xl font-bold font-mono tabular-nums text-[#0B5A9E] dark:text-sky-400 tracking-tight">{{ number_format($kpis['avg_co2_per_pax'], 2) }}</div>
             <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">kg CO₂ / pax</div>
         </div>
 
         <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
-            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Bahan Bakar</div>
+            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Fuel</div>
             <div class="text-2xl font-bold font-mono tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_fuel_kg'] / 1000, 1) }}</div>
             <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">tonnes Jet-A1</div>
         </div>
 
         <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
-            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Penumpang</div>
+            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Total Passengers</div>
             <div class="text-2xl font-bold font-mono tabular-nums text-slate-900 dark:text-white tracking-tight">{{ number_format($kpis['total_passengers']) }}</div>
-            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">penumpang est.</div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">estimated pax</div>
         </div>
 
         <div class="kpi-card card p-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
-            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Rata-rata Load Factor</div>
+            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 truncate">Average Load Factor</div>
             <div class="text-2xl font-bold font-mono tabular-nums text-slate-900 dark:text-white tracking-tight">{{ $kpis['avg_load_factor'] }}<span class="text-sm font-normal text-slate-400">%</span></div>
-            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">keterisian kursi</div>
+            <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">seat occupancy</div>
         </div>
     </div>
 
@@ -208,12 +208,12 @@
         <!-- CO2 Trend -->
         <div class="card p-4 sm:p-5">
             <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3 tracking-tight">
-                Tren Emisi CO₂
+                CO₂ Emission Trend
             </h3>
             <div class="relative h-52">
                 <canvas id="chart-trend"></canvas>
                 @if(empty($charts['trend']['labels']) || count($charts['trend']['labels']) === 0)
-                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">Tidak ada data untuk periode ini.</div>
+                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">No data available for this period.</div>
                 @endif
             </div>
         </div>
@@ -221,12 +221,12 @@
         <!-- CO2 by Aircraft -->
         <div class="card p-4 sm:p-5">
             <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3 tracking-tight">
-                CO₂ per Jenis Pesawat
+                CO₂ by Aircraft Type
             </h3>
             <div class="relative h-52">
                 <canvas id="chart-aircraft"></canvas>
                 @if(empty($charts['byAircraft']['labels']) || count($charts['byAircraft']['labels']) === 0)
-                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">Tidak ada data.</div>
+                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">No data available.</div>
                 @endif
             </div>
         </div>
@@ -234,12 +234,12 @@
         <!-- CO2 by Route -->
         <div class="card p-4 sm:p-5">
             <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3 tracking-tight">
-                CO₂ per Rute
+                CO₂ by Route
             </h3>
             <div class="relative h-52">
                 <canvas id="chart-route"></canvas>
                 @if(empty($charts['byRoute']['labels']) || count($charts['byRoute']['labels']) === 0)
-                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">Tidak ada data untuk periode ini.</div>
+                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">No data available for this period.</div>
                 @endif
             </div>
         </div>
@@ -247,12 +247,12 @@
         <!-- Avg CO2 per Pax -->
         <div class="card p-4 sm:p-5">
             <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3 tracking-tight">
-                Rata-rata CO₂/Penumpang per Rute
+                Average CO₂ / Passenger by Route
             </h3>
             <div class="relative h-52">
                 <canvas id="chart-pax"></canvas>
                 @if(empty($charts['avgPerPax']['labels']) || count($charts['avgPerPax']['labels']) === 0)
-                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">Tidak ada data untuk periode ini.</div>
+                <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs">No data available for this period.</div>
                 @endif
             </div>
         </div>
@@ -271,15 +271,15 @@
                 <div>
                     <div class="flex items-center gap-2">
                         <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">
-                            Peta Radar Penerbangan Real-Time
+                            Real-Time Flight Radar Map
                         </h3>
                         <span id="flight-status-badge" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span id="flight-status-text">Menghubungkan ADS-B...</span>
+                            <span id="flight-status-text">Connecting ADS-B...</span>
                         </span>
                     </div>
                     <p class="text-[11px] text-slate-500 dark:text-slate-400">
-                        Live Tracking Transponder Pesawat ADS-B di Wilayah Udara Indonesia (FIR Jakarta &amp; Ujung Pandang)
+                        Live ADS-B Aircraft Transponder Tracking across Indonesian Airspace (Jakarta &amp; Ujung Pandang FIR)
                     </p>
 
                 </div>
@@ -290,7 +290,7 @@
                 <!-- Active Aircraft Count -->
                 <div class="px-2.5 py-1 bg-white dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 font-semibold text-slate-700 dark:text-slate-200 shadow-xs flex items-center gap-1.5">
                     <span class="text-[#0B5A9E] dark:text-sky-400 font-bold">✈</span>
-                    <span id="aircraft-count-display">0 Pesawat Aktif</span>
+                    <span id="aircraft-count-display">0 Active Aircraft</span>
                 </div>
 
                 <!-- Last Updated -->
@@ -301,21 +301,21 @@
 
                 <!-- Actions -->
                 <div class="flex items-center gap-1.5">
-                    <button type="button" id="btn-refresh-flights" title="Refresh Posisi Pesawat Sekarang"
+                    <button type="button" id="btn-refresh-flights" title="Refresh Aircraft Positions Now"
                             class="px-2.5 py-1 text-[11px] font-medium rounded-md bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 transition shadow-xs flex items-center gap-1.5">
                         <svg id="refresh-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                         <span>Refresh</span>
                     </button>
 
-                    <button type="button" id="btn-toggle-polling" title="Jeda atau lanjutkan polling otomatis"
+                    <button type="button" id="btn-toggle-polling" title="Pause or resume automatic polling"
                             class="px-2.5 py-1 text-[11px] font-medium rounded-md bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 transition shadow-xs flex items-center gap-1.5">
                         <span id="polling-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                         <span id="btn-polling-text">Live (15s)</span>
                     </button>
 
-                    <button type="button" id="btn-center-indonesia" title="Pusatkan kembali ke Indonesia"
+                    <button type="button" id="btn-center-indonesia" title="Center on Indonesia"
                             class="px-2.5 py-1 text-[11px] font-medium rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition shadow-xs">
-                        🇮🇩 Fokus RI
+                        🇮🇩 Center Indonesia
                     </button>
                 </div>
             </div>
@@ -325,7 +325,7 @@
         <div id="flight-radar-alert" class="hidden px-4 py-2 text-xs border-b transition-all flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <span id="alert-icon">⚠️</span>
-                <span id="alert-message">Info status API</span>
+                <span id="alert-message">API status info</span>
             </div>
             <button type="button" onclick="document.getElementById('flight-radar-alert').classList.add('hidden')" class="text-xs font-bold px-1.5 py-0.5 hover:bg-black/10 rounded">×</button>
         </div>
@@ -337,24 +337,24 @@
             <!-- Subtle Radar Legend Overlay (Bottom Left) -->
             <div class="absolute bottom-4 left-4 z-[400] bg-white/95 dark:bg-slate-900/90 backdrop-blur-md rounded-xl p-3 shadow-lg border border-slate-200/80 dark:border-slate-700/80 text-[10px] space-y-1.5 pointer-events-auto">
                 <div class="font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-800 pb-1 flex items-center justify-between gap-3">
-                    <span>Legenda Radar Pesawat</span>
+                    <span>Flight Radar Legend</span>
                     <span class="text-[9px] font-normal text-slate-400">ADS-B OpenSky</span>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="w-3.5 h-3.5 rounded-full bg-[#0B5A9E] inline-flex items-center justify-center text-[8px] text-white">✈</span>
-                    <span class="text-slate-600 dark:text-slate-300">Cruising (Jelajah Udara)</span>
+                    <span class="text-slate-600 dark:text-slate-300">Cruising (Level Flight)</span>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="w-3.5 h-3.5 rounded-full bg-emerald-600 inline-flex items-center justify-center text-[8px] text-white">↗</span>
-                    <span class="text-slate-600 dark:text-slate-300">Climbing (Menanjak &gt; 1.5 m/s)</span>
+                    <span class="text-slate-600 dark:text-slate-300">Climbing (&gt; 1.5 m/s)</span>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="w-3.5 h-3.5 rounded-full bg-amber-600 inline-flex items-center justify-center text-[8px] text-white">↘</span>
-                    <span class="text-slate-600 dark:text-slate-300">Descending (Menurun &lt; -1.5 m/s)</span>
+                    <span class="text-slate-600 dark:text-slate-300">Descending (&lt; -1.5 m/s)</span>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="w-3.5 h-3.5 rounded-full bg-slate-500 inline-flex items-center justify-center text-[8px] text-white">●</span>
-                    <span class="text-slate-600 dark:text-slate-300">On Ground (Di Darat / Apron)</span>
+                    <span class="text-slate-600 dark:text-slate-300">On Ground (Apron / Taxiway)</span>
                 </div>
             </div>
 
@@ -368,9 +368,9 @@
                     <button type="button" onclick="document.getElementById('selected-plane-card').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 font-bold">×</button>
                 </div>
                 <div class="space-y-1 text-[11px]">
-                    <div class="flex justify-between"><span class="text-slate-400">Maskapai:</span> <span id="quick-airline" class="font-semibold text-slate-700 dark:text-slate-200">Garuda Indonesia</span></div>
-                    <div class="flex justify-between"><span class="text-slate-400">Ketinggian:</span> <span id="quick-altitude" class="font-mono font-semibold text-slate-700 dark:text-slate-200">32,000 ft</span></div>
-                    <div class="flex justify-between"><span class="text-slate-400">Kecepatan:</span> <span id="quick-speed" class="font-mono font-semibold text-slate-700 dark:text-slate-200">460 kts</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">Airline:</span> <span id="quick-airline" class="font-semibold text-slate-700 dark:text-slate-200">Garuda Indonesia</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">Altitude:</span> <span id="quick-altitude" class="font-mono font-semibold text-slate-700 dark:text-slate-200">32,000 ft</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">Speed:</span> <span id="quick-speed" class="font-mono font-semibold text-slate-700 dark:text-slate-200">460 kts</span></div>
                     <div class="flex justify-between"><span class="text-slate-400">Heading:</span> <span id="quick-heading" class="font-mono font-semibold text-slate-700 dark:text-slate-200">120°</span></div>
                     <div class="flex justify-between"><span class="text-slate-400">Status:</span> <span id="quick-status" class="font-semibold text-emerald-600 dark:text-emerald-400">Cruising</span></div>
                 </div>
@@ -382,28 +382,28 @@
     <!-- ====== FLIGHT TABLE ====== -->
     <div class="card overflow-hidden">
         <div class="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-200 dark:border-slate-800">
-            <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">Data Penerbangan Terkini</h3>
+            <h3 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">Recent Flight Data</h3>
             <a href="{{ route('flights.index', request()->query()) }}"
                class="text-xs text-[#0B5A9E] dark:text-sky-400 hover:text-[#084a82] font-medium transition-colors">
-                Lihat Semua →
+                View All →
             </a>
         </div>
 
         @if($flights->isEmpty())
         <div class="flex flex-col items-center justify-center py-16 text-center">
             <svg class="w-10 h-10 text-slate-300 dark:text-slate-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-            <p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Tidak ada data penerbangan untuk filter yang dipilih.</p>
-            <a href="{{ route('dashboard') }}" class="mt-2 text-xs text-[#0B5A9E] hover:underline">Reset filter</a>
+            <p class="text-slate-500 dark:text-slate-400 text-xs font-medium">No flight records found for the selected filters.</p>
+            <a href="{{ route('dashboard') }}" class="mt-2 text-xs text-[#0B5A9E] hover:underline">Reset filters</a>
         </div>
         @else
         <div class="overflow-x-auto">
             <table class="w-full text-xs text-left">
                 <thead>
                     <tr class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
-                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Penerbangan</th>
-                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Tanggal</th>
-                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Rute</th>
-                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Pesawat</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Flight</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Date</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Route</th>
+                        <th class="px-4 py-2.5 font-medium uppercase tracking-wider text-[11px]">Aircraft</th>
                         <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">GCD (km)</th>
                         <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">Fuel (kg)</th>
                         <th class="px-4 py-2.5 text-right font-medium uppercase tracking-wider text-[11px]">Load %</th>
@@ -448,7 +448,7 @@
     <!-- Standard methodology note -->
     <div class="flex items-center gap-2.5 px-4 py-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200/80 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
         <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <span>Data operasional penerbangan dan estimasi emisi karbon dihitung berdasarkan metodologi standar ICAO Doc 9889 & CORSIA untuk keperluan pemantauan efisiensi bahan bakar.</span>
+        <span>Flight operational data and carbon emission estimates are calculated following standard ICAO Doc 9889 & CORSIA methodologies for fuel efficiency monitoring.</span>
     </div>
 
     </div>{{-- end real content --}}
@@ -726,30 +726,30 @@ function fetchLiveFlights(isManual = false) {
                 if (statusText) statusText.textContent = '● ' + prov;
                 if (alertBox) alertBox.classList.add('hidden');
 
-                if (countEl) countEl.textContent = `${data.total_count} Pesawat Aktif`;
+                if (countEl) countEl.textContent = `${data.total_count} Active Aircraft`;
 
                 updateAircraftMarkers(data.flights || []);
 
                 if (data.total_count === 0 && alertBox) {
-                    showAlert('ℹ️', 'Tidak ada pesawat dengan transponder aktif terdeteksi di koordinat wilayah ini saat ini.', 'bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800');
+                    showAlert('ℹ️', 'No active transponder aircraft detected in this airspace at the moment.', 'bg-blue-50 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800');
                 }
             } else if (data.status === 'rate_limited') {
                 if (statusBadge) {
                     statusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300';
                 }
                 if (statusText) statusText.textContent = 'Rate Limited (OpenSky)';
-                showAlert('⏳', data.message || 'API OpenSky sedang mencapai batas frekuensi rate limit. Menunggu jeda...', 'bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border-amber-200 dark:border-amber-800');
+                showAlert('⏳', data.message || 'OpenSky API rate limit reached. Waiting for next window...', 'bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border-amber-200 dark:border-amber-800');
 
                 if (data.flights && data.flights.length > 0) {
                     updateAircraftMarkers(data.flights);
-                    if (countEl) countEl.textContent = `${data.total_count} Pesawat (Cache)`;
+                    if (countEl) countEl.textContent = `${data.total_count} Aircraft (Cached)`;
                 }
             } else if (data.status === 'network_error' || data.status === 'error') {
                 if (statusBadge) {
                     statusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300';
                 }
-                if (statusText) statusText.textContent = 'Koneksi API Gagal';
-                showAlert('⚠️', data.message || 'Gagal terhubung ke API live flight tracking. Memeriksa kembali...', 'bg-red-50 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800');
+                if (statusText) statusText.textContent = 'API Connection Failed';
+                showAlert('⚠️', data.message || 'Failed to connect to live flight tracking API. Retrying...', 'bg-red-50 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800');
 
                 if (data.flights && data.flights.length > 0) {
                     updateAircraftMarkers(data.flights);
@@ -760,7 +760,7 @@ function fetchLiveFlights(isManual = false) {
             isFetching = false;
             if (refreshIcon) refreshIcon.classList.remove('animate-spin');
             console.error('Live flights fetch error:', err);
-            showAlert('⚠️', 'Gagal memuat API data penerbangan: ' + err.message, 'bg-red-50 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800');
+            showAlert('⚠️', 'Failed to load flight tracking data: ' + err.message, 'bg-red-50 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800');
         });
 }
 
@@ -836,11 +836,11 @@ function buildFlightPopup(flight) {
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;margin-bottom:8px;">
                 <div style="background:#f8fafc;padding:4px 6px;border-radius:6px;border:1px solid #f1f5f9;">
-                    <div style="font-size:9px;color:#94a3b8;text-transform:uppercase;">Ketinggian</div>
+                    <div style="font-size:9px;color:#94a3b8;text-transform:uppercase;">Altitude</div>
                     <div style="font-weight:700;color:#1e293b;font-family:monospace;">${altText}</div>
                 </div>
                 <div style="background:#f8fafc;padding:4px 6px;border-radius:6px;border:1px solid #f1f5f9;">
-                    <div style="font-size:9px;color:#94a3b8;text-transform:uppercase;">Kecepatan</div>
+                    <div style="font-size:9px;color:#94a3b8;text-transform:uppercase;">Speed</div>
                     <div style="font-weight:700;color:#1e293b;font-family:monospace;">${speedText}</div>
                 </div>
                 <div style="background:#f8fafc;padding:4px 6px;border-radius:6px;border:1px solid #f1f5f9;">
@@ -855,10 +855,10 @@ function buildFlightPopup(flight) {
 
             <div style="font-size:10px;color:#64748b;border-top:1px solid #f1f5f9;padding-top:6px;display:flex;justify-content:space-between;">
                 <span>ICAO24: <strong style="font-family:monospace;color:#334155;">${flight.icao24?.toUpperCase()}</strong></span>
-                <span>Asal: <strong>${flight.origin_country || 'N/A'}</strong></span>
+                <span>Origin: <strong>${flight.origin_country || 'N/A'}</strong></span>
             </div>
             <div style="font-size:9px;color:#94a3b8;margin-top:2px;">
-                Pos: ${flight.lat.toFixed(4)}, ${flight.lng.toFixed(4)} • Kontak: ${flight.last_contact}
+                Pos: ${flight.lat.toFixed(4)}, ${flight.lng.toFixed(4)} • Contact: ${flight.last_contact}
             </div>
         </div>
     `;
@@ -952,7 +952,7 @@ function togglePolling() {
         }
         fetchLiveFlights(true);
     } else {
-        if (btnText) btnText.textContent = 'Jeda';
+        if (btnText) btnText.textContent = 'Paused';
         if (indicator) {
             indicator.className = 'w-2 h-2 rounded-full bg-slate-400';
         }
