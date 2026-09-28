@@ -53,6 +53,21 @@ class CarbonEmissionCalculator
     }
 
     /**
+     * Get ICAO distance correction factor in km.
+     *
+     * @param  float  $gcdKm  Raw Great Circle Distance in km
+     * @return float  Correction distance in km (50, 100, or 125)
+     */
+    public function getDistanceCorrection(float $gcdKm): float
+    {
+        return (float) match(true) {
+            $gcdKm < 550   => self::CORRECTION_SHORT,
+            $gcdKm <= 5500 => self::CORRECTION_MED,
+            default        => self::CORRECTION_LONG,
+        };
+    }
+
+    /**
      * Apply ICAO distance correction factor.
      *
      * Correction accounts for actual flight paths being longer than GCD
@@ -63,13 +78,7 @@ class CarbonEmissionCalculator
      */
     public function applyDistanceCorrection(float $gcdKm): float
     {
-        $correction = match(true) {
-            $gcdKm < 550  => self::CORRECTION_SHORT,
-            $gcdKm <= 5500 => self::CORRECTION_MED,
-            default       => self::CORRECTION_LONG,
-        };
-
-        return round($gcdKm + $correction, 2);
+        return round($gcdKm + $this->getDistanceCorrection($gcdKm), 2);
     }
 
     /**
@@ -152,6 +161,7 @@ class CarbonEmissionCalculator
         );
 
         $adjustedDistance = $this->applyDistanceCorrection($gcd);
+        $correction = $this->getDistanceCorrection($gcd);
 
         $co2Factor = (float) ($params['co2_factor'] ?? self::ICAO_CO2_FACTOR);
         $totalFuelKg = (float) $params['total_fuel_kg'];
@@ -174,7 +184,7 @@ class CarbonEmissionCalculator
         return [
             'distance_gcd_km'             => $gcd,
             'distance_adjusted_km'        => $adjustedDistance,
-            'correction_km'               => $adjustedDistance - $gcd,
+            'correction_km'               => $correction,
             'total_fuel_kg'               => $totalFuelKg,
             'passenger_fuel_kg'           => round($passengerFuelKg, 2),
             'freight_fuel_kg'             => round($freightFuelKg, 2),

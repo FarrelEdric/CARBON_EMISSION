@@ -365,7 +365,7 @@
                                 <span x-text="resultData.result.distance_adjusted_km.toLocaleString()"></span>
                                 <span class="text-xs font-normal text-slate-500">km</span>
                             </div>
-                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="'GCD ' + resultData.result.distance_gcd_km.toLocaleString() + ' (+' + resultData.result.correction_km + ' km)'"></div>
+                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="'GCD ' + resultData.result.distance_gcd_km.toLocaleString() + ' (+' + Math.round(resultData.result.correction_km) + ' km)'"></div>
                         </div>
 
                         <!-- 4. Passengers -->
@@ -420,7 +420,7 @@
                                         1. Jarak Rute Terkoreksi
                                     </td>
                                     <td class="px-4 py-3 text-slate-500">GCD + Koreksi Deviasi ICAO</td>
-                                    <td class="px-4 py-3" x-text="resultData.result.distance_gcd_km.toLocaleString() + ' km + ' + resultData.result.correction_km + ' km'"></td>
+                                    <td class="px-4 py-3" x-text="resultData.result.distance_gcd_km.toLocaleString() + ' km + ' + Math.round(resultData.result.correction_km) + ' km'"></td>
                                     <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.distance_adjusted_km.toLocaleString() + ' km'"></td>
                                 </tr>
                                 <tr>
@@ -831,7 +831,7 @@ function carbonCalculatorApp() {
             const text = `ACE AVIATION CARBON EMISSION REPORT\n` +
                 `====================================\n` +
                 `Rute: ${r.departure.iata_code} (${r.departure.city}) -> ${r.arrival.iata_code} (${r.arrival.city})\n` +
-                `Jarak Tempuh: ${r.result.distance_adjusted_km.toLocaleString()} km (GCD: ${r.result.distance_gcd_km.toLocaleString()} km, Koreksi ICAO: +${r.result.correction_km} km)\n` +
+                `Jarak Tempuh: ${r.result.distance_adjusted_km.toLocaleString()} km (GCD: ${r.result.distance_gcd_km.toLocaleString()} km, Koreksi ICAO: +${Math.round(r.result.correction_km)} km)\n` +
                 `Bahan Bakar: ${r.result.total_fuel_kg.toLocaleString()} kg (Porsi Pax: ${r.result.passenger_fuel_kg.toLocaleString()} kg / ${(r.result.passenger_to_freight_factor*100).toFixed(0)}%)\n` +
                 `Kapasitas & Keterisian: ${r.result.y_seats} kursi (LF: ${(r.result.passenger_load_factor*100).toFixed(0)}%, Penumpang: ${r.result.passenger_count} pax)\n` +
                 `------------------------------------\n` +
