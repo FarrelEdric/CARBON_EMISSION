@@ -68,11 +68,7 @@ class CarbonEmissionCalculator
     }
 
     /**
-     * Apply ICAO distance correction factor.
-     *
-     * Correction accounts for actual flight paths being longer than GCD
-     * due to ATC routing, weather, SID/STAR procedures, etc.
-     *
+
      * @param  float  $gcdKm  Raw Great Circle Distance in km
      * @return float  Adjusted distance in km
      */
@@ -82,13 +78,6 @@ class CarbonEmissionCalculator
     }
 
     /**
-     * Calculate CO₂ per passenger using the ICAO methodology.
-     *
-     * Formula:
-     *   CO₂/pax = co2Factor × (totalFuelKg × paxFreightFactor) / (ySeats × loadFactor)
-     *
-     * Example:
-     *   3.16 × (5000 × 0.80) / (200 × 0.80) = 79 kg CO₂/pax
      *
      * @param  float  $totalFuelKg             Total fuel burned (kg)
      * @param  float  $passengerToFreightFactor Fraction of fuel attributed to passengers (0–1)
@@ -115,7 +104,6 @@ class CarbonEmissionCalculator
     }
 
     /**
-     * Calculate total flight CO₂ in kg.
      *
      * @param  float  $totalFuelKg  Total fuel in kg
      * @param  float  $co2Factor    CO₂ conversion factor
@@ -137,18 +125,9 @@ class CarbonEmissionCalculator
     }
 
     /**
-     * Perform a full calculation for a flight route.
-     * Returns a DTO-style array with all calculation results.
-     *
+
      * @param  array  $params  {
-     *   'departure_lat', 'departure_lng',
-     *   'arrival_lat', 'arrival_lng',
-     *   'total_fuel_kg',
-     *   'passenger_to_freight_factor',
-     *   'y_seats',
-     *   'passenger_load_factor',
-     *   'co2_factor' (optional, defaults to 3.16)
-     * }
+
      * @return array
      */
     public function calculate(array $params): array

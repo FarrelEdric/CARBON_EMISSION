@@ -705,6 +705,11 @@ function carbonCalculatorApp() {
             const mapEl = document.getElementById('calculator-map');
             if (!mapEl) return;
 
+            if (this.planeAnimationId) {
+                cancelAnimationFrame(this.planeAnimationId);
+                this.planeAnimationId = null;
+            }
+
             if (this.mapInstance) {
                 this.mapInstance.remove();
                 this.mapInstance = null;
@@ -773,6 +778,57 @@ function carbonCalculatorApp() {
                 opacity: 0.9,
                 dashArray: '7, 7'
             }).addTo(this.mapInstance);
+
+            // Calculate bearing (heading in degrees) from departure to arrival
+            const toRad = Math.PI / 180;
+            const toDeg = 180 / Math.PI;
+            const lat1 = dep.lat * toRad;
+            const lat2 = arr.lat * toRad;
+            const dLng = (arr.lng - dep.lng) * toRad;
+            const y = Math.sin(dLng) * Math.cos(lat2);
+            const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
+            const bearing = (Math.atan2(y, x) * toDeg + 360) % 360;
+
+            // Animated Flight Airplane Marker
+            const planeIcon = L.divIcon({
+                className: 'flight-route-plane-marker',
+                html: `
+                    <div style="display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);pointer-events:none;">
+                        <div style="transform:rotate(${bearing}deg);display:flex;align-items:center;justify-content:center;">
+                            <div style="background:${isDark ? '#0284c7' : '#0B5A9E'};width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,0.35);border:2px solid #ffffff;">
+                                <svg style="width:15px;height:15px;color:#ffffff;fill:currentColor;" viewBox="0 0 24 24">
+                                    <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                iconSize: [0, 0]
+            });
+
+            const planeMarker = L.marker([dep.lat, dep.lng], {
+                icon: planeIcon,
+                zIndexOffset: 1000
+            }).addTo(this.mapInstance);
+
+            // Loop flight animation along route (e.g. 5 seconds per cycle)
+            const loopDuration = 8000;
+            let animStart = null;
+
+            const animateFlightLoop = (now) => {
+                if (!this.mapInstance) return;
+                if (!animStart) animStart = now;
+                const elapsed = now - animStart;
+                const progress = (elapsed % loopDuration) / loopDuration; // 0.0 -> 1.0
+
+                const curLat = dep.lat + (arr.lat - dep.lat) * progress;
+                const curLng = dep.lng + (arr.lng - dep.lng) * progress;
+
+                planeMarker.setLatLng([curLat, curLng]);
+                this.planeAnimationId = requestAnimationFrame(animateFlightLoop);
+            };
+
+            this.planeAnimationId = requestAnimationFrame(animateFlightLoop);
 
             // Fit bounds with comfortable padding
             this.mapInstance.fitBounds(bounds, { padding: [60, 60] });
