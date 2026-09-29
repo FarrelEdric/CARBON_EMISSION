@@ -189,43 +189,22 @@
                         </div>
                     </div>
 
-                    <!-- Period Presets Quick Buttons -->
+                    <!-- Periode Evaluasi Kalender Dropdown -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            Periode Evaluasi Kalender
+                            Periode Evaluasi Kalender <span class="text-red-500">*</span>
                         </label>
-                        <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 dark:bg-slate-900 rounded-lg text-xs">
-                            <button type="button" @click="setPeriod(30, '1 Bulan (30 hari)')"
-                                    :class="form.period_days === 30 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
-                                    class="py-1.5 rounded transition text-center">
-                                1 Bulan (30h)
-                            </button>
-                            <button type="button" @click="setPeriod(90, 'Triwulan I (90 hari)')"
-                                    :class="form.period_days === 90 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
-                                    class="py-1.5 rounded transition text-center">
-                                TW I (90h)
-                            </button>
-                            <button type="button" @click="setPeriod(91, 'Triwulan II (91 hari)')"
-                                    :class="form.period_days === 91 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
-                                    class="py-1.5 rounded transition text-center">
-                                TW II (91h)
-                            </button>
-                            <button type="button" @click="setPeriod(92, 'Triwulan III / IV (92 hari)')"
-                                    :class="form.period_days === 92 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
-                                    class="py-1.5 rounded transition text-center">
-                                TW III/IV (92h)
-                            </button>
-                            <button type="button" @click="setPeriod(182, 'Semester (182 hari)')"
-                                    :class="form.period_days === 182 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
-                                    class="py-1.5 rounded transition text-center">
-                                Semester (182h)
-                            </button>
-                            <button type="button" @click="setPeriod(365, '1 Tahun (365 hari)')"
-                                    :class="form.period_days === 365 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
-                                    class="py-1.5 rounded transition text-center">
-                                1 Tahun (365h)
-                            </button>
-                        </div>
+                        <select x-model="selectedPeriodKey" @change="onPeriodSelectChanged"
+                                class="w-full form-select-base">
+                            <option value="30">1 Bulan (30 Hari Kalender)</option>
+                            <option value="90">Triwulan I - Q1 (90 Hari Kalender)</option>
+                            <option value="91">Triwulan II - Q2 (91 Hari Kalender)</option>
+                            <option value="92">Triwulan III - Q3 (92 Hari Kalender)</option>
+                            <option value="92-q4">Triwulan IV - Q4 (92 Hari Kalender)</option>
+                            <option value="182">Semester (182 Hari Kalender)</option>
+                            <option value="365">1 Tahun Penuh (365 Hari Kalender)</option>
+                            <option value="custom">Kustom Hari (Input Manual)...</option>
+                        </select>
                     </div>
 
                     <!-- Total Evaluation Days (d) -->
@@ -235,12 +214,18 @@
                         </label>
                         <div class="relative">
                             <input type="number"
+                                   x-ref="periodDaysInput"
                                    min="1"
                                    x-model.number="form.period_days"
-                                   @input="form.period_label = form.period_days + ' Hari'"
+                                   @input="onCustomDaysInput"
+                                   :readonly="selectedPeriodKey !== 'custom'"
+                                   :tabindex="selectedPeriodKey !== 'custom' ? '-1' : '0'"
+                                   :class="selectedPeriodKey !== 'custom'
+                                        ? 'bg-slate-100 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 cursor-not-allowed select-none'
+                                        : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white'"
                                    required
                                    placeholder="91"
-                                   class="w-full form-input-base pr-16 font-mono">
+                                   class="w-full form-input-base pr-16 font-mono transition-colors">
                             <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">hari</span>
                         </div>
                     </div>
@@ -461,18 +446,7 @@
                     <div id="calculator-map" class="w-full h-72 bg-[#e0f2fe] dark:bg-[#0b1329] transition-colors relative"></div>
                 </div>
 
-                <!-- 3. Audit & Calculation Table Breakdown -->
-                <div class="card overflow-hidden">
-                    <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                        <div>
-                            <h3 class="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Audit & Langkah Perhitungan Formula Baku</h3>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400">Verifikasi substitusi parameter baku berdasarkan metodologi evaluasi rute AirNav Indonesia</p>
-                        </div>
-                        <span class="text-xs font-mono text-slate-500 dark:text-slate-400 hidden sm:inline">
-                            CO₂ (kg) = sd × 1,852 × fl × d × fb × ef
-                        </span>
-                    </div>
-
+        
                     <div class="overflow-x-auto">
                         <table class="w-full text-xs text-left border-collapse">
                             <thead>
@@ -602,6 +576,7 @@ function carbonCalculatorApp() {
             exchange_rate: {{ $defaultExchangeRate ?? 15600.0 }},
             tree_absorption_factor: {{ $defaultTreeFactor ?? 21.0 }},
         },
+        selectedPeriodKey: '91',
         previewDistance: {
             gcd: 0,
             nm: 0,
@@ -621,9 +596,32 @@ function carbonCalculatorApp() {
         resizeObs: null,
         themeListenerAttached: false,
 
-        setPeriod(days, label) {
-            this.form.period_days = days;
-            this.form.period_label = label;
+        onPeriodSelectChanged() {
+            const map = {
+                '30': { days: 30, label: '1 Bulan (30 hari)' },
+                '90': { days: 90, label: 'Triwulan I (90 hari)' },
+                '91': { days: 91, label: 'Triwulan II (91 hari)' },
+                '92': { days: 92, label: 'Triwulan III (92 hari)' },
+                '92-q4': { days: 92, label: 'Triwulan IV (92 hari)' },
+                '182': { days: 182, label: 'Semester (182 hari)' },
+                '365': { days: 365, label: '1 Tahun (365 hari)' },
+            };
+            if (map[this.selectedPeriodKey]) {
+                this.form.period_days = map[this.selectedPeriodKey].days;
+                this.form.period_label = map[this.selectedPeriodKey].label;
+            } else if (this.selectedPeriodKey === 'custom') {
+                this.form.period_label = (this.form.period_days || 0) + ' Hari (Kustom)';
+                this.$nextTick(() => {
+                    if (this.$refs.periodDaysInput) {
+                        this.$refs.periodDaysInput.focus();
+                        this.$refs.periodDaysInput.select();
+                    }
+                });
+            }
+        },
+
+        onCustomDaysInput() {
+            this.form.period_label = (this.form.period_days || 0) + ' Hari (Kustom)';
         },
 
         formatCurrencyIdr(val) {
@@ -700,6 +698,7 @@ function carbonCalculatorApp() {
                 this.form.flights_per_day = 50;
                 this.form.period_days = 91;
                 this.form.period_label = 'Triwulan II (91 hari)';
+                this.selectedPeriodKey = '91';
             } else if (preset === 'cgk-sub') {
                 this.form.departure_airport_id = findAirportId('CGK') || depSelect.options[1]?.value;
                 this.form.arrival_airport_id = findAirportId('SUB') || depSelect.options[2]?.value;
@@ -708,6 +707,7 @@ function carbonCalculatorApp() {
                 this.form.flights_per_day = 42;
                 this.form.period_days = 91;
                 this.form.period_label = 'Triwulan II (91 hari)';
+                this.selectedPeriodKey = '91';
             } else if (preset === 'cgk-upg') {
                 this.form.departure_airport_id = findAirportId('CGK') || depSelect.options[1]?.value;
                 this.form.arrival_airport_id = findAirportId('UPG') || depSelect.options[2]?.value;
@@ -716,6 +716,7 @@ function carbonCalculatorApp() {
                 this.form.flights_per_day = 35;
                 this.form.period_days = 91;
                 this.form.period_label = 'Triwulan II (91 hari)';
+                this.selectedPeriodKey = '91';
             }
 
             this.onRouteChanged();
@@ -968,6 +969,7 @@ function carbonCalculatorApp() {
             this.form.flights_per_day = 50;
             this.form.period_days = 91;
             this.form.period_label = 'Triwulan II (91 hari)';
+            this.selectedPeriodKey = '91';
             this.previewDistance = { gcd: 0, nm: 0 };
             this.hasResult = false;
             if (this.planeAnimationId) {
