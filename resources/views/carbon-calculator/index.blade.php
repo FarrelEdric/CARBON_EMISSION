@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'ICAO Carbon Emissions Calculator')
-@section('page-title', 'Carbon Emissions Calculator')
-@section('page-subtitle', 'Aviation Emission Estimation System Based on ICAO Doc 9889 Standards')
+@section('title', 'Kalkulator Pengurangan Emisi Karbon (CO₂) Rute RNAV')
+@section('page-title', 'Kalkulator Pengurangan Emisi Karbon')
+@section('page-subtitle', 'Aviation Emission Reduction & Route Efficiency Calculation Based on AirNav Standard')
 
 @section('content')
 <div class="p-4 md:p-6 space-y-6" x-data="carbonCalculatorApp()">
@@ -11,34 +11,34 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
         <div>
             <div class="flex items-center gap-2">
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                    ICAO Doc 9889
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-sky-300 border border-blue-200 dark:border-blue-800">
+                    AirNav Indonesia
                 </span>
-                <span class="text-xs text-slate-500 dark:text-slate-400">CORSIA Standard Framework</span>
+                <span class="text-xs text-slate-500 dark:text-slate-400">RNAV Route Efficiency & Emission Standard</span>
             </div>
             <h1 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100 mt-1">
-                Flight CO₂ Emissions Calculator
+                Kalkulator Pengurangan Emisi Karbon (CO₂) Rute RNAV
             </h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Commercial passenger flight fuel burn and CO₂ emissions estimation based on corrected GCD distance and passenger-freight allocation.
+                Kalkulasi metrik efisiensi rute penerbangan, penghematan bahan bakar avtur, estimasi biaya operasional, dan serapan emisi pohon.
             </p>
         </div>
 
         <!-- Quick Route Presets -->
         <div class="flex items-center gap-2 text-xs">
-            <span class="text-slate-400 font-medium hidden md:inline">Route Presets:</span>
+            <span class="text-slate-400 font-medium hidden md:inline">Preset Rute:</span>
             <div class="inline-flex p-0.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-                <button type="button" @click="applyPreset('icao')"
-                        class="px-2.5 py-1 font-medium rounded-md hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
-                    ICAO Sample
-                </button>
                 <button type="button" @click="applyPreset('cgk-dps')"
                         class="px-2.5 py-1 font-medium rounded-md hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
-                    CGK &rarr; DPS
+                    CGK &rarr; DPS (TW II)
+                </button>
+                <button type="button" @click="applyPreset('cgk-sub')"
+                        class="px-2.5 py-1 font-medium rounded-md hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
+                    CGK &rarr; SUB (TW II)
                 </button>
                 <button type="button" @click="applyPreset('cgk-upg')"
                         class="px-2.5 py-1 font-medium rounded-md hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition">
-                    CGK &rarr; UPG
+                    CGK &rarr; UPG (TW II)
                 </button>
             </div>
         </div>
@@ -55,23 +55,23 @@
                 <div class="p-5 space-y-4">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                            1. Flight Route
+                            1. Rute Penerbangan
                         </span>
                         <button type="button" @click="swapAirports"
                                 class="text-xs font-medium text-[#0B5A9E] dark:text-sky-400 hover:underline flex items-center gap-1 transition">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
-                            Swap Route
+                            Tukar Rute
                         </button>
                     </div>
 
                     <!-- Departure Airport -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            Origin Airport <span class="text-red-500">*</span>
+                            Bandara Asal (Origin) <span class="text-red-500">*</span>
                         </label>
                         <select x-model="form.departure_airport_id" @change="onRouteChanged" required
                                 class="w-full form-select-base">
-                            <option value="">-- Select Origin Airport --</option>
+                            <option value="">-- Pilih Bandara Asal --</option>
                             @foreach($airports as $ap)
                                 <option value="{{ $ap->id }}" data-lat="{{ $ap->latitude }}" data-lng="{{ $ap->longitude }}" data-iata="{{ $ap->iata_code }}">
                                     {{ $ap->iata_code }} — {{ $ap->name }} ({{ $ap->city }})
@@ -83,11 +83,11 @@
                     <!-- Arrival Airport -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            Destination Airport <span class="text-red-500">*</span>
+                            Bandara Tujuan (Destination) <span class="text-red-500">*</span>
                         </label>
                         <select x-model="form.arrival_airport_id" @change="onRouteChanged" required
                                 class="w-full form-select-base">
-                            <option value="">-- Select Destination Airport --</option>
+                            <option value="">-- Pilih Bandara Tujuan --</option>
                             @foreach($airports as $ap)
                                 <option value="{{ $ap->id }}" data-lat="{{ $ap->latitude }}" data-lng="{{ $ap->longitude }}" data-iata="{{ $ap->iata_code }}">
                                     {{ $ap->iata_code }} — {{ $ap->name }} ({{ $ap->city }})
@@ -103,152 +103,220 @@
                             <span class="font-semibold text-slate-800 dark:text-slate-200" x-text="previewDistance.gcd.toLocaleString() + ' km'"></span>
                         </div>
                         <div class="flex justify-between text-slate-600 dark:text-slate-400">
-                            <span>ICAO Route Deviation Correction:</span>
-                            <span class="font-semibold text-slate-800 dark:text-slate-200" x-text="'+' + previewDistance.correction + ' km'"></span>
-                        </div>
-                        <div class="flex justify-between border-t border-slate-200 dark:border-slate-800 pt-1.5 text-slate-900 dark:text-slate-100 font-bold">
-                            <span>Estimated Corrected Distance:</span>
-                            <span class="text-[#0B5A9E] dark:text-sky-400" x-text="previewDistance.adjusted.toLocaleString() + ' km'"></span>
+                            <span>Estimasi Nautical Miles (Nm):</span>
+                            <span class="font-semibold text-[#0B5A9E] dark:text-sky-400" x-text="(previewDistance.gcd / form.nm_to_km).toFixed(1) + ' Nm'"></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. Aircraft & Configuration Section -->
+                <!-- 2. Route Optimization (sd & tm) Section -->
                 <div class="p-5 space-y-4">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                            2. Aircraft Type & Capacity
+                            2. Parameter Penghematan Rute (sd & tm)
                         </span>
                     </div>
 
-                    <!-- Aircraft Selector -->
+                    <!-- Saved Distance (sd) in Nautical Miles -->
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            Select Aircraft Fleet Model
-                        </label>
-                        <select x-model="form.aircraft_id" @change="onAircraftChanged"
-                                class="w-full form-select-base">
-                            <option value="">-- Custom / Manual Input --</option>
-                            @foreach($aircraft as $ac)
-                                <option value="{{ $ac->id }}"
-                                        data-seats="{{ $ac->y_seats }}"
-                                        data-paxratio="{{ $ac->passenger_to_freight_factor }}"
-                                        data-fuelburn="{{ $ac->fuel_burn_factor }}"
-                                        data-co2="{{ $ac->co2_factor }}">
-                                    {{ $ac->manufacturer }} {{ $ac->model }} ({{ $ac->icao_type }}) — {{ $ac->y_seats }} Seats
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                Penghematan Jarak (sd) <span class="text-red-500">*</span>
+                            </label>
+                            <span class="text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400"
+                                  x-text="'= ' + (form.saved_distance_nm * form.nm_to_km).toFixed(4) + ' km / penerbangan'"></span>
+                        </div>
+                        <div class="relative">
+                            <input type="number"
+                                   step="0.01"
+                                   min="0"
+                                   x-model.number="form.saved_distance_nm"
+                                   required
+                                   placeholder="12.1"
+                                   class="w-full form-input-base pr-20 font-mono">
+                            <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">Nm</span>
+                        </div>
+                        <span class="text-[11px] text-slate-400 mt-1 block">1 Nautical Mile (Nm) = 1,852 km</span>
                     </div>
 
-                    <!-- Y-Seats -->
+                    <!-- Saved Time (tm) in Minutes -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                Penghematan Waktu Tempuh (tm) <span class="text-red-500">*</span>
+                            </label>
+                            <span class="text-xs font-mono font-medium text-blue-600 dark:text-blue-400"
+                                  x-text="'= ' + Math.round(form.saved_time_minutes * 60) + ' detik / penerbangan'"></span>
+                        </div>
+                        <div class="relative">
+                            <input type="number"
+                                   step="0.01"
+                                   min="0"
+                                   x-model.number="form.saved_time_minutes"
+                                   required
+                                   placeholder="1.7"
+                                   class="w-full form-input-base pr-20 font-mono">
+                            <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">menit</span>
+                        </div>
+                        <span class="text-[11px] text-slate-400 mt-1 block">Rata-rata waktu terbang dihemat per penerbangan</span>
+                    </div>
+                </div>
+
+                <!-- 3. Traffic Frequency & Evaluation Period (fl & d) Section -->
+                <div class="p-5 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            3. Frekuensi & Periode Evaluasi (fl & d)
+                        </span>
+                        <span class="text-xs font-mono font-bold text-[#0B5A9E] dark:text-sky-400"
+                              x-text="'Total: ' + (Math.round(form.flights_per_day * form.period_days)).toLocaleString() + ' Flights'"></span>
+                    </div>
+
+                    <!-- Average Flights Per Day (fl) -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            Economy Class Seat Capacity (Y-Seats) <span class="text-red-500">*</span>
+                            Rata-rata Frekuensi Penerbangan (fl) <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input type="number"
+                                   step="1"
+                                   min="0.1"
+                                   x-model.number="form.flights_per_day"
+                                   required
+                                   placeholder="50"
+                                   class="w-full form-input-base pr-28 font-mono">
+                            <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">flights / hari</span>
+                        </div>
+                    </div>
+
+                    <!-- Period Presets Quick Buttons -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                            Periode Evaluasi Kalender
+                        </label>
+                        <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 dark:bg-slate-900 rounded-lg text-xs">
+                            <button type="button" @click="setPeriod(30, '1 Bulan (30 hari)')"
+                                    :class="form.period_days === 30 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                                    class="py-1.5 rounded transition text-center">
+                                1 Bulan (30h)
+                            </button>
+                            <button type="button" @click="setPeriod(90, 'Triwulan I (90 hari)')"
+                                    :class="form.period_days === 90 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                                    class="py-1.5 rounded transition text-center">
+                                TW I (90h)
+                            </button>
+                            <button type="button" @click="setPeriod(91, 'Triwulan II (91 hari)')"
+                                    :class="form.period_days === 91 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                                    class="py-1.5 rounded transition text-center">
+                                TW II (91h)
+                            </button>
+                            <button type="button" @click="setPeriod(92, 'Triwulan III / IV (92 hari)')"
+                                    :class="form.period_days === 92 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                                    class="py-1.5 rounded transition text-center">
+                                TW III/IV (92h)
+                            </button>
+                            <button type="button" @click="setPeriod(182, 'Semester (182 hari)')"
+                                    :class="form.period_days === 182 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                                    class="py-1.5 rounded transition text-center">
+                                Semester (182h)
+                            </button>
+                            <button type="button" @click="setPeriod(365, '1 Tahun (365 hari)')"
+                                    :class="form.period_days === 365 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                                    class="py-1.5 rounded transition text-center">
+                                1 Tahun (365h)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Total Evaluation Days (d) -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                            Jumlah Hari Kalender (d) <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <input type="number"
                                    min="1"
-                                   x-model.number="form.y_seats"
+                                   x-model.number="form.period_days"
+                                   @input="form.period_label = form.period_days + ' Hari'"
                                    required
-                                   placeholder="200"
+                                   placeholder="91"
                                    class="w-full form-input-base pr-16 font-mono">
-                            <span class="absolute right-3 top-2 text-xs text-slate-400 pointer-events-none">seats</span>
+                            <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">hari</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. Fuel & Operational Parameters Section -->
-                <div class="p-5 space-y-4">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                            3. Fuel Consumption Parameters
+                <!-- 4. Standard Operational Parameters & Assumptions (AirNav Standard) -->
+                <div class="p-5 space-y-3" x-data="{ showAdvanced: false }">
+                    <button type="button" @click="showAdvanced = !showAdvanced"
+                            class="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200">
+                        <span class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            4. Parameter & Asumsi Standar Baku
                         </span>
-                    </div>
+                        <svg class="w-4 h-4 transform transition-transform" :class="showAdvanced ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
 
-                    <!-- Total Fuel Burn -->
-                    <div>
-                        <div class="flex items-center justify-between mb-1">
-                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                                Total Flight Fuel Burn <span class="text-red-500">*</span>
+                    <div x-show="showAdvanced" x-collapse x-cloak class="space-y-3 pt-2">
+                        <!-- Fuel Burn Factor (fb) -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                Fuel Burn Factor (fb)
                             </label>
-                            <button type="button" x-show="canEstimateFuel" @click="estimateFuelFromDistance" x-cloak
-                                    class="text-xs text-[#0B5A9E] dark:text-sky-400 hover:underline font-semibold">
-                                Estimate from Distance
-                            </button>
+                            <div class="relative">
+                                <input type="number" step="0.01" x-model.number="form.fuel_burn_rate" class="w-full form-input-base pr-28 font-mono">
+                                <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">kg BBM / km</span>
+                            </div>
+                            <span class="text-[11px] text-slate-400 mt-0.5 block">Standar AirNav: 3,59 kg avtur per km</span>
                         </div>
-                        <div class="relative">
-                            <input type="number"
-                                   step="0.1"
-                                   min="0.1"
-                                   x-model.number="form.total_fuel_kg"
-                                   required
-                                   placeholder="5000"
-                                   class="w-full form-input-base pr-12 font-mono">
-                            <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">kg</span>
-                        </div>
-                    </div>
 
-                    <!-- Passenger to Freight Factor -->
-                    <div>
-                        <div class="flex items-center justify-between mb-1">
-                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                                Passenger vs. Freight Allocation
+                        <!-- Emission Factor (ef) -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                Emission Factor CO₂ (ef)
                             </label>
-                            <span class="text-xs font-mono font-bold text-[#0B5A9E] dark:text-sky-400" x-text="(form.passenger_to_freight_factor * 100).toFixed(0) + '% Pax'"></span>
+                            <div class="relative">
+                                <input type="number" step="0.01" x-model.number="form.co2_factor" class="w-full form-input-base pr-32 font-mono">
+                                <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">kg CO₂ / kg BBM</span>
+                            </div>
+                            <span class="text-[11px] text-slate-400 mt-0.5 block">Standar Avtur Jet-A1: 3,15 kg CO₂ per kg BBM</span>
                         </div>
-                        <div class="grid grid-cols-4 gap-1.5 p-1 bg-slate-100 dark:bg-slate-900 rounded-lg">
-                            <button type="button" @click="form.passenger_to_freight_factor = 0.80"
-                                    :class="form.passenger_to_freight_factor === 0.80 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
-                                    class="py-1 text-xs rounded transition">
-                                80% (ICAO)
-                            </button>
-                            <button type="button" @click="form.passenger_to_freight_factor = 0.85"
-                                    :class="form.passenger_to_freight_factor === 0.85 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
-                                    class="py-1 text-xs rounded transition">
-                                85%
-                            </button>
-                            <button type="button" @click="form.passenger_to_freight_factor = 0.90"
-                                    :class="form.passenger_to_freight_factor === 0.90 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
-                                    class="py-1 text-xs rounded transition">
-                                90%
-                            </button>
-                            <button type="button" @click="form.passenger_to_freight_factor = 1.00"
-                                    :class="form.passenger_to_freight_factor === 1.00 ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
-                                    class="py-1 text-xs rounded transition">
-                                100%
-                            </button>
-                        </div>
-                    </div>
 
-                    <!-- Passenger Load Factor -->
-                    <div>
-                        <div class="flex items-center justify-between mb-1.5">
-                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                                Passenger Load Factor (LF)
+                        <!-- Cost Index / Operasional (ci) -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                Cost Index Operasional (ci)
                             </label>
-                            <span class="text-xs font-mono font-bold text-slate-800 dark:text-slate-200" x-text="(form.passenger_load_factor * 100).toFixed(0) + '% (' + estimatedPaxCount + ' Passengers)'"></span>
+                            <div class="relative">
+                                <input type="number" step="0.1" x-model.number="form.cost_index" class="w-full form-input-base pr-28 font-mono">
+                                <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">USD / menit</span>
+                            </div>
+                            <span class="text-[11px] text-slate-400 mt-0.5 block">Standar operasional: 25 USD per menit</span>
                         </div>
-                        <input type="range" min="0.10" max="1.00" step="0.01"
-                               x-model.number="form.passenger_load_factor"
-                               class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#0B5A9E]">
-                    </div>
 
-                    <!-- CO2 Factor -->
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            CO₂ Emission Factor
-                        </label>
-                        <div class="relative">
-                            <input type="number"
-                                   step="0.01"
-                                   x-model.number="form.co2_factor"
-                                   required
-                                   placeholder="3.16"
-                                   class="w-full form-input-base pr-28 font-mono">
-                            <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">t CO₂ / t fuel</span>
+                        <!-- Exchange Rate (fx) -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                Kurs Tukar (fx)
+                            </label>
+                            <div class="relative">
+                                <input type="number" step="10" x-model.number="form.exchange_rate" class="w-full form-input-base pr-24 font-mono">
+                                <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">IDR / USD</span>
+                            </div>
+                            <span class="text-[11px] text-slate-400 mt-0.5 block">Standar kurs konversi: Rp 15.600 per USD</span>
                         </div>
-                        <span class="text-[11px] text-slate-400 mt-1 block">ICAO standard factor: 1 tonne fuel combustion produces 3.16 tonnes CO₂.</span>
+
+                        <!-- Tree Absorption Factor -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                                Faktor Serapan Pohon
+                            </label>
+                            <div class="relative">
+                                <input type="number" step="0.1" x-model.number="form.tree_absorption_factor" class="w-full form-input-base pr-36 font-mono">
+                                <span class="absolute right-3 top-2 text-xs text-slate-400 font-mono pointer-events-none">kg CO₂ / pohon / th</span>
+                            </div>
+                            <span class="text-[11px] text-slate-400 mt-0.5 block">1 pohon menyerap 21 kg CO₂ per tahun</span>
+                        </div>
                     </div>
                 </div>
 
@@ -261,7 +329,7 @@
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                         </svg>
-                        <span x-text="isLoading ? 'Calculating Emissions...' : 'Calculate Emissions'"></span>
+                        <span x-text="isLoading ? 'Menghitung Pengurangan Emisi...' : 'Hitung Pengurangan Emisi'"></span>
                     </button>
                     <button type="button" @click="resetForm" class="btn-secondary h-10 px-4 text-xs sm:text-sm font-medium rounded-lg">
                         Reset
@@ -275,18 +343,18 @@
 
             <!-- Initial Placeholder (when not calculated yet) -->
             <div x-show="!hasResult && !isLoading" class="card p-10 flex flex-col items-center justify-center text-center min-h-[460px] space-y-4">
-                <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-[#0B5A9E] dark:text-sky-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                 </div>
                 <div class="max-w-md space-y-1">
-                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">Ready to Calculate Emissions</h3>
+                    <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-100">Siap Menghitung Pengurangan Emisi Rute</h3>
                     <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                        Select origin, destination, and fleet parameters on the left panel to compute flight CO₂ emissions in accordance with official ICAO standards.
+                        Pilih bandara rute, masukkan penghematan jarak (sd), penghematan waktu (tm), frekuensi harian, dan periode evaluasi untuk menghasilkan kalkulasi emisi akurat.
                     </p>
                 </div>
                 <div class="pt-2">
                     <button type="button" @click="applyPreset('cgk-dps')" class="btn-secondary">
-                        Try Simulation: CGK &rarr; DPS (B738)
+                        Coba Skenario Simulasi: CGK &rarr; DPS (TW II)
                     </button>
                 </div>
             </div>
@@ -294,8 +362,8 @@
             <!-- Loading State -->
             <div x-show="isLoading" class="card p-10 flex flex-col items-center justify-center text-center min-h-[460px] space-y-3">
                 <div class="w-7 h-7 border-2 border-[#0B5A9E] border-t-transparent rounded-full animate-spin"></div>
-                <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">Calculating Emissions...</div>
-                <div class="text-xs text-slate-400 font-mono">Processing ICAO Doc 9889 methodology</div>
+                <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">Menghitung Efisiensi Rute...</div>
+                <div class="text-xs text-slate-400 font-mono">Memproses formula kalkulasi baku AirNav Indonesia</div>
             </div>
 
             <!-- Result Cards & Dashboard (when calculated) -->
@@ -306,88 +374,89 @@
                     <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-700/80 pb-3">
                         <div class="flex items-center gap-3">
                             <span class="text-xl font-bold font-mono text-slate-900 dark:text-white" x-text="resultData.departure.iata_code + ' → ' + resultData.arrival.iata_code"></span>
-                            <span class="text-xs text-slate-500 dark:text-slate-400" x-text="resultData.departure.city + ' (' + resultData.departure.iata_code + ') to ' + resultData.arrival.city + ' (' + resultData.arrival.iata_code + ')'"></span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400" x-text="resultData.departure.city + ' (' + resultData.departure.iata_code + ') ke ' + resultData.arrival.city + ' (' + resultData.arrival.iata_code + ')'"></span>
                         </div>
-                        <span class="px-2.5 py-1 rounded text-xs font-semibold"
-                              :class="getEfficiencyBadgeClass(resultData.result.co2_per_passenger_kg)"
-                              x-text="getEfficiencyLabel(resultData.result.co2_per_passenger_kg)">
+                        <span class="px-2.5 py-1 rounded text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800">
+                            Efisiensi Rute RNAV
                         </span>
                     </div>
 
-                    <!-- HERO METRIC: Clean Professional Focus -->
+                    <!-- HERO METRIC: TOTAL EMISI CO2 DIKURANGI -->
                     <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
                             <div class="text-[11px] font-bold tracking-wider uppercase text-slate-500 dark:text-slate-400">
-                                ESTIMATED CO₂
+                                Total Emisi CO₂ Dikurangi
                             </div>
                             <div class="flex items-baseline gap-2 mt-1">
                                 <span class="text-4xl sm:text-5xl font-extrabold font-mono text-[#0B5A9E] dark:text-sky-400 tracking-tight"
-                                      x-text="resultData.result.co2_per_passenger_kg.toFixed(2)"></span>
-                                <span class="text-xl font-bold text-slate-700 dark:text-slate-300 font-mono">kg CO₂</span>
+                                      x-text="resultData.result.co2_saved_ton.toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 2})"></span>
+                                <span class="text-xl font-bold text-slate-700 dark:text-slate-300 font-mono">Ton CO₂</span>
                             </div>
                             <div class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">
-                                per passenger (economy class)
+                                Setara <span class="font-mono font-bold text-slate-800 dark:text-slate-200" x-text="resultData.result.co2_saved_kg.toLocaleString('id-ID') + ' kg CO₂'"></span>
+                                untuk <span class="font-mono font-semibold" x-text="resultData.result.total_flights.toLocaleString('id-ID') + ' penerbangan'"></span>
+                                (<span x-text="resultData.result.period_label"></span>)
                             </div>
                         </div>
                         <div class="text-xs text-slate-500 dark:text-slate-400 sm:text-right border-t sm:border-t-0 sm:border-l border-slate-200 dark:border-slate-800 pt-3 sm:pt-0 sm:pl-5 space-y-1">
-                            <div>Standard: <span class="font-mono font-semibold text-slate-700 dark:text-slate-300">ICAO Doc 9889</span></div>
-                            <div>Emission Factor: <span class="font-mono font-semibold text-slate-700 dark:text-slate-300" x-text="resultData.result.co2_factor + ' t CO₂ / t fuel'"></span></div>
-                            <div class="text-[11px] text-slate-400">(1 kg Fuel = 3.16 kg CO₂)</div>
+                            <div>Standar: <span class="font-mono font-semibold text-slate-700 dark:text-slate-300">AirNav Indonesia</span></div>
+                            <div>Fuel Burn Rate: <span class="font-mono font-semibold text-slate-700 dark:text-slate-300" x-text="resultData.result.fuel_burn_rate + ' kg/km'"></span></div>
+                            <div>Emission Factor: <span class="font-mono font-semibold text-slate-700 dark:text-slate-300" x-text="resultData.result.co2_factor + ' kg CO₂/kg BBM'"></span></div>
+                            <div class="text-[11px] text-slate-400 font-mono" x-text="'Hemat Jarak: ' + resultData.result.saved_distance_nm + ' Nm (' + resultData.result.saved_distance_km + ' km)'"></div>
                         </div>
                     </div>
 
                     <!-- 4 Main Secondary KPI Metrics -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
-                        <!-- 1. Total Passenger CO2 -->
+                        <!-- 1. Bahan Bakar Avtur Dihemat -->
                         <div class="p-3.5 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
-                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Passenger CO₂</div>
+                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Bahan Bakar Avtur Dihemat</div>
                             <div class="text-lg sm:text-xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">
-                                <span x-text="(resultData.result.passenger_co2_total_tonnes || (resultData.result.passenger_fuel_kg * resultData.result.co2_factor / 1000)).toFixed(2)"></span>
-                                <span class="text-xs font-normal text-slate-500">tonnes</span>
+                                <span x-text="resultData.result.fuel_saved_ton.toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 2})"></span>
+                                <span class="text-xs font-normal text-slate-500">Ton</span>
                             </div>
-                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="(resultData.result.passenger_co2_total_kg || Math.round(resultData.result.passenger_fuel_kg * resultData.result.co2_factor)).toLocaleString() + ' kg CO₂'"></div>
+                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="resultData.result.fuel_saved_kg.toLocaleString('id-ID') + ' kg BBM'"></div>
                         </div>
 
-                        <!-- 2. Fuel Consumption -->
+                        <!-- 2. CO2 per Single Flight -->
                         <div class="p-3.5 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
-                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Fuel Consumption</div>
+                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">CO₂ per Penerbangan</div>
                             <div class="text-lg sm:text-xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">
-                                <span x-text="resultData.result.total_fuel_kg.toLocaleString()"></span>
+                                <span x-text="resultData.result.co2_per_flight_kg.toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 2})"></span>
                                 <span class="text-xs font-normal text-slate-500">kg</span>
                             </div>
-                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="'Pax: ' + resultData.result.passenger_fuel_kg.toLocaleString() + ' kg (' + (resultData.result.passenger_to_freight_factor * 100).toFixed(0) + '%)'"></div>
+                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="'Hemat ' + resultData.result.saved_distance_km + ' km/flt'"></div>
                         </div>
 
-                        <!-- 3. Flight Distance -->
+                        <!-- 3. Penghematan Biaya Operasional -->
                         <div class="p-3.5 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
-                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Flight Distance</div>
+                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Hemat Biaya Operasional</div>
                             <div class="text-lg sm:text-xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">
-                                <span x-text="resultData.result.distance_adjusted_km.toLocaleString()"></span>
-                                <span class="text-xs font-normal text-slate-500">km</span>
+                                <span x-text="formatCurrencyIdr(resultData.result.cost_saved_idr)"></span>
                             </div>
-                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="'GCD ' + resultData.result.distance_gcd_km.toLocaleString() + ' (+' + Math.round(resultData.result.correction_km) + ' km)'"></div>
+                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="'$ ' + resultData.result.cost_saved_usd.toLocaleString('id-ID') + ' USD'"></div>
                         </div>
 
-                        <!-- 4. Passengers -->
+                        <!-- 4. Ekuivalensi Serapan Pohon -->
                         <div class="p-3.5 rounded-lg bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
-                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Passengers</div>
+                            <div class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ekuivalen Serapan Pohon</div>
                             <div class="text-lg sm:text-xl font-bold font-mono text-slate-900 dark:text-slate-100 mt-1">
-                                <span x-text="resultData.result.passenger_count"></span>
-                                <span class="text-xs font-normal text-slate-500">pax</span>
+                                <span x-text="resultData.result.tree_equivalence.toLocaleString('id-ID')"></span>
+                                <span class="text-xs font-normal text-slate-500">pohon</span>
                             </div>
-                            <div class="text-[11px] text-slate-400 font-mono mt-0.5" x-text="resultData.result.y_seats + ' seats (' + (resultData.result.passenger_load_factor * 100).toFixed(0) + '% LF)'"></div>
+                            <div class="text-[11px] text-slate-400 font-mono mt-0.5">21 kg CO₂ / pohon / th</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. Interactive Map Visualizer -->
+                <!-- 2. Interactive Map Visualizer (TETAP DIPERTAHANKAN UTUH) -->
                 <div class="card overflow-hidden flex flex-col">
                     <div class="px-4 py-2.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs bg-slate-50 dark:bg-slate-800/50">
                         <div class="flex items-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-[#0B5A9E]"></span>
-                            <span class="font-semibold text-slate-800 dark:text-slate-200">Flight Route Map</span>
+                            <span class="font-semibold text-slate-800 dark:text-slate-200">Peta Rute Penerbangan</span>
                         </div>
-                        <span class="font-mono text-slate-500 dark:text-slate-400" x-text="resultData.departure.iata_code + ' → ' + resultData.arrival.iata_code + ' (' + resultData.result.distance_adjusted_km + ' km)'"></span>
+                        <span class="font-mono text-slate-500 dark:text-slate-400" x-text="resultData.departure.iata_code + ' → ' + resultData.arrival.iata_code + ' (Hemat: ' + resultData.result.saved_distance_nm + ' Nm / ' + resultData.result.saved_distance_km + ' km)'"></span>
                     </div>
                     <div id="calculator-map" class="w-full h-72 bg-[#e0f2fe] dark:bg-[#0b1329] transition-colors relative"></div>
                 </div>
@@ -396,11 +465,11 @@
                 <div class="card overflow-hidden">
                     <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                         <div>
-                            <h3 class="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">ICAO Formula Calculation Audit</h3>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400">Parameter substitution verification based on official Doc 9889 methodology</p>
+                            <h3 class="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">Audit & Langkah Perhitungan Formula Baku</h3>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">Verifikasi substitusi parameter baku berdasarkan metodologi evaluasi rute AirNav Indonesia</p>
                         </div>
                         <span class="text-xs font-mono text-slate-500 dark:text-slate-400 hidden sm:inline">
-                            CO₂/pax = 3.16 × (Fuel × P/F) / (Seats × LF)
+                            CO₂ (kg) = sd × 1,852 × fl × d × fb × ef
                         </span>
                     </div>
 
@@ -408,52 +477,76 @@
                         <table class="w-full text-xs text-left border-collapse">
                             <thead>
                                 <tr class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                                    <th class="px-4 py-2.5">Calculation Stage</th>
-                                    <th class="px-4 py-2.5">Methodology Formula</th>
-                                    <th class="px-4 py-2.5">Substituted Input Values</th>
-                                    <th class="px-4 py-2.5 text-right">Result</th>
+                                    <th class="px-4 py-2.5">Tahap Perhitungan</th>
+                                    <th class="px-4 py-2.5">Rumus Baku</th>
+                                    <th class="px-4 py-2.5">Substitusi Nilai Input</th>
+                                    <th class="px-4 py-2.5 text-right">Hasil Perhitungan</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300 font-mono">
                                 <tr>
                                     <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
-                                        1. Corrected Route Distance
+                                        1. Total Penerbangan Periode
                                     </td>
-                                    <td class="px-4 py-3 text-slate-500">GCD + ICAO Deviation Correction</td>
-                                    <td class="px-4 py-3" x-text="resultData.result.distance_gcd_km.toLocaleString() + ' km + ' + Math.round(resultData.result.correction_km) + ' km'"></td>
-                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.distance_adjusted_km.toLocaleString() + ' km'"></td>
+                                    <td class="px-4 py-3 text-slate-500">fl × d</td>
+                                    <td class="px-4 py-3" x-text="resultData.result.flights_per_day + ' flights/hari × ' + resultData.result.period_days + ' hari'"></td>
+                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.total_flights.toLocaleString('id-ID') + ' penerbangan'"></td>
                                 </tr>
                                 <tr>
                                     <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
-                                        2. Passenger Fuel Share
+                                        2. Hemat Jarak per Penerbangan
                                     </td>
-                                    <td class="px-4 py-3 text-slate-500">Total Fuel × Pax Factor</td>
-                                    <td class="px-4 py-3" x-text="resultData.result.total_fuel_kg.toLocaleString() + ' kg × ' + resultData.result.passenger_to_freight_factor"></td>
-                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.passenger_fuel_kg.toLocaleString() + ' kg'"></td>
-                                </tr>
-                                <tr>
-                                    <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
-                                        3. Estimated Passengers Carried
-                                    </td>
-                                    <td class="px-4 py-3 text-slate-500">Y-Seats × Load Factor</td>
-                                    <td class="px-4 py-3" x-text="resultData.result.y_seats + ' seats × ' + resultData.result.passenger_load_factor"></td>
-                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.passenger_count + ' pax'"></td>
-                                </tr>
-                                <tr>
-                                    <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
-                                        4. Total Passenger Emissions
-                                    </td>
-                                    <td class="px-4 py-3 text-slate-500">Passenger Fuel × 3.16</td>
-                                    <td class="px-4 py-3" x-text="resultData.result.passenger_fuel_kg.toLocaleString() + ' kg × ' + resultData.result.co2_factor"></td>
-                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="(resultData.result.passenger_co2_total_tonnes || (resultData.result.passenger_fuel_kg * resultData.result.co2_factor / 1000)).toFixed(2) + ' tonnes'"></td>
+                                    <td class="px-4 py-3 text-slate-500">sd × 1,852</td>
+                                    <td class="px-4 py-3" x-text="resultData.result.saved_distance_nm + ' Nm × 1,852'"></td>
+                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.saved_distance_km + ' km'"></td>
                                 </tr>
                                 <tr class="bg-blue-50/40 dark:bg-blue-950/20">
                                     <td class="px-4 py-3 font-sans font-bold text-[#0B5A9E] dark:text-sky-400">
-                                        5. CO₂ Emissions per Passenger
+                                        3. Total Pengurangan Emisi CO₂
                                     </td>
-                                    <td class="px-4 py-3 text-[#0B5A9E] dark:text-sky-400">Total Pax Emissions / Pax Count</td>
-                                    <td class="px-4 py-3 text-[#0B5A9E] dark:text-sky-400" x-text="(resultData.result.passenger_co2_total_kg || Math.round(resultData.result.passenger_fuel_kg * resultData.result.co2_factor)).toLocaleString() + ' kg / ' + resultData.result.passenger_count + ' pax'"></td>
-                                    <td class="px-4 py-3 text-right font-black text-sm text-[#0B5A9E] dark:text-sky-400" x-text="resultData.result.co2_per_passenger_kg.toFixed(2) + ' kg CO₂/pax'"></td>
+                                    <td class="px-4 py-3 text-[#0B5A9E] dark:text-sky-400">sd × 1,852 × fl × d × fb × ef</td>
+                                    <td class="px-4 py-3 text-[#0B5A9E] dark:text-sky-400" x-text="resultData.result.saved_distance_nm + ' × 1,852 × ' + resultData.result.flights_per_day + ' × ' + resultData.result.period_days + ' × ' + resultData.result.fuel_burn_rate + ' × ' + resultData.result.co2_factor"></td>
+                                    <td class="px-4 py-3 text-right font-black text-sm text-[#0B5A9E] dark:text-sky-400" x-text="resultData.result.co2_saved_kg.toLocaleString('id-ID') + ' kg (' + resultData.result.co2_saved_ton.toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 2}) + ' Ton)'"></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
+                                        4. Total Bahan Bakar Avtur Dihemat
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-500">CO₂ (kg) / ef / 1000</td>
+                                    <td class="px-4 py-3" x-text="resultData.result.co2_saved_kg.toLocaleString('id-ID') + ' kg / ' + resultData.result.co2_factor + ' / 1000'"></td>
+                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.fuel_saved_ton.toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 2}) + ' Ton avtur'"></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
+                                        5. Pengurangan CO₂ per Penerbangan
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-500">CO₂ (kg) / Total Penerbangan</td>
+                                    <td class="px-4 py-3" x-text="resultData.result.co2_saved_kg.toLocaleString('id-ID') + ' kg / ' + resultData.result.total_flights.toLocaleString('id-ID')"></td>
+                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.co2_per_flight_kg.toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 2}) + ' kg CO₂'"></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
+                                        6. Penghematan Biaya Operasional (USD)
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-500">tm × ci × fl × d</td>
+                                    <td class="px-4 py-3" x-text="resultData.result.saved_time_minutes + ' mnt × $' + resultData.result.cost_index + ' × ' + resultData.result.flights_per_day + ' × ' + resultData.result.period_days"></td>
+                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="'$' + resultData.result.cost_saved_usd.toLocaleString('id-ID') + ' USD'"></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
+                                        7. Penghematan Biaya Operasional (IDR)
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-500">Hemat Biaya USD × Kurs (fx)</td>
+                                    <td class="px-4 py-3" x-text="'$' + resultData.result.cost_saved_usd.toLocaleString('id-ID') + ' × Rp ' + resultData.result.exchange_rate.toLocaleString('id-ID')"></td>
+                                    <td class="px-4 py-3 text-right font-bold text-emerald-600 dark:text-emerald-400" x-text="'Rp ' + resultData.result.cost_saved_idr.toLocaleString('id-ID')"></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 font-sans font-medium text-slate-900 dark:text-slate-100">
+                                        8. Ekuivalensi Serapan Pohon Tahunan
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-500">CO₂ (kg) / 21 kg per pohon</td>
+                                    <td class="px-4 py-3" x-text="resultData.result.co2_saved_kg.toLocaleString('id-ID') + ' kg / 21'"></td>
+                                    <td class="px-4 py-3 text-right font-bold text-slate-900 dark:text-white" x-text="resultData.result.tree_equivalence.toLocaleString('id-ID') + ' pohon'"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -466,18 +559,18 @@
                         <button type="button" @click="copySummary"
                                 class="btn-secondary h-9 text-xs flex items-center gap-1.5">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-                            <span x-text="copied ? 'Copied to Clipboard!' : 'Copy Summary'"></span>
+                            <span x-text="copied ? 'Tersalin ke Clipboard!' : 'Salin Ringkasan'"></span>
                         </button>
                         <button type="button" @click="window.print()"
                                 class="btn-secondary h-9 text-xs flex items-center gap-1.5">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                            Print Report
+                            Cetak Laporan
                         </button>
                     </div>
 
                     <a href="{{ route('flights.index') }}"
                        class="text-xs font-semibold text-[#0B5A9E] dark:text-sky-400 hover:underline flex items-center gap-1">
-                        Flight Monitoring &rarr;
+                        Monitoring Penerbangan &rarr;
                     </a>
                 </div>
 
@@ -497,17 +590,21 @@ function carbonCalculatorApp() {
         form: {
             departure_airport_id: '',
             arrival_airport_id: '',
-            aircraft_id: '',
-            total_fuel_kg: 5000,
-            passenger_to_freight_factor: 0.80,
-            y_seats: 200,
-            passenger_load_factor: 0.80,
-            co2_factor: {{ $defaultCo2Factor ?? 3.16 }},
+            saved_distance_nm: 12.1,
+            saved_time_minutes: 1.7,
+            flights_per_day: 50,
+            period_days: 91,
+            period_label: 'Triwulan II (91 hari)',
+            nm_to_km: {{ $defaultNmToKm ?? 1.852 }},
+            fuel_burn_rate: {{ $defaultFuelBurnRate ?? 3.59 }},
+            co2_factor: {{ $defaultCo2Factor ?? 3.15 }},
+            cost_index: {{ $defaultCostIndex ?? 25.0 }},
+            exchange_rate: {{ $defaultExchangeRate ?? 15600.0 }},
+            tree_absorption_factor: {{ $defaultTreeFactor ?? 21.0 }},
         },
         previewDistance: {
             gcd: 0,
-            correction: 0,
-            adjusted: 0,
+            nm: 0,
         },
         isLoading: false,
         hasResult: false,
@@ -519,42 +616,25 @@ function carbonCalculatorApp() {
             operational_route: null,
         },
         mapInstance: null,
-        selectedAircraftFuelBurn: null,
         tileLayerInstance: null,
+        planeAnimationId: null,
         resizeObs: null,
         themeListenerAttached: false,
 
-        get estimatedPaxCount() {
-            return Math.round((this.form.y_seats || 0) * (this.form.passenger_load_factor || 0));
+        setPeriod(days, label) {
+            this.form.period_days = days;
+            this.form.period_label = label;
         },
 
-        get canEstimateFuel() {
-            return this.previewDistance.adjusted > 0 && this.selectedAircraftFuelBurn > 0;
-        },
-
-        estimateFuelFromDistance() {
-            if (this.canEstimateFuel) {
-                this.form.total_fuel_kg = Math.round(this.previewDistance.adjusted * this.selectedAircraftFuelBurn);
+        formatCurrencyIdr(val) {
+            if (!val) return 'Rp 0';
+            if (val >= 1000000000) {
+                return 'Rp ' + (val / 1000000000).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Miliar';
             }
-        },
-
-        onAircraftChanged(e) {
-            const opt = e.target.selectedOptions[0];
-            if (!opt || !opt.value) {
-                this.selectedAircraftFuelBurn = null;
-                return;
+            if (val >= 1000000) {
+                return 'Rp ' + (val / 1000000).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Juta';
             }
-            if (opt.dataset.seats) this.form.y_seats = parseInt(opt.dataset.seats);
-            if (opt.dataset.paxratio) this.form.passenger_to_freight_factor = parseFloat(opt.dataset.paxratio);
-            if (opt.dataset.co2) this.form.co2_factor = parseFloat(opt.dataset.co2);
-            if (opt.dataset.fuelburn) {
-                this.selectedAircraftFuelBurn = parseFloat(opt.dataset.fuelburn);
-                if (this.previewDistance.adjusted > 0) {
-                    this.form.total_fuel_kg = Math.round(this.previewDistance.adjusted * this.selectedAircraftFuelBurn);
-                }
-            } else {
-                this.selectedAircraftFuelBurn = null;
-            }
+            return 'Rp ' + val.toLocaleString('id-ID');
         },
 
         onRouteChanged() {
@@ -572,23 +652,14 @@ function carbonCalculatorApp() {
 
                 if (!isNaN(lat1) && !isNaN(lng1) && !isNaN(lat2) && !isNaN(lng2)) {
                     const gcd = this.calculateGCD(lat1, lng1, lat2, lng2);
-                    let correction = 100;
-                    if (gcd < 550) correction = 50;
-                    else if (gcd > 5500) correction = 125;
-
                     this.previewDistance = {
                         gcd: Math.round(gcd),
-                        correction: correction,
-                        adjusted: Math.round(gcd + correction)
+                        nm: Math.round(gcd / this.form.nm_to_km)
                     };
-
-                    if (this.selectedAircraftFuelBurn && (!this.form.total_fuel_kg || this.form.total_fuel_kg === 5000)) {
-                        this.form.total_fuel_kg = Math.round(this.previewDistance.adjusted * this.selectedAircraftFuelBurn);
-                    }
                     return;
                 }
             }
-            this.previewDistance = { gcd: 0, correction: 0, adjusted: 0 };
+            this.previewDistance = { gcd: 0, nm: 0 };
         },
 
         calculateGCD(lat1, lon1, lat2, lon2) {
@@ -621,33 +692,30 @@ function carbonCalculatorApp() {
                 return '';
             };
 
-            if (preset === 'icao') {
-                const cgk = findAirportId('CGK') || depSelect.options[1]?.value;
-                const sub = findAirportId('SUB') || depSelect.options[2]?.value;
-                this.form.departure_airport_id = cgk;
-                this.form.arrival_airport_id = sub;
-                this.form.aircraft_id = '';
-                this.form.total_fuel_kg = 5000;
-                this.form.passenger_to_freight_factor = 0.80;
-                this.form.y_seats = 200;
-                this.form.passenger_load_factor = 0.80;
-                this.form.co2_factor = 3.16;
-            } else if (preset === 'cgk-dps') {
+            if (preset === 'cgk-dps') {
                 this.form.departure_airport_id = findAirportId('CGK') || depSelect.options[1]?.value;
                 this.form.arrival_airport_id = findAirportId('DPS') || depSelect.options[2]?.value;
-                this.form.total_fuel_kg = 4200;
-                this.form.passenger_to_freight_factor = 0.85;
-                this.form.y_seats = 180;
-                this.form.passenger_load_factor = 0.85;
-                this.form.co2_factor = 3.16;
+                this.form.saved_distance_nm = 12.1;
+                this.form.saved_time_minutes = 1.7;
+                this.form.flights_per_day = 50;
+                this.form.period_days = 91;
+                this.form.period_label = 'Triwulan II (91 hari)';
+            } else if (preset === 'cgk-sub') {
+                this.form.departure_airport_id = findAirportId('CGK') || depSelect.options[1]?.value;
+                this.form.arrival_airport_id = findAirportId('SUB') || depSelect.options[2]?.value;
+                this.form.saved_distance_nm = 8.5;
+                this.form.saved_time_minutes = 1.2;
+                this.form.flights_per_day = 42;
+                this.form.period_days = 91;
+                this.form.period_label = 'Triwulan II (91 hari)';
             } else if (preset === 'cgk-upg') {
                 this.form.departure_airport_id = findAirportId('CGK') || depSelect.options[1]?.value;
                 this.form.arrival_airport_id = findAirportId('UPG') || depSelect.options[2]?.value;
-                this.form.total_fuel_kg = 6100;
-                this.form.passenger_to_freight_factor = 0.85;
-                this.form.y_seats = 180;
-                this.form.passenger_load_factor = 0.88;
-                this.form.co2_factor = 3.16;
+                this.form.saved_distance_nm = 15.4;
+                this.form.saved_time_minutes = 2.1;
+                this.form.flights_per_day = 35;
+                this.form.period_days = 91;
+                this.form.period_label = 'Triwulan II (91 hari)';
             }
 
             this.onRouteChanged();
@@ -656,11 +724,11 @@ function carbonCalculatorApp() {
 
         async submitCalculation() {
             if (!this.form.departure_airport_id || !this.form.arrival_airport_id) {
-                alert('Please select both origin and destination airports.');
+                alert('Silakan pilih bandara asal dan tujuan.');
                 return;
             }
             if (this.form.departure_airport_id === this.form.arrival_airport_id) {
-                alert('Origin and destination airports cannot be the same.');
+                alert('Bandara asal dan tujuan tidak boleh sama.');
                 return;
             }
 
@@ -680,7 +748,7 @@ function carbonCalculatorApp() {
                 const data = await response.json();
 
                 if (!response.ok || data.error) {
-                    alert(data.error || 'An error occurred while calculating emissions.');
+                    alert(data.error || 'Terjadi kesalahan saat menghitung emisi.');
                     this.isLoading = false;
                     return;
                 }
@@ -696,7 +764,7 @@ function carbonCalculatorApp() {
 
             } catch (err) {
                 console.error(err);
-                alert('Failed to connect to server: ' + err.message);
+                alert('Gagal terhubung ke server: ' + err.message);
                 this.isLoading = false;
             }
         },
@@ -735,7 +803,6 @@ function carbonCalculatorApp() {
                 maxZoom: 19,
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }).addTo(this.mapInstance);
-
 
             // High-visibility Departure Pin (Origin)
             const depDiv = L.divIcon({
@@ -811,7 +878,7 @@ function carbonCalculatorApp() {
                 zIndexOffset: 1000
             }).addTo(this.mapInstance);
 
-            // Loop flight animation along route (e.g. 5 seconds per cycle)
+            // Loop flight animation along route
             const loopDuration = 8000;
             let animStart = null;
 
@@ -819,7 +886,7 @@ function carbonCalculatorApp() {
                 if (!this.mapInstance) return;
                 if (!animStart) animStart = now;
                 const elapsed = now - animStart;
-                const progress = (elapsed % loopDuration) / loopDuration; // 0.0 -> 1.0
+                const progress = (elapsed % loopDuration) / loopDuration;
 
                 const curLat = dep.lat + (arr.lat - dep.lat) * progress;
                 const curLng = dep.lng + (arr.lng - dep.lng) * progress;
@@ -833,7 +900,7 @@ function carbonCalculatorApp() {
             // Fit bounds with comfortable padding
             this.mapInstance.fitBounds(bounds, { padding: [60, 60] });
 
-            // FIX: Invalidate map size after Alpine finishes expanding the container
+            // Invalidate map size after Alpine finishes expanding the container
             setTimeout(() => {
                 if (this.mapInstance) {
                     this.mapInstance.invalidateSize();
@@ -867,37 +934,25 @@ function carbonCalculatorApp() {
             }
         },
 
-        getEfficiencyBadgeClass(co2Pax) {
-            if (co2Pax < 90) return 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800';
-            if (co2Pax <= 140) return 'bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800';
-            return 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800';
-        },
-
-        getEfficiencyLabel(co2Pax) {
-            if (co2Pax < 90) return 'Highly Efficient';
-            if (co2Pax <= 140) return 'Moderate / Normal';
-            return 'High Emissions';
-        },
-
         copySummary() {
             if (!this.hasResult) return;
             const r = this.resultData;
-            const paxCo2Tonnes = (r.result.passenger_co2_total_tonnes || (r.result.passenger_fuel_kg * r.result.co2_factor / 1000)).toFixed(2);
-            const paxCo2Kg = (r.result.passenger_co2_total_kg || Math.round(r.result.passenger_fuel_kg * r.result.co2_factor)).toLocaleString();
-            const text = `ACE AVIATION CARBON EMISSION REPORT\n` +
-                `====================================\n` +
-                `Route: ${r.departure.iata_code} (${r.departure.city}) -> ${r.arrival.iata_code} (${r.arrival.city})\n` +
-                `Flight Distance: ${r.result.distance_adjusted_km.toLocaleString()} km (GCD: ${r.result.distance_gcd_km.toLocaleString()} km, ICAO Correction: +${Math.round(r.result.correction_km)} km)\n` +
-                `Fuel Burn: ${r.result.total_fuel_kg.toLocaleString()} kg (Pax Share: ${r.result.passenger_fuel_kg.toLocaleString()} kg / ${(r.result.passenger_to_freight_factor*100).toFixed(0)}%)\n` +
-                `Capacity & Load: ${r.result.y_seats} seats (LF: ${(r.result.passenger_load_factor*100).toFixed(0)}%, Passengers: ${r.result.passenger_count} pax)\n` +
-                `------------------------------------\n` +
-                `ESTIMATED CO2: ${r.result.co2_per_passenger_kg.toFixed(2)} kg CO2 per passenger\n` +
-                `Total Passenger CO2: ${paxCo2Tonnes} tonnes (${paxCo2Kg} kg CO2)\n` +
-                `Total Flight Fuel: ${r.result.total_fuel_kg.toLocaleString()} kg\n` +
-                `Total Flight CO2: ${r.result.co2_total_tonnes.toFixed(2)} tonnes (${r.result.co2_total_kg.toLocaleString()} kg CO2)\n` +
-                `------------------------------------\n` +
-                `Methodology: ICAO Doc 9889 & CORSIA Framework\n` +
-                `Formula: CO2/pax = 3.16 * (Total Fuel * Pax Factor) / (Y-Seats * Load Factor)`;
+            const res = r.result;
+            const text = `LAPORAN PENGURANGAN EMISI RUTE RNAV - AIRNAV INDONESIA\n` +
+                `====================================================\n` +
+                `Rute: ${r.departure.iata_code} (${r.departure.city}) -> ${r.arrival.iata_code} (${r.arrival.city})\n` +
+                `Periode Evaluasi: ${res.period_label} (${res.period_days} hari kalender)\n` +
+                `Frekuensi Penerbangan: ${res.flights_per_day} flights/hari (Total: ${res.total_flights.toLocaleString('id-ID')} penerbangan)\n` +
+                `Hemat Jarak: ${res.saved_distance_nm} Nm (${res.saved_distance_km} km per penerbangan)\n` +
+                `Hemat Waktu: ${res.saved_time_minutes} menit per penerbangan\n` +
+                `----------------------------------------------------\n` +
+                `TOTAL PENGURANGAN EMISI CO2: ${res.co2_saved_ton.toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 2})} Ton CO2 (${res.co2_saved_kg.toLocaleString('id-ID')} kg)\n` +
+                `TOTAL AVTUR DIHEMAT: ${res.fuel_saved_ton.toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 2})} Ton avtur (${res.fuel_saved_kg.toLocaleString('id-ID')} kg)\n` +
+                `PENGURANGAN CO2 PER FLIGHT: ${res.co2_per_flight_kg.toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 2})} kg CO2\n` +
+                `PENGHEMATAN BIAYA OPERASIONAL: $ ${res.cost_saved_usd.toLocaleString('id-ID')} USD (Rp ${res.cost_saved_idr.toLocaleString('id-ID')})\n` +
+                `EKUIVALENSI SERAPAN POHON: ${res.tree_equivalence.toLocaleString('id-ID')} pohon per tahun\n` +
+                `----------------------------------------------------\n` +
+                `Standar: AirNav Indonesia (fb=3,59 kg/km, ef=3,15 kg CO2/kg avtur, ci=$25/mnt, fx=Rp 15.600, serapan=21 kg/pohon)`;
 
             navigator.clipboard.writeText(text).then(() => {
                 this.copied = true;
@@ -908,14 +963,17 @@ function carbonCalculatorApp() {
         resetForm() {
             this.form.departure_airport_id = '';
             this.form.arrival_airport_id = '';
-            this.form.aircraft_id = '';
-            this.form.total_fuel_kg = 5000;
-            this.form.passenger_to_freight_factor = 0.80;
-            this.form.y_seats = 200;
-            this.form.passenger_load_factor = 0.80;
-            this.form.co2_factor = {{ $defaultCo2Factor ?? 3.16 }};
-            this.previewDistance = { gcd: 0, correction: 0, adjusted: 0 };
+            this.form.saved_distance_nm = 12.1;
+            this.form.saved_time_minutes = 1.7;
+            this.form.flights_per_day = 50;
+            this.form.period_days = 91;
+            this.form.period_label = 'Triwulan II (91 hari)';
+            this.previewDistance = { gcd: 0, nm: 0 };
             this.hasResult = false;
+            if (this.planeAnimationId) {
+                cancelAnimationFrame(this.planeAnimationId);
+                this.planeAnimationId = null;
+            }
             if (this.mapInstance) {
                 this.mapInstance.remove();
                 this.mapInstance = null;

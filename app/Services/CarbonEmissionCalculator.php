@@ -206,4 +206,85 @@ class CarbonEmissionCalculator
             'co2_factor'                  => $co2Factor,
         ]);
     }
+
+    /**
+     * Calculate RNAV Route Efficiency & Carbon Emission Reduction (AirNav Standard)
+     *
+     * Rumus:
+     * - Total Penerbangan = fl * d
+     * - Hemat Jarak (km/flight) = sd * 1.852
+     * - Total Hemat Jarak (km) = sd * 1.852 * fl * d
+     * - CO2 (kg) = sd * 1.852 * fl * d * fb * ef
+     * - CO2 (ton) = CO2 (kg) / 1000
+     * - Avtur Dihemat (kg) = CO2 (kg) / ef = sd * 1.852 * fl * d * fb
+     * - Avtur Dihemat (ton) = Avtur Dihemat (kg) / 1000
+     * - CO2 per flight (kg) = CO2 (kg) / (fl * d) = sd * 1.852 * fb * ef
+     * - Hemat Biaya (USD) = tm * ci * fl * d
+     * - Hemat Biaya (IDR) = Hemat Biaya (USD) * fx
+     * - Ekuivalensi Pohon = round(CO2 (kg) / 21)
+     */
+    public function calculateRnavEfficiency(array $params): array
+    {
+        $sd = (float) ($params['saved_distance_nm'] ?? 0);
+        $tm = (float) ($params['saved_time_minutes'] ?? 0);
+        $fl = (float) ($params['flights_per_day'] ?? 0);
+        $d  = (int) ($params['period_days'] ?? 1);
+
+        $nmToKm      = (float) ($params['nm_to_km'] ?? 1.852);
+        $fb          = (float) ($params['fuel_burn_rate'] ?? 3.59);
+        $ef          = (float) ($params['co2_factor'] ?? 3.15);
+        $ci          = (float) ($params['cost_index'] ?? 25.0);
+        $fx          = (float) ($params['exchange_rate'] ?? 15600.0);
+        $treeFactor  = (float) ($params['tree_absorption_factor'] ?? 21.0);
+        $periodLabel = (string) ($params['period_label'] ?? ($d . ' Hari'));
+
+        $totalFlights = (int) round($fl * $d);
+        $savedDistanceKm = round($sd * $nmToKm, 4);
+        $totalSavedDistanceKm = round($savedDistanceKm * $fl * $d, 2);
+
+        // CO2 Saved
+        $co2SavedKg = round($sd * $nmToKm * $fl * $d * $fb * $ef, 2);
+        $co2SavedTon = round($co2SavedKg / 1000, 4);
+
+        // Fuel Saved
+        $fuelSavedKg = $ef > 0 ? round($co2SavedKg / $ef, 2) : 0.0;
+        $fuelSavedTon = round($fuelSavedKg / 1000, 4);
+
+        // CO2 per flight
+        $co2PerFlightKg = $totalFlights > 0
+            ? round($co2SavedKg / ($fl * $d), 2)
+            : round($sd * $nmToKm * $fb * $ef, 2);
+
+        // Cost Savings
+        $costSavedUsd = round($tm * $ci * $fl * $d, 2);
+        $costSavedIdr = (int) round($costSavedUsd * $fx);
+
+        // Tree Equivalence
+        $treeEquivalence = $treeFactor > 0 ? (int) round($co2SavedKg / $treeFactor) : 0;
+
+        return [
+            'saved_distance_nm'       => $sd,
+            'saved_time_minutes'      => $tm,
+            'flights_per_day'         => $fl,
+            'period_days'             => $d,
+            'period_label'            => $periodLabel,
+            'nm_to_km'                => $nmToKm,
+            'fuel_burn_rate'          => $fb,
+            'co2_factor'              => $ef,
+            'cost_index'              => $ci,
+            'exchange_rate'           => $fx,
+            'tree_absorption_factor'  => $treeFactor,
+            'total_flights'           => $totalFlights,
+            'saved_distance_km'       => $savedDistanceKm,
+            'total_saved_distance_km' => $totalSavedDistanceKm,
+            'co2_saved_kg'            => $co2SavedKg,
+            'co2_saved_ton'           => $co2SavedTon,
+            'fuel_saved_kg'           => $fuelSavedKg,
+            'fuel_saved_ton'          => $fuelSavedTon,
+            'co2_per_flight_kg'       => $co2PerFlightKg,
+            'cost_saved_usd'          => $costSavedUsd,
+            'cost_saved_idr'          => $costSavedIdr,
+            'tree_equivalence'        => $treeEquivalence,
+        ];
+    }
 }
